@@ -1,0 +1,28 @@
+table.paul
+{
+  width:100%;
+  border-left:0px;
+  border-right:0px;
+  border:0px;
+  z-index:1;
+}
+
+
+tr.paul
+{
+  border-left:0px;
+  border-right:0px;
+  border:0px;
+}
+
+td.paul
+{
+  font-size:20pt;
+  text-align:center;
+  border-left:0px;
+  border-right:0px;
+  border:0px;
+  width:7%;
+  z-index:1;
+  border:0px;
+}

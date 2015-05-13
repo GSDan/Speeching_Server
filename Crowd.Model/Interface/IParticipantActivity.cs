@@ -1,0 +1,20 @@
+using System.Collections.Generic;
+using Crowd.Model.Data;
+
+namespace Crowd.Model.Interface
+{
+    public interface IParticipantActivity
+    {
+        int Id { get; set; }
+        string ExternalId { get; set; }
+        string PrincipleInvestigatorId { get; set; }
+        string Title { get; set; }
+        string Icon { get; set; }
+        string Resource { get; set; }
+        int CrowdCategoryId { get; set; }
+        CrowdCategory CrowdCategory { get; set; }
+        ICollection<ParticipantTask> ParticipantTasks { get; set; }
+        ICollection<CrowdPage> CrowdPages { get; set; }
+        ICollection<ParticipantResult> ParticipantResults { get; set; }
+    }
+}

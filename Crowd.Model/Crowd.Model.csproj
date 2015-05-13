@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7ECB67BC-DBF2-457E-B183-7BCD72F6CDEE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Crowd.Model</RootNamespace>
+    <AssemblyName>Crowd.Model</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Crowd.Presenter">
+      <HintPath>..\Crowd.Presenter\bin\Debug\Crowd.Presenter.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\TaskType.cs" />
+    <Compile Include="CrowdContext.cs" />
+    <Compile Include="CustomDBInitializer.cs" />
+    <Compile Include="Data\ParticipantActivity.cs" />
+    <Compile Include="Data\CrowdCategory.cs" />
+    <Compile Include="Data\CrowdPage.cs" />
+    <Compile Include="Data\ParticipantResult.cs" />
+    <Compile Include="Data\ParticipantTask.cs" />
+    <Compile Include="Data\ParticipantTaskContent.cs" />
+    <Compile Include="Data\ParticipantTaskResponse.cs" />
+    <Compile Include="Data\CrowdWorker.cs" />
+    <Compile Include="Data\ScientistTaskResponse.cs" />
+    <Compile Include="Interface\IParticipantActivity.cs" />
+    <Compile Include="Interface\ICrowdCategory.cs" />
+    <Compile Include="Data\SpeechingRecording.cs" />
+    <Compile Include="Data\SpeechingSample.cs" />
+    <Compile Include="Data\SpeechingUser.cs" />
+    <Compile Include="Data\CrowdTaskRow.cs" />
+    <Compile Include="Interface\IParticipantPage.cs" />
+    <Compile Include="Interface\IParticipantResult.cs" />
+    <Compile Include="Interface\IParticipantTaskResponse.cs" />
+    <Compile Include="Interface\IParticipantTask.cs" />
+    <Compile Include="Interface\IParticipantTaskContent.cs" />
+    <Compile Include="Interface\ICrowdTaskModel.cs" />
+    <Compile Include="Interface\ICrowdTaskRowModel.cs" />
+    <Compile Include="Interface\IScientistTaskResponse.cs" />
+    <Compile Include="Interface\IUser.cs" />
+    <Compile Include="ITaskModel.cs" />
+    <Compile Include="Migrations\201503231124346_create_db.cs" />
+    <Compile Include="Migrations\201503231124346_create_db.Designer.cs">
+      <DependentUpon>201503231124346_create_db.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503261216203_one_task_to_many_scientistTaskresponse.cs" />
+    <Compile Include="Migrations\201503261216203_one_task_to_many_scientistTaskresponse.Designer.cs">
+      <DependentUpon>201503261216203_one_task_to_many_scientistTaskresponse.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TaskModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201503231124346_create_db.resx">
+      <DependentUpon>201503231124346_create_db.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503261216203_one_task_to_many_scientistTaskresponse.resx">
+      <DependentUpon>201503261216203_one_task_to_many_scientistTaskresponse.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

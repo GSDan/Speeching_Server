@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="api.opescode.com" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^Z:\\Developments\\NCLUni\\Speeching\\Crowd\.Service\\obj\\Release\\Package\\PackageTmp$" />
+    <parameterEntry kind="ProviderPath" scope="setAcl" match="^Z:\\Developments\\NCLUni\\Speeching\\Crowd\.Service\\obj\\Release\\Package\\PackageTmp$" />
+  </parameter>
+  <parameter name="CrowdScience-Web.config Connection String" description="CrowdScience Connection String used in web.config by the application to access the database." value="Data Source=184.168.47.10;Initial Catalog=CrowdScience;Persist Security Info=True;User ID=opessa;Password=Mc2000Mc2000" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="Z:\\Developments\\NCLUni\\Speeching\\Crowd\.Service\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='CrowdScience']/@connectionString" />
+  </parameter>
+</parameters>

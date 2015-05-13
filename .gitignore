@@ -1,0 +1,7 @@
+*.suo
+*.dll
+web.config
+Crowd.Service/Properties
+Admin
+Admin.*
+packages
