@@ -1,6 +1,6 @@
 *.suo
 *.dll
-web.config
+*.config
 Crowd.Service/Properties
 Admin
 Admin.*
