@@ -1,9 +1,9 @@
 Z:\Developments\NCLUni\Speeching\Crowd.View\bin\Debug\Crowd.View.dll
 Z:\Developments\NCLUni\Speeching\Crowd.View\bin\Debug\Crowd.View.pdb
-Z:\Developments\NCLUni\Speeching\Crowd.View\obj\Debug\Crowd.View.dll
-Z:\Developments\NCLUni\Speeching\Crowd.View\obj\Debug\Crowd.View.pdb
 Z:\Developments\NCLUni\Speeching\Crowd.View\bin\Debug\Crowd.Model.dll
 Z:\Developments\NCLUni\Speeching\Crowd.View\bin\Debug\EntityFramework.dll
 Z:\Developments\NCLUni\Speeching\Crowd.View\bin\Debug\Crowd.Model.pdb
 Z:\Developments\NCLUni\Speeching\Crowd.View\bin\Debug\EntityFramework.xml
 Z:\Developments\NCLUni\Speeching\Crowd.View\obj\Debug\Crowd.View.csprojResolveAssemblyReference.cache
+Z:\Developments\NCLUni\Speeching\Crowd.View\obj\Debug\Crowd.View.dll
+Z:\Developments\NCLUni\Speeching\Crowd.View\obj\Debug\Crowd.View.pdb

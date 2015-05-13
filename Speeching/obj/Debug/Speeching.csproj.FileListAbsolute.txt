@@ -1,6 +1,7 @@
 Z:\Developments\NCLUni\Speeching\Speeching\bin\Speeching.dll.config
 Z:\Developments\NCLUni\Speeching\Speeching\bin\Speeching.dll
 Z:\Developments\NCLUni\Speeching\Speeching\bin\Speeching.pdb
+Z:\Developments\NCLUni\Speeching\Speeching\bin\Crowd.Model.dll
 Z:\Developments\NCLUni\Speeching\Speeching\bin\Crowd.Presenter.dll
 Z:\Developments\NCLUni\Speeching\Speeching\bin\Crowd.Service.dll
 Z:\Developments\NCLUni\Speeching\Speeching\bin\Crowd.View.dll
@@ -10,6 +11,9 @@ Z:\Developments\NCLUni\Speeching\Speeching\bin\Newtonsoft.Json.dll
 Z:\Developments\NCLUni\Speeching\Speeching\bin\System.Net.Http.Formatting.dll
 Z:\Developments\NCLUni\Speeching\Speeching\bin\System.Web.Http.dll
 Z:\Developments\NCLUni\Speeching\Speeching\bin\System.Web.Http.WebHost.dll
+Z:\Developments\NCLUni\Speeching\Speeching\bin\Ewk.SoundCloud.ApiLibrary.dll
+Z:\Developments\NCLUni\Speeching\Speeching\bin\ICSharpCode.SharpZipLib.dll
+Z:\Developments\NCLUni\Speeching\Speeching\bin\Ewk.Extensions.dll
 Z:\Developments\NCLUni\Speeching\Speeching\bin\Crowd.Model.pdb
 Z:\Developments\NCLUni\Speeching\Speeching\bin\Crowd.Presenter.pdb
 Z:\Developments\NCLUni\Speeching\Speeching\bin\Crowd.Service.pdb
@@ -20,11 +24,7 @@ Z:\Developments\NCLUni\Speeching\Speeching\bin\Newtonsoft.Json.xml
 Z:\Developments\NCLUni\Speeching\Speeching\bin\System.Net.Http.Formatting.xml
 Z:\Developments\NCLUni\Speeching\Speeching\bin\System.Web.Http.xml
 Z:\Developments\NCLUni\Speeching\Speeching\bin\System.Web.Http.WebHost.xml
+Z:\Developments\NCLUni\Speeching\Speeching\bin\Ewk.SoundCloud.ApiLibrary.xml
 Z:\Developments\NCLUni\Speeching\Speeching\obj\Debug\Speeching.csprojResolveAssemblyReference.cache
 Z:\Developments\NCLUni\Speeching\Speeching\obj\Debug\Speeching.dll
 Z:\Developments\NCLUni\Speeching\Speeching\obj\Debug\Speeching.pdb
-Z:\Developments\NCLUni\Speeching\Speeching\bin\Crowd.Model.dll
-Z:\Developments\NCLUni\Speeching\Speeching\bin\Ewk.SoundCloud.ApiLibrary.dll
-Z:\Developments\NCLUni\Speeching\Speeching\bin\Ewk.Extensions.dll
-Z:\Developments\NCLUni\Speeching\Speeching\bin\Ewk.SoundCloud.ApiLibrary.xml
-Z:\Developments\NCLUni\Speeching\Speeching\bin\ICSharpCode.SharpZipLib.dll
