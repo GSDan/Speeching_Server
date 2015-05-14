@@ -14,6 +14,7 @@ namespace Crowd.Model.Data
         public string ResourceDirectory { get; set; }
         public string ExternalAccessToken { get; set;  }
         public int ParticipantActivityId { get; set; }
+        public int CrowdJobId { get; set; }
         public ParticipantActivity ParticipantActivity { get; set; }
         public Dictionary<int, string> ParticipantTaskIdResults { get; set; }
     }

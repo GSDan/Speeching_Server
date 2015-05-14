@@ -159,7 +159,6 @@
     <Compile Include="Model\ScenarioModel.cs" />
     <Compile Include="Model\TaskContentModel.cs" />
     <Compile Include="Model\TaskModel.cs" />
-    <Compile Include="Model\ScientistTaskResponseModel.cs" />
     <Compile Include="Model\TaskResponseModel.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="ProductsController.cs" />

@@ -56,6 +56,7 @@
     <Compile Include="Common\TaskType.cs" />
     <Compile Include="CrowdContext.cs" />
     <Compile Include="CustomDBInitializer.cs" />
+    <Compile Include="Data\CrowdTaskResponse.cs" />
     <Compile Include="Data\ParticipantActivity.cs" />
     <Compile Include="Data\CrowdCategory.cs" />
     <Compile Include="Data\CrowdPage.cs" />
@@ -64,7 +65,7 @@
     <Compile Include="Data\ParticipantTaskContent.cs" />
     <Compile Include="Data\ParticipantTaskResponse.cs" />
     <Compile Include="Data\CrowdWorker.cs" />
-    <Compile Include="Data\ScientistTaskResponse.cs" />
+    <Compile Include="Interface\ICrowdTaskJudgement.cs" />
     <Compile Include="Interface\IParticipantActivity.cs" />
     <Compile Include="Interface\ICrowdCategory.cs" />
     <Compile Include="Data\SpeechingRecording.cs" />
@@ -78,7 +79,6 @@
     <Compile Include="Interface\IParticipantTaskContent.cs" />
     <Compile Include="Interface\ICrowdTaskModel.cs" />
     <Compile Include="Interface\ICrowdTaskRowModel.cs" />
-    <Compile Include="Interface\IScientistTaskResponse.cs" />
     <Compile Include="Interface\IUser.cs" />
     <Compile Include="ITaskModel.cs" />
     <Compile Include="Migrations\201503231124346_create_db.cs" />

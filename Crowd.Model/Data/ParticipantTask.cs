@@ -19,7 +19,7 @@ namespace Crowd.Model.Data
         public virtual ParticipantActivity ParticipantActivity { get; set; }
         public virtual ParticipantTaskContent ParticipantTaskContent { get; set; }
         public virtual ParticipantTaskResponse ParticipantTaskResponse { get; set; }
-        public virtual ICollection<ScientistTaskResponse> ScientistTaskResponses { get; set; }
+        public virtual ICollection<CrowdTaskResponse> ScientistTaskResponses { get; set; }
 
         //public CrowdTask()
         //{

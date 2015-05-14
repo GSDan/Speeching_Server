@@ -18,7 +18,7 @@ namespace Crowd.Model
         public DbSet<CrowdPage> CrowdPages { get; set; }
         public DbSet<ParticipantTaskContent> ParticipantTaskContents { get; set; }
         public DbSet<ParticipantTaskResponse> ParticipantTaskResponses { get; set; }
-        public DbSet<ScientistTaskResponse> ScientistTaskResponses { get; set; }
+        public DbSet<CrowdTaskResponse> CrowdTaskResponses { get; set; }
         public DbSet<ParticipantActivity> ParticipantActivities { get; set; }
         public DbSet<ParticipantResult> ParticipantResults { get; set; }
         //public DbSet<SpeechingSample> SpeechingSamples { get; set; }

@@ -14,6 +14,7 @@ namespace Crowd.Model.Interface
         string ExternalAccessToken { get; set;  }
         string ResourceDirectory { get; set; }
         int ParticipantActivityId { get; set; }
+        int CrowdJobId { get; set; }
         ParticipantActivity ParticipantActivity { get; set; }
         Dictionary<int, string> ParticipantTaskIdResults { get; set; }
     }

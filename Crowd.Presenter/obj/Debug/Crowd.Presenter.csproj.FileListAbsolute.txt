@@ -13,3 +13,16 @@ Z:\Developments\NCLUni\Speeching\Crowd.Presenter\bin\Debug\EntityFramework.xml
 Z:\Developments\NCLUni\Speeching\Crowd.Presenter\obj\Debug\Crowd.Presenter.csprojResolveAssemblyReference.cache
 Z:\Developments\NCLUni\Speeching\Crowd.Presenter\obj\Debug\Crowd.Presenter.dll
 Z:\Developments\NCLUni\Speeching\Crowd.Presenter\obj\Debug\Crowd.Presenter.pdb
+C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Presenter\obj\Debug\Crowd.Presenter.csprojResolveAssemblyReference.cache
+C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Presenter\obj\Debug\Crowd.Presenter.pdb
+C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Presenter\bin\Debug\Crowd.Presenter.dll
+C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Presenter\bin\Debug\Crowd.Presenter.pdb
+C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Presenter\bin\Debug\Crowd.View.dll
+C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Presenter\bin\Debug\Newtonsoft.Json.dll
+C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Presenter\bin\Debug\Crowd.Model.dll
+C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Presenter\bin\Debug\EntityFramework.dll
+C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Presenter\bin\Debug\Crowd.View.pdb
+C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Presenter\bin\Debug\Newtonsoft.Json.xml
+C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Presenter\bin\Debug\Crowd.Model.pdb
+C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Presenter\bin\Debug\EntityFramework.xml
+C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Presenter\obj\Debug\Crowd.Presenter.dll

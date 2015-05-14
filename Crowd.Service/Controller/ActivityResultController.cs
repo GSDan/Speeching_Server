@@ -106,9 +106,21 @@ namespace Crowd.Service.Controller
                     SvcStatus status = CrowdFlowerApi.CreateJob(parRes);
                     if (status.Level == 0)
                     {
-                        //var jobRes = status.Response.Content.ReadAsAsync<CFJobResponse>().Result;
-                        //CrowdFlowerApi.UploadUnits(jobRes.id, parRes.ResourceUrl);
-                        //CrowdFlowerApi.JobQualitySettings(jobRes.id);
+                        var jobRes = status.Response.Content.ReadAsAsync<CFJobResponse>().Result;
+                        CrowdFlowerApi.UploadUnits(jobRes.id, parRes.ResourceUrl);
+                        CrowdFlowerApi.JobQualitySettings(jobRes.id);
+
+                        parRes.CrowdJobId = jobRes.id;
+                        
+                        try
+                        {
+                            DB.SaveChanges();
+                        }
+                        catch(Exception e)
+                        {
+                            throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.ExpectationFailed, e.Message));
+                        }
+
                         ////TODO: Save CF job response to database
                         ////TODO: Launch the job
                         //CrowdFlowerApi.LaunchJob(jobRes.id);
