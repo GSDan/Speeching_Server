@@ -13,7 +13,7 @@ namespace Crowd.Service.CrowdFlower
 
         public string Signal { get; set; }
 
-        /*[JsonProperty(PropertyName = "payload")]
+        [JsonProperty(PropertyName = "payload")]
         private string JsonPayload
         {
             get
@@ -22,37 +22,45 @@ namespace Crowd.Service.CrowdFlower
             }
             set
             {
-                // This property comes in as a serialized string, so have to deserialize it separately
-                _json = value;
-                Payload = JsonConvert.DeserializeObject<CFResponseData>(value);
+                try
+                {
+                    // This property comes in as a serialized string, so have to deserialize it separately
+                    _json = value;
+                    PayloadData = JsonConvert.DeserializeObject<CFResponseData>(value);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                
             }
-        }*/
-        public string signature { get; set; }
+        }
+        public string Signature { get; set; }
 
-        public CFResponseData Payload { get; set; }
+
+        public CFResponseData PayloadData { get; set; }
 
         /// <summary>
         /// Convert the 
         /// </summary>
         /// <returns></returns>
-        public List<CrowdTaskResponse> GetResponses(ParticipantTask originalTask)
+        public List<CrowdRowResponse> GetResponses(int originalTaskId)
         {
-            List<CrowdTaskResponse> responses = new List<CrowdTaskResponse>();
+            List<CrowdRowResponse> responses = new List<CrowdRowResponse>();
 
-            foreach(Judgement judgement in Payload.results.judgments)
+            foreach(Judgement judgement in PayloadData.results.judgments)
             {
-                CrowdTaskResponse thisResp = new CrowdTaskResponse()
+                CrowdRowResponse thisResp = new CrowdRowResponse()
                 {
                     Id = judgement.id.ToString(),
-                    Created_at = DateTime.Now,
+                    CreatedAt = DateTime.Now,
                     Tainted = judgement.tainted,
                     Country = judgement.country,
                     City = judgement.city,
-                    JobId = Payload.job_id,
+                    JobId = PayloadData.job_id,
                     WorkerId = judgement.worker_id,
                     Trust = judgement.trust,
-                    ParticipantTask = originalTask,
-                    ParticipantTaskId = originalTask.Id,
+                    ParticipantTaskId = originalTaskId,
                     Data = judgement.data
                 };
                 responses.Add(thisResp);
@@ -81,8 +89,14 @@ namespace Crowd.Service.CrowdFlower
     public class Results
     {
         public List<Judgement> judgments { get; set; }
-        public string rlsttrans { get; set; }
-        public string rlstaccent { get; set; }
+        public AggResult rlsttrans { get; set; }
+        public AggResult rlstaccent { get; set; }
+    }
+
+    public class AggResult
+    {
+        public string agg;
+        public double confidence;
     }
 
     public class Judgement

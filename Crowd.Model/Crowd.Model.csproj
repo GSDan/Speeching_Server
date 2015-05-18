@@ -11,6 +11,21 @@
     <AssemblyName>Crowd.Model</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,9 +45,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Crowd.Presenter">
-      <HintPath>..\Crowd.Presenter\bin\Debug\Crowd.Presenter.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -56,53 +68,63 @@
     <Compile Include="Common\TaskType.cs" />
     <Compile Include="CrowdContext.cs" />
     <Compile Include="CustomDBInitializer.cs" />
-    <Compile Include="Data\CrowdTaskResponse.cs" />
+    <Compile Include="Data\CrowdRowResponse.cs" />
     <Compile Include="Data\ParticipantActivity.cs" />
-    <Compile Include="Data\CrowdCategory.cs" />
-    <Compile Include="Data\CrowdPage.cs" />
+    <Compile Include="Data\ParticipantActivityCategory.cs" />
+    <Compile Include="Data\ParticipantPage.cs" />
     <Compile Include="Data\ParticipantResult.cs" />
     <Compile Include="Data\ParticipantTask.cs" />
     <Compile Include="Data\ParticipantTaskContent.cs" />
     <Compile Include="Data\ParticipantTaskResponse.cs" />
     <Compile Include="Data\CrowdWorker.cs" />
-    <Compile Include="Interface\ICrowdTaskJudgement.cs" />
+    <Compile Include="Interface\ICrowdRowResponse.cs" />
     <Compile Include="Interface\IParticipantActivity.cs" />
-    <Compile Include="Interface\ICrowdCategory.cs" />
+    <Compile Include="Interface\IParticipantActivityCategory.cs" />
     <Compile Include="Data\SpeechingRecording.cs" />
     <Compile Include="Data\SpeechingSample.cs" />
     <Compile Include="Data\SpeechingUser.cs" />
-    <Compile Include="Data\CrowdTaskRow.cs" />
     <Compile Include="Interface\IParticipantPage.cs" />
     <Compile Include="Interface\IParticipantResult.cs" />
     <Compile Include="Interface\IParticipantTaskResponse.cs" />
     <Compile Include="Interface\IParticipantTask.cs" />
     <Compile Include="Interface\IParticipantTaskContent.cs" />
     <Compile Include="Interface\ICrowdTaskModel.cs" />
-    <Compile Include="Interface\ICrowdTaskRowModel.cs" />
     <Compile Include="Interface\IUser.cs" />
     <Compile Include="ITaskModel.cs" />
-    <Compile Include="Migrations\201503231124346_create_db.cs" />
-    <Compile Include="Migrations\201503231124346_create_db.Designer.cs">
-      <DependentUpon>201503231124346_create_db.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503261216203_one_task_to_many_scientistTaskresponse.cs" />
-    <Compile Include="Migrations\201503261216203_one_task_to_many_scientistTaskresponse.Designer.cs">
-      <DependentUpon>201503261216203_one_task_to_many_scientistTaskresponse.cs</DependentUpon>
+    <Compile Include="Migrations\201505181009197_Initial.cs" />
+    <Compile Include="Migrations\201505181009197_Initial.Designer.cs">
+      <DependentUpon>201505181009197_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201503231124346_create_db.resx">
-      <DependentUpon>201503231124346_create_db.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503261216203_one_task_to_many_scientistTaskresponse.resx">
-      <DependentUpon>201503261216203_one_task_to_many_scientistTaskresponse.cs</DependentUpon>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201505181009197_Initial.resx">
+      <DependentUpon>201505181009197_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

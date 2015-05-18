@@ -15,7 +15,7 @@ namespace Crowd.Service.Model
         public int CrowdActivityId { get; set; }
         public TaskResponseModel TaskResponse { get; set; }
         public TaskContentModel TaskContent { get; set; }
-        public virtual IEnumerable<CrowdTaskResponse> CrowdTaskResponses { get; set; }
+        public virtual IEnumerable<CrowdRowResponse> CrowdRowResponses { get; set; }
 
         public static TaskModel Convert(ParticipantTask crowdTask)
         {
@@ -28,7 +28,7 @@ namespace Crowd.Service.Model
                 retTask.Title = crowdTask.Title;
                 retTask.TaskContent = TaskContentModel.Convert(crowdTask.ParticipantTaskContent);
                 retTask.TaskResponse = TaskResponseModel.Convert(crowdTask.ParticipantTaskResponse);
-                retTask.CrowdTaskResponses = crowdTask.ScientistTaskResponses;
+                retTask.CrowdRowResponses = crowdTask.CrowdRowResponses;
             }
             return retTask;
         }

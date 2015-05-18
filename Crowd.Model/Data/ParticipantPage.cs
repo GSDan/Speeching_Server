@@ -7,7 +7,7 @@ using Crowd.Model.Interface;
 
 namespace Crowd.Model.Data
 {
-    public class CrowdPage : IParticipantPage
+    public class ParticipantPage : IParticipantPage
     {
         public int Id { get; set; }
         public string MediaLocation { get; set; }

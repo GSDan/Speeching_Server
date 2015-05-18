@@ -16,14 +16,13 @@ namespace Crowd.Service.Model
         public static ActivityResultModel Convert(ParticipantResult crowdResult)
         {
             var retResModel = new ActivityResultModel();
-            if (crowdResult != null)
-            {
-                retResModel.Id = crowdResult.Id;
-                retResModel.ResourceUrl = crowdResult.ResourceUrl;
-                retResModel.ParticipantActivityId = crowdResult.ParticipantActivityId;
-                retResModel.ParticipantTaskIdResults = crowdResult.ParticipantTaskIdResults;
-                retResModel.ExternalAccessKey = crowdResult.ExternalAccessToken;
-            }
+            if (crowdResult == null) return retResModel;
+
+            retResModel.Id = crowdResult.Id;
+            retResModel.ResourceUrl = crowdResult.ResourceUrl;
+            retResModel.ParticipantActivityId = crowdResult.ParticipantActivityId;
+            retResModel.ParticipantTaskIdResults = crowdResult.ParticipantTaskIdResults;
+            retResModel.ExternalAccessKey = crowdResult.ExternalAccessToken;
             return retResModel;
         }
 

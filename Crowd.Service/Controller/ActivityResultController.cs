@@ -6,11 +6,14 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
+using Crowd.Model.Data;
 using Crowd.Service.Common;
 using Crowd.Service.CrowdFlower;
 using Crowd.Service.Interface;
 using Crowd.Service.Model;
+using Newtonsoft.Json;
 
 namespace Crowd.Service.Controller
 {
@@ -86,13 +89,13 @@ namespace Crowd.Service.Controller
         }
         
         // POST api/ActivityResult
-        public HttpResponseMessage Post(ActivityResultModel result)
+        public async Task<HttpResponseMessage> Post(ActivityResultModel result)
         {
             if (ModelState.IsValid)
             {
                 if (result != null)
                 {
-                    var parRes = ActivityResultModel.ConvertToEntity(result);
+                    ParticipantResult parRes = ActivityResultModel.ConvertToEntity(result);
                     DB.ParticipantResults.Add(parRes);
                     try
                     {
@@ -103,15 +106,24 @@ namespace Crowd.Service.Controller
                         throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.ExpectationFailed,
                             ex.Message));
                     }
-                    SvcStatus status = CrowdFlowerApi.CreateJob(parRes);
+                    SvcStatus status = await CrowdFlowerApi.CreateJob(parRes);
                     if (status.Level == 0)
                     {
-                        var jobRes = status.Response.Content.ReadAsAsync<CFJobResponse>().Result;
+                        string json = await status.Response.Content.ReadAsStringAsync();
+                        CFJobResponse jobRes = JsonConvert.DeserializeObject<CFJobResponse>(json);
                         CrowdFlowerApi.UploadUnits(jobRes.id, parRes.ResourceUrl);
                         CrowdFlowerApi.JobQualitySettings(jobRes.id);
 
                         parRes.CrowdJobId = jobRes.id;
-                        
+
+                        if (status.CreatedRows != null)
+                        {
+                            foreach (CrowdRowResponse row in status.CreatedRows)
+                            {
+                                DB.CrowdRowResponses.Add(row);
+                            }
+                        }
+
                         try
                         {
                             DB.SaveChanges();
@@ -123,7 +135,7 @@ namespace Crowd.Service.Controller
 
                         ////TODO: Save CF job response to database
                         ////TODO: Launch the job
-                        //CrowdFlowerApi.LaunchJob(jobRes.id);
+                        CrowdFlowerApi.LaunchJob(jobRes.id);
                         return status.Response;
                     }
                     else

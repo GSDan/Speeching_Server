@@ -9,23 +9,23 @@ using Crowd.Model.Data;
 
 namespace Crowd.Model
 {
-    public class CustomDBInitializer : DropCreateDatabaseIfModelChanges<CrowdContext>
+    public class CustomDBInitializer : CreateDatabaseIfNotExists<CrowdContext>
     {
         protected override void Seed(CrowdContext context)
         {
             //if (System.Diagnostics.Debugger.IsAttached == false)
             //    System.Diagnostics.Debugger.Launch();
             Console.WriteLine("*****Seeding******");
-            var categories = new List<CrowdCategory>();
-            categories.AddRange(new List<CrowdCategory>()
+            var categories = new List<ParticipantActivityCategory>();
+            categories.AddRange(new List<ParticipantActivityCategory>()
             {
-                new CrowdCategory()
+                new ParticipantActivityCategory()
                 {
                     ExternalId = "anId1",
                     Icon = "https://cdn0.iconfinder.com/data/icons/cosmo-medicine/40/test-tube_1-128.png",
                     Recommended = false,
                     Title = "Dysfluency",
-                    CrowdActivities = new List<ParticipantActivity>()
+                    Activities = new List<ParticipantActivity>()
                     {
                       new ParticipantActivity()
                       {
@@ -175,13 +175,13 @@ namespace Crowd.Model
                       }
                     }
                 },
-                new CrowdCategory()
+                new ParticipantActivityCategory()
                 {
                     ExternalId = "anId2",
                     Icon = "https://cdn0.iconfinder.com/data/icons/cosmo-medicine/40/test-tube_1-128.png",
                     Recommended = false,
                     Title = "Dementia",
-                    CrowdActivities = new List<ParticipantActivity>()
+                    Activities = new List<ParticipantActivity>()
                     {
                       new ParticipantActivity()
                       {
@@ -287,13 +287,13 @@ namespace Crowd.Model
                       }
                     }
                 },
-                new CrowdCategory()
+                new ParticipantActivityCategory()
                 {
                     ExternalId = "anId3",
                     Icon = "https://cdn1.iconfinder.com/data/icons/MetroStation-PNG/128/MB__help.png",
                     Recommended = false,
                     Title = "Helpful Guides",
-                    CrowdActivities = new List<ParticipantActivity>()
+                    Activities = new List<ParticipantActivity>()
                     {
                       new ParticipantActivity()
                       {
@@ -301,20 +301,20 @@ namespace Crowd.Model
                           Icon = "http://www.pursuittraining.co.uk/images/care-icon.gif",
                           Title = "Interaction Tips",
                           Resource = "https://www.dropbox.com/s/pw1ubz20nwatxtl/guide.zip?raw=1",
-                          CrowdPages = new List<CrowdPage>()
+                          CrowdPages = new List<ParticipantPage>()
                           {
-                              new CrowdPage()
+                              new ParticipantPage()
                               {
                                   MediaLocation = "pic1.jpg",
                                   Text = "Try to think through how it might feel to struggle to communicate if you were living with dementia and think about what might help and what has helped in the past."
                               },
-                              new CrowdPage()
+                              new ParticipantPage()
                               {
                                   MediaLocation = "pic2.jpg",
                                   Text = "Smile where you can and offer reassuring physical contact where it is appropriate. Make sure people can see your face and that you have engaged their attention."
                               },
 
-                              new CrowdPage()
+                              new ParticipantPage()
                               {
                                   MediaLocation = "pic3.jpg",
                                   Text = "Relax as much as you can and help the person you are talking with to relax. Be prepared to be treated as someone you are not (for example being mistaken for another relative)."
@@ -327,7 +327,7 @@ namespace Crowd.Model
             Console.WriteLine("*****Adding******");
             foreach (var cat in categories)
             {
-                context.CrowdCategories.Add(cat);    
+                context.ParticipantActivityCategories.Add(cat);    
             }
             
             try

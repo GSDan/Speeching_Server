@@ -6,10 +6,10 @@ using System;
 
 namespace Crowd.Model.Data
 {
-    public class CrowdTaskResponse : ICrowdTaskJudgement
+    public class CrowdRowResponse : ICrowdRowResponse
     {
         public string Id { get; set; }
-        public DateTime Created_at { get; set; }
+        public DateTime CreatedAt { get; set; }
         public bool Tainted { get; set; }
         public string Country { get; set; }
         public string City { get; set; }
@@ -17,8 +17,8 @@ namespace Crowd.Model.Data
         public int WorkerId { get; set; }
         public double Trust { get; set; }
 
+        public int ParticipantResultId { get; set; }
         public int ParticipantTaskId { get; set; }
-        public ParticipantTask ParticipantTask { get; set; }
 
         // eg "txta":"hello can I order a pizza please"
         public Dictionary<string, string> Data { get; set; }

@@ -13,12 +13,12 @@ namespace Crowd.Model
             Database.SetInitializer<CrowdContext>(new CustomDBInitializer());
             this.Database.Initialize(true);
         }
-        public DbSet<CrowdCategory> CrowdCategories { get; set; }
+        public DbSet<ParticipantActivityCategory> ParticipantActivityCategories { get; set; }
         public DbSet<ParticipantTask> ParticipantTasks { get; set; }
-        public DbSet<CrowdPage> CrowdPages { get; set; }
+        public DbSet<ParticipantPage> ParticipantPages { get; set; }
         public DbSet<ParticipantTaskContent> ParticipantTaskContents { get; set; }
         public DbSet<ParticipantTaskResponse> ParticipantTaskResponses { get; set; }
-        public DbSet<CrowdTaskResponse> CrowdTaskResponses { get; set; }
+        public DbSet<CrowdRowResponse> CrowdRowResponses { get; set; }
         public DbSet<ParticipantActivity> ParticipantActivities { get; set; }
         public DbSet<ParticipantResult> ParticipantResults { get; set; }
         //public DbSet<SpeechingSample> SpeechingSamples { get; set; }

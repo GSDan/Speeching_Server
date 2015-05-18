@@ -8,9 +8,9 @@ using Crowd.Model.Interface;
 
 namespace Crowd.Model.Data
 {
-    public class CrowdCategory : ICrowdCategory
+    public class ParticipantActivityCategory : IParticipantActivityCategory
     {
-        public CrowdCategory()
+        public ParticipantActivityCategory()
         {
             //CrowdActivities = new Collection<CrowdActivity>();
         }
@@ -19,6 +19,6 @@ namespace Crowd.Model.Data
         public string Title { get; set; }
         public string Icon { get; set; }
         public bool Recommended { get; set; }
-        public virtual ICollection<ParticipantActivity> CrowdActivities { get; set; }
+        public virtual ICollection<ParticipantActivity> Activities { get; set; }
     }
 }

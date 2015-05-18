@@ -13,7 +13,7 @@ namespace Crowd.Service.Model
         public string Text { get; set; }
         public int CrowdActivityId { get; set; }
 
-        public static GuideModel Convert(CrowdPage cPage)
+        public static GuideModel Convert(ParticipantPage cPage)
         {
             var guide = new GuideModel();
             if (cPage != null)
@@ -26,7 +26,7 @@ namespace Crowd.Service.Model
             return guide;
         }
 
-        public static IEnumerable<GuideModel> Convert(IEnumerable<CrowdPage> cPages)
+        public static IEnumerable<GuideModel> Convert(IEnumerable<ParticipantPage> cPages)
         {
             var retGuides = new List<GuideModel>();
             if (cPages != null && cPages.Any())

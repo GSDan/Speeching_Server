@@ -14,8 +14,8 @@ namespace Crowd.Service.Interface
     {
         HttpResponseMessage Get();
         HttpResponseMessage Get(int id);
-        HttpResponseMessage Put(CrowdCategory category);
-        HttpResponseMessage Post(CrowdCategory category);
+        HttpResponseMessage Put(ParticipantActivityCategory category);
+        HttpResponseMessage Post(ParticipantActivityCategory category);
         HttpResponseMessage Delete(int id);
     }
 

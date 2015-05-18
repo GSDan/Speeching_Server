@@ -13,6 +13,6 @@ namespace Crowd.Model.Interface
         ParticipantActivity ParticipantActivity { get; set; }
         ParticipantTaskContent ParticipantTaskContent { get; set; }
         ParticipantTaskResponse ParticipantTaskResponse { get; set; }
-        ICollection<CrowdTaskResponse> ScientistTaskResponses { get; set; }
+        ICollection<CrowdRowResponse> CrowdRowResponses { get; set; }
     }
 }

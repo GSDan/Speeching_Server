@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web;
+using Crowd.Model.Data;
 
 namespace Crowd.Service.Common
 {
@@ -18,5 +19,6 @@ namespace Crowd.Service.Common
         public int Level { get; set; }
         public string Description { get; set;}
         public HttpResponseMessage Response { get; set; }
+        public List<CrowdRowResponse> CreatedRows;
     }
 }

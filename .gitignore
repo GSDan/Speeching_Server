@@ -3,6 +3,7 @@
 web.config
 app.config
 Crowd.Service/Properties
+Crowd.Service/Uploads
 Admin
 Admin.*
 packages

@@ -18,7 +18,7 @@ namespace Crowd.Service.Controller
         // GET api/Category
         public HttpResponseMessage Get()
         {
-            var cats = DB.CrowdCategories.ToList();
+            var cats = DB.ParticipantActivityCategories.ToList();
 
             return new HttpResponseMessage()
             {
@@ -33,7 +33,7 @@ namespace Crowd.Service.Controller
             if (id <= 0)
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
 
-            var category = DB.CrowdCategories.Find(id);
+            var category = DB.ParticipantActivityCategories.Find(id);
             if (category == null)
             {
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
@@ -45,7 +45,7 @@ namespace Crowd.Service.Controller
         }
 
         // PUT api/Category/5
-        public HttpResponseMessage Put(CrowdCategory category)
+        public HttpResponseMessage Put(ParticipantActivityCategory category)
         {
             if (!ModelState.IsValid)
             {
@@ -55,7 +55,7 @@ namespace Crowd.Service.Controller
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
-            DB.CrowdCategories.Attach(category);
+            DB.ParticipantActivityCategories.Attach(category);
             DB.Entry(category).State = EntityState.Modified;
             try
             {
@@ -69,11 +69,11 @@ namespace Crowd.Service.Controller
         }
 
         // POST api/Category
-        public HttpResponseMessage Post(CrowdCategory category)
+        public HttpResponseMessage Post(ParticipantActivityCategory category)
         {
             if (ModelState.IsValid)
             {
-                DB.CrowdCategories.Add(category);
+                DB.ParticipantActivityCategories.Add(category);
                 DB.SaveChanges();
                 var response = Request.CreateResponse(HttpStatusCode.Created, category);
                 response.Headers.Location = new Uri(this.Request.RequestUri.AbsoluteUri + category.Id);//new Uri(Url.Link("DefaultApi", new { id = category.Id }));
@@ -90,12 +90,12 @@ namespace Crowd.Service.Controller
         {
             if (id <= 0)
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "id must be greater than zero");
-            var category = DB.CrowdCategories.Find(id);
+            var category = DB.ParticipantActivityCategories.Find(id);
             if (category == null)
             {
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
             }
-            DB.CrowdCategories.Remove(category);
+            DB.ParticipantActivityCategories.Remove(category);
             try
             {
                 DB.SaveChanges();

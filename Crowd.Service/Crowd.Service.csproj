@@ -135,6 +135,7 @@
     <Compile Include="CrowdFlower\CFJobRequest.cs" />
     <Compile Include="CrowdFlower\CFOptions.cs" />
     <Compile Include="CrowdFlower\CFUnitRequest.cs" />
+    <Compile Include="CrowdFlower\CFUnitResponse.cs" />
     <Compile Include="CrowdFlower\CFWebhook.cs" />
     <Compile Include="CrowdFlower\CrowdFlowerApi.cs" />
     <Compile Include="CrowdFlower\CFJobResponse.cs" />

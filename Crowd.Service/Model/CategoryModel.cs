@@ -17,7 +17,7 @@ namespace Crowd.Service.Model
         public bool Recommended { get; set; }
         public IEnumerable<ActivityModel> Activities { get; set; }
 
-        public static CategoryModel Convert(CrowdCategory crowdCategory)
+        public static CategoryModel Convert(ParticipantActivityCategory crowdCategory)
         {
             var retCat = new CategoryModel();
             if (crowdCategory != null)
@@ -27,12 +27,12 @@ namespace Crowd.Service.Model
                 retCat.Title = crowdCategory.Title;
                 retCat.Icon = crowdCategory.Icon;
                 retCat.Recommended = crowdCategory.Recommended;
-                retCat.Activities = ActivityModel.Convert(crowdCategory.CrowdActivities);
+                retCat.Activities = ActivityModel.Convert(crowdCategory.Activities);
             }
             return retCat;
         }
 
-        public static IEnumerable<CategoryModel> Convert(IEnumerable<CrowdCategory> crowdCategories)
+        public static IEnumerable<CategoryModel> Convert(IEnumerable<ParticipantActivityCategory> crowdCategories)
         {
             var categoryModels = new List<CategoryModel>();
             if (crowdCategories != null && crowdCategories.Any())

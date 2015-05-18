@@ -12,9 +12,9 @@ namespace Crowd.Model.Interface
         string Icon { get; set; }
         string Resource { get; set; }
         int CrowdCategoryId { get; set; }
-        CrowdCategory CrowdCategory { get; set; }
+        ParticipantActivityCategory CrowdCategory { get; set; }
         ICollection<ParticipantTask> ParticipantTasks { get; set; }
-        ICollection<CrowdPage> CrowdPages { get; set; }
+        ICollection<ParticipantPage> CrowdPages { get; set; }
         ICollection<ParticipantResult> ParticipantResults { get; set; }
     }
 }

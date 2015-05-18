@@ -119,7 +119,7 @@ namespace Crowd.Service
         protected void gvCategories_RowUpdating(object sender, GridViewUpdateEventArgs e)
         {
             GridViewRow row = gvCategories.Rows[e.RowIndex];
-            CrowdCategory crowdCat = new CrowdCategory();
+            ParticipantActivityCategory crowdCat = new ParticipantActivityCategory();
             crowdCat.Id = Convert.ToInt32(gvCategories.DataKeys[e.RowIndex].Values[0]);
             crowdCat.ExternalId = ((TextBox)(row.Cells[1].Controls[0])).Text;
             crowdCat.Title = ((TextBox)(row.Cells[2].Controls[0])).Text;
@@ -127,7 +127,7 @@ namespace Crowd.Service
             crowdCat.Recommended = ((CheckBox)(row.Cells[4].Controls[1])).Checked;
             JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
             var jsonSerialized = jsonSerializer.Serialize(crowdCat);
-            var response = PutService<CrowdCategory>("http://api.opescode.com/", "api/Category/", jsonSerialized);
+            var response = PutService<ParticipantActivityCategory>("http://api.opescode.com/", "api/Category/", jsonSerialized);
 
             gvCategories.EditIndex = -1; 
             BindData();
@@ -135,14 +135,14 @@ namespace Crowd.Service
 
         protected void lbtnCreate_OnClick(object sender, EventArgs e)
         {
-            CrowdCategory crowdCat = new CrowdCategory();
+            ParticipantActivityCategory crowdCat = new ParticipantActivityCategory();
             crowdCat.ExternalId = "xyz";
             crowdCat.Title = "test title";
             crowdCat.Icon = "https://testaddress";
             crowdCat.Recommended = true;
             JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
             var jsonSerialized = jsonSerializer.Serialize(crowdCat);
-            var response = PostService<CrowdCategory>("http://api.opescode.com/", "api/Category/", jsonSerialized);
+            var response = PostService<ParticipantActivityCategory>("http://api.opescode.com/", "api/Category/", jsonSerialized);
             BindData();
         }
     }

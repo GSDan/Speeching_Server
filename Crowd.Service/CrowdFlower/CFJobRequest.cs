@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using System.Web;
 using Crowd.Model.Data;
 using Crowd.Service.Common;
@@ -58,7 +59,7 @@ namespace Crowd.Service.CrowdFlower
             return new FormUrlEncodedContent(lst);
         }
 
-        internal SvcStatus CreateAudioJob()
+        internal async Task<SvcStatus> CreateAudioJob()
         {
             SvcStatus status = new SvcStatus();
             using (HttpClient client = new HttpClient())
@@ -68,27 +69,26 @@ namespace Crowd.Service.CrowdFlower
                 var response = client.PostAsync(baseAddress, reqContent).Result;
                 if (response.IsSuccessStatusCode)
                 {
-                    var jobRes = response.Content.ReadAsAsync<CFJobResponse>().Result;
+                    CFJobResponse jobRes = await response.Content.ReadAsAsync<CFJobResponse>();
                     string zipFileName = jobRes.id.ToString();
                     var lstAudioFiles = SvcUtil.DownloadAndExtractZip(this.resourceUrl, zipFileName);
-                    if (lstAudioFiles.Any())
+
+                    if (!lstAudioFiles.Any()) return status;
+
+                    CFUnitRequest unitsReq = new CFUnitRequest();
+                    string uploadUnitsJson = AudioUnit.CreateCFUploadUnits(lstAudioFiles, MP4_TYPE_CODEC);
+
+                    this.rows = await unitsReq.UploadUnits(jobRes.id, uploadUnitsJson);
+
+                    //JobQualitySettings(jobRes.id);
+                    //LaunchJob(jobRes.id);
+
+                    status = new SvcStatus()
                     {
-                        CFUnitRequest unitsReq = new CFUnitRequest();
-                        var uploadUnitsJson = AudioUnit.CreateCFUploadUnits(lstAudioFiles, MP4_TYPE_CODEC);
-                        unitsReq.UploadUnits(jobRes.id, uploadUnitsJson);
-                        //JobQualitySettings(jobRes.id);
-                        //TODO: Save CF job response to database
-                        //TODO: Launch the job
-                        LaunchJob(jobRes.id);
-                        status = new SvcStatus()
-                        {
-                            Level = 0,
-                            Description = "Job created and launched",
-                            Response = response
-                        };
-                    }
-                    //else
-                    //    status = new SvcStatus() { Level = 1, Description = "No audio files found" };
+                        Level = 0,
+                        Description = "Job created and launched",
+                        Response = response
+                    };
                 }
                 else
                 {
@@ -140,6 +140,7 @@ namespace Crowd.Service.CrowdFlower
         }
 
         public string resourceUrl { get; set; }
+        public List<CrowdRowResponse> rows; 
         //public bool completed { get; set; }
         //public string completed_at { get; set; }
         //public string created_at { get; set; }
