@@ -11,16 +11,11 @@ namespace Crowd.Model.Interface
     {
         string Id { get; set; }
         DateTime CreatedAt { get; set; }
-        bool Tainted { get; set; }
-        string Country { get; set; }
-        string City { get; set; }
-        int JobId { get; set; }
-        int WorkerId { get; set; }
-        double Trust { get; set; }
 
+        int ParticipantResultId { get; set; }
         int ParticipantTaskId { get; set; }
 
-        // eg "txta":"hello can I order a pizza please"
-        Dictionary<string, string> Data { get; set; }
+        // The judgements given for this row
+        ICollection<CrowdJudgement> TaskJudgements { get; set; }
     }
 }

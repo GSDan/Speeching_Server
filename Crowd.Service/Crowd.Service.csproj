@@ -129,6 +129,7 @@
     <Compile Include="Controller\CategoryController.cs" />
     <Compile Include="Controller\CFWebhookController.cs" />
     <Compile Include="Controller\CrowdsourceController.cs" />
+    <Compile Include="Controller\FeedbackController.cs" />
     <Compile Include="Controller\JobController.cs" />
     <Compile Include="Controller\TaskController.cs" />
     <Compile Include="Controller\UnitController.cs" />

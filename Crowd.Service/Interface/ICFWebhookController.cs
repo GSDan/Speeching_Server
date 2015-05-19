@@ -9,10 +9,10 @@ namespace Crowd.Service.Interface
 {
     public interface ICFWebhookController
     {
-        HttpResponseMessage Get();
+        Task<HttpResponseMessage> Get();
         HttpResponseMessage Get(int id);
         HttpResponseMessage Put();
-        HttpResponseMessage Post();
+        Task<HttpResponseMessage> Post();
         HttpResponseMessage Delete(int id);
     }
 }

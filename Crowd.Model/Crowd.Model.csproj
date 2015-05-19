@@ -68,6 +68,7 @@
     <Compile Include="Common\TaskType.cs" />
     <Compile Include="CrowdContext.cs" />
     <Compile Include="CustomDBInitializer.cs" />
+    <Compile Include="Data\CrowdJudgement.cs" />
     <Compile Include="Data\CrowdRowResponse.cs" />
     <Compile Include="Data\ParticipantActivity.cs" />
     <Compile Include="Data\ParticipantActivityCategory.cs" />
@@ -91,9 +92,9 @@
     <Compile Include="Interface\ICrowdTaskModel.cs" />
     <Compile Include="Interface\IUser.cs" />
     <Compile Include="ITaskModel.cs" />
-    <Compile Include="Migrations\201505181009197_Initial.cs" />
-    <Compile Include="Migrations\201505181009197_Initial.Designer.cs">
-      <DependentUpon>201505181009197_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201505190944481_MoreData.cs" />
+    <Compile Include="Migrations\201505190944481_MoreData.Designer.cs">
+      <DependentUpon>201505190944481_MoreData.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -123,8 +124,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201505181009197_Initial.resx">
-      <DependentUpon>201505181009197_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201505190944481_MoreData.resx">
+      <DependentUpon>201505190944481_MoreData.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

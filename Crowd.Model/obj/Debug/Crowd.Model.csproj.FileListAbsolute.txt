@@ -24,6 +24,5 @@ C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\bin\Debug\Enti
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\bin\Debug\Newtonsoft.Json.xml
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.dll
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.pdb
-C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.Migrations.Initial.resources
+C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.Migrations.MoreData.resources
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.csproj.GenerateResource.Cache
-C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.csprojResolveAssemblyReference.cache

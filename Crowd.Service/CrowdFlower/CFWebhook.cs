@@ -37,37 +37,7 @@ namespace Crowd.Service.CrowdFlower
         }
         public string Signature { get; set; }
 
-
         public CFResponseData PayloadData { get; set; }
-
-        /// <summary>
-        /// Convert the 
-        /// </summary>
-        /// <returns></returns>
-        public List<CrowdRowResponse> GetResponses(int originalTaskId)
-        {
-            List<CrowdRowResponse> responses = new List<CrowdRowResponse>();
-
-            foreach(Judgement judgement in PayloadData.results.judgments)
-            {
-                CrowdRowResponse thisResp = new CrowdRowResponse()
-                {
-                    Id = judgement.id.ToString(),
-                    CreatedAt = DateTime.Now,
-                    Tainted = judgement.tainted,
-                    Country = judgement.country,
-                    City = judgement.city,
-                    JobId = PayloadData.job_id,
-                    WorkerId = judgement.worker_id,
-                    Trust = judgement.trust,
-                    ParticipantTaskId = originalTaskId,
-                    Data = judgement.data
-                };
-                responses.Add(thisResp);
-            }
-
-            return responses;
-        }
     }
 
     public class CFResponseData
