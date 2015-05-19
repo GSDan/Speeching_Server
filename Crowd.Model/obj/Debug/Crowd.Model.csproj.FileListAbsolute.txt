@@ -26,3 +26,4 @@ C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Debug\Crow
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.pdb
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.Migrations.MoreData.resources
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.csproj.GenerateResource.Cache
+C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.csprojResolveAssemblyReference.cache

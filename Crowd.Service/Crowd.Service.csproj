@@ -148,6 +148,7 @@
     <Compile Include="Interface\ICategoryController.cs" />
     <Compile Include="Interface\ICFWebhookController.cs" />
     <Compile Include="Interface\IContextBase.cs" />
+    <Compile Include="Interface\IFeedbackItem.cs" />
     <Compile Include="Interface\IJob.cs" />
     <Compile Include="Interface\IScenario.cs" />
     <Compile Include="Interface\ITaskController.cs" />
@@ -155,6 +156,8 @@
     <Compile Include="Model\ActivityModel.cs" />
     <Compile Include="Model\AudioUnit.cs" />
     <Compile Include="Model\CategoryModel.cs" />
+    <Compile Include="Model\Feedback\FeedbackItem.cs" />
+    <Compile Include="Model\Feedback\FeedbackItemRating.cs" />
     <Compile Include="Model\GuideModel.cs" />
     <Compile Include="Model\JobModel.cs" />
     <Compile Include="Model\ActivityResultModel.cs" />
