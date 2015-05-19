@@ -157,6 +157,7 @@
     <Compile Include="Model\AudioUnit.cs" />
     <Compile Include="Model\CategoryModel.cs" />
     <Compile Include="Model\Feedback\FeedbackItem.cs" />
+    <Compile Include="Model\Feedback\FeedbackItemGraph.cs" />
     <Compile Include="Model\Feedback\FeedbackItemRating.cs" />
     <Compile Include="Model\GuideModel.cs" />
     <Compile Include="Model\JobModel.cs" />

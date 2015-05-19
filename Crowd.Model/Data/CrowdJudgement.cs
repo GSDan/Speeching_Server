@@ -16,6 +16,7 @@ namespace Crowd.Model.Data
         public int JobId { get; set; }
         public int WorkerId { get; set; }
         public double Trust { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         public virtual ICollection<CrowdJudgementData> Data { get; set; }
 
@@ -40,12 +41,9 @@ namespace Crowd.Model.Data
                     StringResponse = pair.Value
                 };
 
-                switch (newData.DataType)
+                if (char.IsDigit(newData.StringResponse[0]))
                 {
-                    case "rlsttrans" :
-                    case "rlstaccent":
-                        newData.NumResponse = (int)char.GetNumericValue(newData.StringResponse[0]);
-                        break;
+                    newData.NumResponse = (int)char.GetNumericValue(newData.StringResponse[0]);
                 }
 
                 Data.Add(newData);
@@ -58,7 +56,6 @@ namespace Crowd.Model.Data
             }
             catch (Exception exception)
             {
-                
                 throw exception;
             }
         }
