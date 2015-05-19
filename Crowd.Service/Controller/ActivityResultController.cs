@@ -135,7 +135,7 @@ namespace Crowd.Service.Controller
 
                         ////TODO: Save CF job response to database
                         ////TODO: Launch the job
-                        //CrowdFlowerApi.LaunchJob(jobRes.id);
+                        CrowdFlowerApi.LaunchJob(jobRes.id);
                         return status.Response;
                     }
                     else
