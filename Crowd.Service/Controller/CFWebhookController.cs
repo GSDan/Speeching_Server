@@ -67,7 +67,8 @@ namespace Crowd.Service.Controller
                     CrowdRowResponseId = resp.Id,
                     Tainted = judgement.tainted,
                     Trust = judgement.trust,
-                    WorkerId = judgement.worker_id
+                    WorkerId = judgement.worker_id,
+                    CreatedAt = DateTime.Now
                 };
                 resp.TaskJudgements.Add(cJudgement);
                 DB.CrowdJudgements.Add(cJudgement);

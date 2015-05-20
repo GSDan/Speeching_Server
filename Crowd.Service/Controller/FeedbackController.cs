@@ -15,24 +15,24 @@ namespace Crowd.Service.Controller
 {
     public class FeedbackController : BaseController
     {
-        private async Task<float> AverageRating(string resDataType, int jobId = -1)
+        private async Task<float?> AverageRating(string resDataType, int jobId = -1)
         {
             if (jobId >= 0)
             {
-                return (float)await (from judgement in DB.CrowdJudgements
+                return (float?)await (from judgement in DB.CrowdJudgements
                                      where judgement.JobId == jobId
                                      from data in judgement.Data
                                      where data.DataType == resDataType
                                      select data.NumResponse).AverageAsync();
             }
 
-            return (float)await (from judgement in DB.CrowdJudgements
+            return (float?)await (from judgement in DB.CrowdJudgements
                 from data in judgement.Data
                 where data.DataType == resDataType
                 select data.NumResponse).AverageAsync();
         }
 
-        private async Task<List<GraphPoint>> GetGraphPoints(string resDataType)
+        private async Task<GraphPoint[]> GetGraphPoints(string resDataType)
         {
             CrowdJudgement[] ordered = await (from judgement in DB.CrowdJudgements
                 orderby judgement.CreatedAt
@@ -53,9 +53,10 @@ namespace Crowd.Service.Controller
                 });
             }
 
-            return points;
+            return points.ToArray();
         }
 
+        //http://localhost:52215/api/Feedback?id=null
         public async Task<HttpResponseMessage> Get(int? id)
         {
             try
@@ -74,27 +75,49 @@ namespace Crowd.Service.Controller
                     }
                 }
 
-                FeedbackItemRating accentFeedback = new FeedbackItemRating
+                List<IFeedbackItem> feedback = new List<IFeedbackItem>();
+
+                float? accentRating = await AverageRating("rlstaccent", submissionId);
+                if (accentRating != null)
                 {
-                    Rating = await AverageRating("rlstaccent", submissionId),
-                    Title = "Accent Influence",
-                    Description = "This rating shows how much your accent affected listeners' understanding of your speech.",
+                    var accentFeedback = new FeedbackItemRating
+                    {
+                        Rating = (float)accentRating,
+                        Title = "Accent Influence",
+                        Description = "This rating shows how much your accent affected listeners' understanding of your speech.",
+                        Date = DateTime.Now,
+                        Dismissable = false,
+                        Importance = 10
+                    };
+                    feedback.Add(accentFeedback);
+                }
+
+                float? transRating = await AverageRating("rlsttrans", submissionId);
+                if (transRating != null)
+                {
+                    var transFeedback = new FeedbackItemRating
+                    {
+                        Rating = (float)transRating,
+                        Title = "Difficulty of Understanding",
+                        Description = "This rating shows how difficult listeners find understanding what you say.",
+                        Date = DateTime.Now,
+                        Dismissable = false,
+                        Importance = 10
+                    };
+                    feedback.Add(transFeedback);
+                }
+
+
+                FeedbackItemGraph graphFeedback = new FeedbackItemGraph
+                {
+                    Title = "Understanding Progress",
+                    Description = "How understandable people have found you over time.",
                     Date = DateTime.Now,
                     Dismissable = false,
-                    Importance = 10
+                    Importance = 8,
+                    DataPoints = await GetGraphPoints("rlsttrans")
                 };
-
-                FeedbackItemRating transFeedback = new FeedbackItemRating
-                {
-                    Rating = await AverageRating("rlsttrans", submissionId),
-                    Title = "Difficulty of Understanding",
-                    Description = "This rating shows how difficult listeners find understanding what you say.",
-                    Date = DateTime.Now,
-                    Dismissable = false,
-                    Importance = 10
-                };
-
-                IFeedbackItem[] feedback = { transFeedback, accentFeedback };
+                feedback.Add(graphFeedback);
 
                 return new HttpResponseMessage
                 {

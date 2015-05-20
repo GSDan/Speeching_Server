@@ -92,10 +92,6 @@
     <Compile Include="Interface\ICrowdTaskModel.cs" />
     <Compile Include="Interface\IUser.cs" />
     <Compile Include="ITaskModel.cs" />
-    <Compile Include="Migrations\201505190944481_MoreData.cs" />
-    <Compile Include="Migrations\201505190944481_MoreData.Designer.cs">
-      <DependentUpon>201505190944481_MoreData.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskModel.cs" />
@@ -122,11 +118,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201505190944481_MoreData.resx">
-      <DependentUpon>201505190944481_MoreData.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

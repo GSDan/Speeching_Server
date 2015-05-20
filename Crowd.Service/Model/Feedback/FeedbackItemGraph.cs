@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Crowd.Service.Model.Feedback
 {
-    public class FeedbackItemGraph
+    public class FeedbackItemGraph : FeedbackItem
     {
         public GraphPoint[] DataPoints;
     }
