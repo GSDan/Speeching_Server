@@ -25,7 +25,7 @@ namespace Crowd.Model.Interface
         TaskType TaskType { get; set; }
 
         int SpeechingUserId { get; set; }
-        SpeechingUser SpeechingUser { get; set; }
+        User User { get; set; }
 
         int? CrowdWorkerId { get; set; }
         CrowdWorker CrowdWorker { get; set; }

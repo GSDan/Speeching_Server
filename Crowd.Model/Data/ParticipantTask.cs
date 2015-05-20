@@ -46,12 +46,12 @@ namespace Crowd.Model.Data
         //{
         //    using (var db = new SpeechingContext())
         //    {
-        //        var ct = db.CrowdTasks.SingleOrDefault(t => t.Id.Equals(id));
+        //        var ct = db.CrowdTasks.SingleOrDefault(t => t.Key.Equals(id));
         //        return ct;
         //    }
         //}
 
-        //public int Id { get; set; }
+        //public int Key { get; set; }
         //public string Name { get; set; }
         //public string Url { get; set; }
         //public string Description { get; set; }
@@ -63,7 +63,7 @@ namespace Crowd.Model.Data
         //public DateTime? CompletedOn { get; set; }
         //public TaskType TaskType { get; set; }
         //public int SpeechingUserId { get; set; }
-        //public SpeechingUser SpeechingUser { get; set; }
+        //public User User { get; set; }
         //public int? CrowdWorkerId { get; set; }
         //public CrowdWorker CrowdWorker { get; set; }
         ////public virtual ICollection<CrowdTaskRow> CrowdTaskRows { get; set; }

@@ -91,6 +91,11 @@ namespace Crowd.Service.Controller
         // POST api/ActivityResult
         public async Task<HttpResponseMessage> Post(ActivityResultModel result)
         {
+            string Email = this.Request.Headers.GetValues("Email").First();
+            int Key = int.Parse(this.Request.Headers.GetValues("Key").First());
+
+            bool authenticated = await AuthenticateUser(Key, Email);
+
             if (ModelState.IsValid)
             {
                 if (result != null)
@@ -135,7 +140,7 @@ namespace Crowd.Service.Controller
 
                         ////TODO: Save CF job response to database
                         ////TODO: Launch the job
-                        CrowdFlowerApi.LaunchJob(jobRes.id);
+                        //CrowdFlowerApi.LaunchJob(jobRes.id);
                         return status.Response;
                     }
                     else

@@ -8,7 +8,7 @@ namespace Crowd.Service.Model
 {
     public class TaskResponseModel
     {
-        //public int Id { get; set; }
+        //public int Key { get; set; }
         public string ExternalId { get; set; }
         public string Type { get; set; }
         public string Prompt { get; set; }
@@ -22,7 +22,7 @@ namespace Crowd.Service.Model
             {
                 retTask.Type = crowdTaskResponse.Type;
                 retTask.ExternalId = crowdTaskResponse.ExternalId;
-                //retTask.Id = crowdTaskResponse.Id;
+                //retTask.Key = crowdTaskResponse.Key;
                 retTask.Prompt = crowdTaskResponse.Prompt;
                 retTask.ParticipantTaskId = crowdTaskResponse.ParticipantTaskId;
                 retTask.Related = new List<string>();

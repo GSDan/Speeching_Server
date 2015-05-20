@@ -6,7 +6,7 @@ namespace Crowd.Model.Interface
 {
     public interface IParticipantTaskContent
     {
-        //int Id { get; set; }
+        //int Key { get; set; }
         int ParticipantTaskId { get; set; }
         string ExternalId { get; set; }
         string Type { get; set; }

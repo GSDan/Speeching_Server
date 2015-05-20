@@ -80,7 +80,7 @@ namespace Crowd.Service.Controller
                 DB.ParticipantTasks.Add(task);
                 DB.SaveChanges();
                 var response = Request.CreateResponse(HttpStatusCode.Created, task);
-                //response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = task.Id }));
+                //response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = task.Key }));
                 return response;
             }
             else

@@ -18,7 +18,7 @@ namespace Crowd.Model.Data
         public bool Complete { get; set; }
 
         public int SpeechingUserId { get; set; }
-        public virtual SpeechingUser SpeechingUser { get; set; }
+        public virtual User User { get; set; }
 
         public int? CrowdWorkerId { get; set; }
         public virtual CrowdWorker CrowdWorker { get; set; }

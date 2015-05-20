@@ -29,7 +29,7 @@ namespace Crowd.Service.Controller
         //    var acts = DB.ParticipantActivities.ToList();
         //    ActivityModel am = new ActivityModel();
         //    //return am.Convert(acts);
-        //    return new List<ActivityModel>() { new ActivityModel() { Id = 3}, new ActivityModel() { Id = 4 } };
+        //    return new List<ActivityModel>() { new ActivityModel() { Key = 3}, new ActivityModel() { Key = 4 } };
         //    //System.Web.Script.Serialization.JavaScriptSerializer sr = new System.Web.Script.Serialization.JavaScriptSerializer();
         //    //var x = sr.Serialize(acts);
         //}
@@ -96,7 +96,7 @@ namespace Crowd.Service.Controller
                 DB.ParticipantActivities.Add(activity);
                 DB.SaveChanges();
                 var response = Request.CreateResponse(HttpStatusCode.Created, activity);
-                //response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = activity.Id }));
+                //response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = activity.Key }));
                 return response;
             }
             else

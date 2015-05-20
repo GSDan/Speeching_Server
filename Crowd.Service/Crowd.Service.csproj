@@ -15,7 +15,7 @@
     <AssemblyName>Crowd.Service</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort />
+    <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -123,6 +123,7 @@
       <DependentUpon>Categories.aspx</DependentUpon>
     </Compile>
     <Compile Include="Common\SvcStatus.cs" />
+    <Compile Include="Controller\AccountController.cs" />
     <Compile Include="Controller\ActivityController.cs" />
     <Compile Include="Controller\ActivityResultController.cs" />
     <Compile Include="Controller\BaseController.cs" />
@@ -155,6 +156,7 @@
     <Compile Include="JsonContent.cs" />
     <Compile Include="Model\ActivityModel.cs" />
     <Compile Include="Model\AudioUnit.cs" />
+    <Compile Include="Model\AuthenticationModel.cs" />
     <Compile Include="Model\CategoryModel.cs" />
     <Compile Include="Model\Feedback\FeedbackItem.cs" />
     <Compile Include="Model\Feedback\FeedbackItemGraph.cs" />
@@ -214,7 +216,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>52288</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:52215/</IISUrl>
+          <IISUrl>https://localhost:44300/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

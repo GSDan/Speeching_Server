@@ -76,7 +76,7 @@ namespace Crowd.Service.Controller
                 DB.ParticipantActivityCategories.Add(category);
                 DB.SaveChanges();
                 var response = Request.CreateResponse(HttpStatusCode.Created, category);
-                response.Headers.Location = new Uri(this.Request.RequestUri.AbsoluteUri + category.Id);//new Uri(Url.Link("DefaultApi", new { id = category.Id }));
+                response.Headers.Location = new Uri(this.Request.RequestUri.AbsoluteUri + category.Id);//new Uri(Url.Link("DefaultApi", new { id = category.Key }));
                 return response;
             }
             else

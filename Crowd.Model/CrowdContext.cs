@@ -25,7 +25,7 @@ namespace Crowd.Model
         public DbSet<ParticipantResult> ParticipantResults { get; set; }
         //public DbSet<SpeechingSample> SpeechingSamples { get; set; }
         //public DbSet<CrowdWorker> CrowdWorkers { get; set; }
-        //public DbSet<SpeechingUser> SpeechingUsers { get; set; }
+        public DbSet<User> Users { get; set; }
         //public DbSet<CrowdTaskRow> CrowdTaskRows { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -47,7 +47,7 @@ namespace Crowd.Model
             //    .WillCascadeOnDelete(false);
 
             //modelBuilder.Entity<CrowdTask>()
-            //    .HasRequired(w => w.SpeechingUser)
+            //    .HasRequired(w => w.User)
             //    .WithMany(c => c.SpeechingRecordings)
             //    .WillCascadeOnDelete(false);
 

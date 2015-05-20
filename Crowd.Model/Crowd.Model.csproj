@@ -83,7 +83,7 @@
     <Compile Include="Interface\IParticipantActivityCategory.cs" />
     <Compile Include="Data\SpeechingRecording.cs" />
     <Compile Include="Data\SpeechingSample.cs" />
-    <Compile Include="Data\SpeechingUser.cs" />
+    <Compile Include="Data\User.cs" />
     <Compile Include="Interface\IParticipantPage.cs" />
     <Compile Include="Interface\IParticipantResult.cs" />
     <Compile Include="Interface\IParticipantTaskResponse.cs" />

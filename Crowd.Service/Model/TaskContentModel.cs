@@ -8,7 +8,7 @@ namespace Crowd.Service.Model
 {
     public class TaskContentModel
     {
-        //public int Id { get; set; }
+        //public int Key { get; set; }
         public string ExternalId { get; set; }
         public string Type { get; set; }
         public string Visual { get; set; }
@@ -23,7 +23,7 @@ namespace Crowd.Service.Model
             {
                 retTask.Type = crowdTaskContent.Type;
                 retTask.ExternalId = crowdTaskContent.ExternalId;
-                //retTask.Id = crowdTaskContent.Id;
+                //retTask.Key = crowdTaskContent.Key;
                 retTask.Visual = crowdTaskContent.Visual;
                 retTask.Audio = crowdTaskContent.Audio;
                 retTask.Text = crowdTaskContent.Text;

@@ -6,7 +6,7 @@ namespace Crowd.Model.Data
 {
     public class ParticipantTaskContent : IParticipantTaskContent
     {
-        //public int Id { get; set; }
+        //public int Key { get; set; }
         [Key, ForeignKey("ParticipantTask")]
         public int ParticipantTaskId { get; set; }
         public string ExternalId { get; set; }

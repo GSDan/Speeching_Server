@@ -133,7 +133,7 @@ namespace Crowd.Service.CrowdFlower
                 status = new SvcStatus()
                 {
                     Level = 2,
-                    Description = "Job Id must be greater than 0"
+                    Description = "Job Key must be greater than 0"
                 };
             }
             return status;
