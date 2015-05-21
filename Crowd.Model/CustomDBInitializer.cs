@@ -332,7 +332,130 @@ namespace Crowd.Model
             {
                 context.ParticipantActivityCategories.Add(cat);    
             }
-            
+
+            context.Users.Add(new User
+            {
+                Email = "dan@dan.com",
+                Avatar = "https://backwardsandstupiddotcom.files.wordpress.com/2012/07/great-success.png",
+                Key = 1,
+                Name = "Dan Richardson",
+                Nickname = "Dan",
+                Submissions = new List<ParticipantResult>
+                {
+                    new ParticipantResult()
+                    {
+                        Id = 1,
+                        ResourceUrl = "https://di.ncl.ac.uk/owncloud/remote.php/webdav/uploads/105578599171449888956/1431595798212.24_2.zip",
+                        CrowdJobId = 727531,
+                        ParticipantActivityId = 2
+                    }
+                }
+            });
+
+            context.CrowdRowResponses.Add(new CrowdRowResponse
+            {
+                Id = "724408203",
+                CreatedAt = DateTime.Parse("18/05/2015 14:08:50"),
+                ParticipantResultId = 1,
+                ParticipantTaskId = 4,
+                TaskJudgements = new List<CrowdJudgement>
+                {
+                    new CrowdJudgement
+                    {
+                        CreatedAt = DateTime.Parse("18/05/2015 14:08:50"),
+                        City = "Polska",
+                        Country = "POL",
+                        JobId = 727531,
+                        WorkerId = 30615206,
+                        Tainted = false,
+                        Trust = 0.5,
+                        Data = new List<CrowdJudgementData>
+                        {
+                            new CrowdJudgementData
+                            {
+                                DataType = "txta",
+                                StringResponse = "Hello can I order a pizza please",
+                                NumResponse = 0
+                            },
+                            new CrowdJudgementData
+                            {
+                                DataType = "rlsttrans",
+                                StringResponse = "5 Very Easy",
+                                NumResponse = 5
+                            },
+                            new CrowdJudgementData
+                            {
+                                DataType = "rlstaccent",
+                                StringResponse = "5 Very much",
+                                NumResponse = 5
+                            },
+                        }
+                    },
+                    new CrowdJudgement
+                    {
+                        CreatedAt = DateTime.Parse("19/05/2015 14:08:50"),
+                        City = "Illescas",
+                        Country = "ESP",
+                        JobId = 727531,
+                        WorkerId = 24965948,
+                        Tainted = false,
+                        Trust = 0.5,
+                        Data = new List<CrowdJudgementData>
+                        {
+                            new CrowdJudgementData
+                            {
+                                DataType = "txta",
+                                StringResponse = "Yes",
+                                NumResponse = 0
+                            },
+                            new CrowdJudgementData
+                            {
+                                DataType = "rlsttrans",
+                                StringResponse = "4",
+                                NumResponse = 4
+                            },
+                            new CrowdJudgementData
+                            {
+                                DataType = "rlstaccent",
+                                StringResponse = "1 Not at all",
+                                NumResponse = 1
+                            },
+                        }
+                    },
+                    new CrowdJudgement
+                    {
+                        CreatedAt = DateTime.Parse("13/05/2015 14:08:50"),
+                        City = "Ciudad Real",
+                        Country = "ESP",
+                        JobId = 727531,
+                        WorkerId = 32070389,
+                        Tainted = false,
+                        Trust = 0.5,
+                        Data = new List<CrowdJudgementData>
+                        {
+                            new CrowdJudgementData
+                            {
+                                DataType = "txta",
+                                StringResponse = "Hi can i have a pizza please",
+                                NumResponse = 0
+                            },
+                            new CrowdJudgementData
+                            {
+                                DataType = "rlsttrans",
+                                StringResponse = "3",
+                                NumResponse = 3
+                            },
+                            new CrowdJudgementData
+                            {
+                                DataType = "rlstaccent",
+                                StringResponse = "5 Very much",
+                                NumResponse = 5
+                            },
+                        }
+                    }
+                }
+            });
+
             try
             {
                 context.SaveChanges();
