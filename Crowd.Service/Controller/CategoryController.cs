@@ -5,6 +5,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Crowd.Model.Data;
 using Crowd.Model.Interface;
@@ -16,8 +17,14 @@ namespace Crowd.Service.Controller
     public class CategoryController : BaseController, ICategoryController
     {
         // GET api/Category
-        public HttpResponseMessage Get()
+        public async Task<HttpResponseMessage> Get()
         {
+            AuthenticationModel auth = GetAuthentication();
+            if (!await AuthenticateUser(auth))
+            {
+                return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+            }
+
             var cats = DB.ParticipantActivityCategories.ToList();
 
             return new HttpResponseMessage()
@@ -28,8 +35,14 @@ namespace Crowd.Service.Controller
         }
 
         // GET api/Category/5
-        public HttpResponseMessage Get(int id)
+        public async Task<HttpResponseMessage> Get(int id)
         {
+            AuthenticationModel auth = GetAuthentication();
+            if (!await AuthenticateUser(auth))
+            {
+                return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+            }
+
             if (id <= 0)
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
 
@@ -45,8 +58,14 @@ namespace Crowd.Service.Controller
         }
 
         // PUT api/Category/5
-        public HttpResponseMessage Put(ParticipantActivityCategory category)
+        public async Task<HttpResponseMessage> Put(ParticipantActivityCategory category)
         {
+            AuthenticationModel auth = GetAuthentication();
+            if (!await AuthenticateUser(auth))
+            {
+                return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+            }
+
             if (!ModelState.IsValid)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
@@ -69,8 +88,14 @@ namespace Crowd.Service.Controller
         }
 
         // POST api/Category
-        public HttpResponseMessage Post(ParticipantActivityCategory category)
+        public async Task<HttpResponseMessage> Post(ParticipantActivityCategory category)
         {
+            AuthenticationModel auth = GetAuthentication();
+            if (!await AuthenticateUser(auth))
+            {
+                return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+            }
+
             if (ModelState.IsValid)
             {
                 DB.ParticipantActivityCategories.Add(category);
@@ -86,8 +111,14 @@ namespace Crowd.Service.Controller
         }
 
         // DELETE api/Category/5
-        public HttpResponseMessage Delete(int id)
+        public async Task<HttpResponseMessage> Delete(int id)
         {
+            AuthenticationModel auth = GetAuthentication();
+            if (!await AuthenticateUser(auth))
+            {
+                return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+            }
+
             if (id <= 0)
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "id must be greater than zero");
             var category = DB.ParticipantActivityCategories.Find(id);

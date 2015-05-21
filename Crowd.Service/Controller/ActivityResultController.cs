@@ -89,12 +89,14 @@ namespace Crowd.Service.Controller
         }
         
         // POST api/ActivityResult
+        [RequireHttps]
         public async Task<HttpResponseMessage> Post(ActivityResultModel result)
         {
-            string Email = this.Request.Headers.GetValues("Email").First();
-            int Key = int.Parse(this.Request.Headers.GetValues("Key").First());
-
-            bool authenticated = await AuthenticateUser(Key, Email);
+            AuthenticationModel auth = GetAuthentication();
+            if (!await AuthenticateUser(auth))
+            {
+                return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+            }
 
             if (ModelState.IsValid)
             {

@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Crowd.Model.Data;
-using Crowd.Model.Interface;
-using Crowd.Service.Model;
 
 namespace Crowd.Service.Interface
 {
     public interface ICategoryController
     {
-        HttpResponseMessage Get();
-        HttpResponseMessage Get(int id);
-        HttpResponseMessage Put(ParticipantActivityCategory category);
-        HttpResponseMessage Post(ParticipantActivityCategory category);
-        HttpResponseMessage Delete(int id);
+        Task<HttpResponseMessage> Get();
+        Task<HttpResponseMessage> Get(int id);
+        Task<HttpResponseMessage> Put(ParticipantActivityCategory category);
+        Task<HttpResponseMessage> Post(ParticipantActivityCategory category);
+        Task<HttpResponseMessage> Delete(int id);
     }
-
-
 }

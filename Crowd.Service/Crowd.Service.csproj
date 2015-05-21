@@ -122,6 +122,7 @@
     <Compile Include="Categories.aspx.designer.cs">
       <DependentUpon>Categories.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Common\RequireHttpsAttribute.cs" />
     <Compile Include="Common\SvcStatus.cs" />
     <Compile Include="Controller\AccountController.cs" />
     <Compile Include="Controller\ActivityController.cs" />
