@@ -92,8 +92,8 @@ namespace Crowd.Service.Controller
         [RequireHttps]
         public async Task<HttpResponseMessage> Post(ActivityResultModel result)
         {
-            AuthenticationModel auth = GetAuthentication();
-            if (!await AuthenticateUser(auth))
+            User user = await AuthenticateUser(GetAuthentication());
+            if (user == null)
             {
                 return new HttpResponseMessage(HttpStatusCode.Unauthorized);
             }
@@ -103,6 +103,8 @@ namespace Crowd.Service.Controller
                 if (result != null)
                 {
                     ParticipantResult parRes = ActivityResultModel.ConvertToEntity(result);
+                    parRes.User = user;
+                    user.Submissions.Add(parRes);
                     DB.ParticipantResults.Add(parRes);
                     try
                     {

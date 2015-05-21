@@ -15,26 +15,34 @@ namespace Crowd.Service.Controller
 {
     public class FeedbackController : BaseController
     {
-        private async Task<float?> AverageRating(string resDataType, int jobId = -1)
+        private async Task<float?> AverageRating(string resDataType, User user, int jobId = -1)
         {
             if (jobId >= 0)
             {
-                return (float?)await (from judgement in DB.CrowdJudgements
-                                     where judgement.JobId == jobId
-                                     from data in judgement.Data
-                                     where data.DataType == resDataType
-                                     select data.NumResponse).AverageAsync();
+                return (float?) await (from judgement in DB.CrowdJudgements
+                    where judgement.JobId == jobId
+                    from data in judgement.Data
+                    where data.DataType == resDataType
+                    select data.NumResponse).AverageAsync();
             }
 
-            return (float?)await (from judgement in DB.CrowdJudgements
+            var queryRes = from res in DB.ParticipantResults
+                where res.User.Email == user.Email
+                from judgement in DB.CrowdJudgements
+                where res.CrowdJobId == judgement.JobId
                 from data in judgement.Data
                 where data.DataType == resDataType
-                select data.NumResponse).AverageAsync();
+                select data.NumResponse;
+
+            return (float?) await queryRes.AverageAsync();
         }
 
-        private async Task<GraphPoint[]> GetGraphPoints(string resDataType)
+        private async Task<GraphPoint[]> GetGraphPoints(string resDataType, User user)
         {
-            CrowdJudgement[] ordered = await (from judgement in DB.CrowdJudgements
+            CrowdJudgement[] ordered = await (from res in DB.ParticipantResults
+                where res.User.Email == user.Email
+                from judgement in DB.CrowdJudgements
+                where res.CrowdJobId == judgement.JobId
                 orderby judgement.CreatedAt
                 select judgement).ToArrayAsync();
 
@@ -59,15 +67,26 @@ namespace Crowd.Service.Controller
         //http://localhost:52215/api/Feedback?id=null
         public async Task<HttpResponseMessage> Get(int? id)
         {
+            User user = await AuthenticateUser(GetAuthentication());
+            if (user == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+            }
+
             try
             {
                 int submissionId = id ?? -1;
+                int jobId = -1;
                 if (submissionId >= 0)
                 {
                     ParticipantResult res = await DB.ParticipantResults.FindAsync(id);
                     if (res != null)
                     {
-                        submissionId = res.CrowdJobId;
+                        if (res.User != user)
+                        {
+                            throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.Forbidden));
+                        }
+                        jobId = res.CrowdJobId;
                     }
                     else
                     {
@@ -77,14 +96,15 @@ namespace Crowd.Service.Controller
 
                 List<IFeedbackItem> feedback = new List<IFeedbackItem>();
 
-                float? accentRating = await AverageRating("rlstaccent", submissionId);
+                float? accentRating = await AverageRating("rlstaccent", user, jobId);
                 if (accentRating != null)
                 {
                     var accentFeedback = new FeedbackItemRating
                     {
-                        Rating = (float)accentRating,
+                        Rating = (float) accentRating,
                         Title = "Accent Influence",
-                        Description = "This rating shows how much your accent affected listeners' understanding of your speech.",
+                        Description =
+                            "This rating shows how much your accent affected listeners' understanding of your speech.",
                         Date = DateTime.Now,
                         Dismissable = false,
                         Importance = 10
@@ -92,12 +112,12 @@ namespace Crowd.Service.Controller
                     feedback.Add(accentFeedback);
                 }
 
-                float? transRating = await AverageRating("rlsttrans", submissionId);
+                float? transRating = await AverageRating("rlsttrans", user, submissionId);
                 if (transRating != null)
                 {
                     var transFeedback = new FeedbackItemRating
                     {
-                        Rating = (float)transRating,
+                        Rating = (float) transRating,
                         Title = "Difficulty of Understanding",
                         Description = "This rating shows how difficult listeners find understanding what you say.",
                         Date = DateTime.Now,
@@ -115,7 +135,7 @@ namespace Crowd.Service.Controller
                     Date = DateTime.Now,
                     Dismissable = false,
                     Importance = 8,
-                    DataPoints = await GetGraphPoints("rlsttrans")
+                    DataPoints = await GetGraphPoints("rlsttrans", user)
                 };
                 feedback.Add(graphFeedback);
 

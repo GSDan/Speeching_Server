@@ -19,13 +19,13 @@ namespace Crowd.Service.Controller
         // GET api/Category
         public async Task<HttpResponseMessage> Get()
         {
-            AuthenticationModel auth = GetAuthentication();
-            if (!await AuthenticateUser(auth))
+            User user = await AuthenticateUser(GetAuthentication());
+            if (user == null)
             {
                 return new HttpResponseMessage(HttpStatusCode.Unauthorized);
             }
 
-            var cats = DB.ParticipantActivityCategories.ToList();
+            var cats = user.SubscribedCategories;
 
             return new HttpResponseMessage()
             {
@@ -37,8 +37,8 @@ namespace Crowd.Service.Controller
         // GET api/Category/5
         public async Task<HttpResponseMessage> Get(int id)
         {
-            AuthenticationModel auth = GetAuthentication();
-            if (!await AuthenticateUser(auth))
+            User user = await AuthenticateUser(GetAuthentication());
+            if (user == null)
             {
                 return new HttpResponseMessage(HttpStatusCode.Unauthorized);
             }
@@ -60,8 +60,8 @@ namespace Crowd.Service.Controller
         // PUT api/Category/5
         public async Task<HttpResponseMessage> Put(ParticipantActivityCategory category)
         {
-            AuthenticationModel auth = GetAuthentication();
-            if (!await AuthenticateUser(auth))
+            User user = await AuthenticateUser(GetAuthentication());
+            if (user == null)
             {
                 return new HttpResponseMessage(HttpStatusCode.Unauthorized);
             }
@@ -90,8 +90,8 @@ namespace Crowd.Service.Controller
         // POST api/Category
         public async Task<HttpResponseMessage> Post(ParticipantActivityCategory category)
         {
-            AuthenticationModel auth = GetAuthentication();
-            if (!await AuthenticateUser(auth))
+            User user = await AuthenticateUser(GetAuthentication());
+            if (user == null)
             {
                 return new HttpResponseMessage(HttpStatusCode.Unauthorized);
             }
@@ -113,8 +113,8 @@ namespace Crowd.Service.Controller
         // DELETE api/Category/5
         public async Task<HttpResponseMessage> Delete(int id)
         {
-            AuthenticationModel auth = GetAuthentication();
-            if (!await AuthenticateUser(auth))
+            User user = await AuthenticateUser(GetAuthentication());
+            if (user == null)
             {
                 return new HttpResponseMessage(HttpStatusCode.Unauthorized);
             }

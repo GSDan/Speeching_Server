@@ -17,5 +17,7 @@ namespace Crowd.Model.Data
         public int CrowdJobId { get; set; }
         public ParticipantActivity ParticipantActivity { get; set; }
         public Dictionary<int, string> ParticipantTaskIdResults { get; set; }
+
+        public virtual User User { get; set; }
     }
 }

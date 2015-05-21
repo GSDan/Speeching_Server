@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Crowd.Model;
@@ -13,20 +10,29 @@ namespace Crowd.Service.Controller
 {
     public class BaseController : ApiController
     {
+        public BaseController()
+        {
+            DB = new CrowdContext();
+        }
+
         protected CrowdContext DB { get; set; }
 
         /// <summary>
         /// Checks if the given details validate
         /// </summary>
         /// <param name="auth"></param>
-        /// <returns>True if correct</returns>
-        protected async Task<bool> AuthenticateUser(AuthenticationModel auth)
+        /// <returns>User obj if allowed, otherwise null</returns>
+        protected async Task<User> AuthenticateUser(AuthenticationModel auth)
         {
-            if (auth == null) return false;
+            if (auth == null) return null;
 
             User found = await DB.Users.FindAsync(auth.Email);
 
-            return found != null && found.Key == auth.Key;
+            if (found != null && found.Key == auth.Key)
+            {
+                return found;
+            }
+            return null;
         }
 
         /// <summary>
@@ -47,11 +53,6 @@ namespace Crowd.Service.Controller
             {
                 return null;
             }
-        }
-
-        public BaseController()
-        {
-            DB = new CrowdContext();
         }
 
         protected override void Dispose(bool disposing)
