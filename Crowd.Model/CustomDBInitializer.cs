@@ -24,6 +24,7 @@ namespace Crowd.Model
                     ExternalId = "anId1",
                     Icon = "https://cdn0.iconfinder.com/data/icons/cosmo-medicine/40/test-tube_1-128.png",
                     Recommended = false,
+                    DefaultSubscription = true,
                     Title = "Dysfluency",
                     Activities = new List<ParticipantActivity>()
                     {
@@ -180,6 +181,7 @@ namespace Crowd.Model
                     ExternalId = "anId2",
                     Icon = "https://cdn0.iconfinder.com/data/icons/cosmo-medicine/40/test-tube_1-128.png",
                     Recommended = false,
+                    DefaultSubscription = false,
                     Title = "Dementia",
                     Activities = new List<ParticipantActivity>()
                     {
@@ -292,6 +294,7 @@ namespace Crowd.Model
                     ExternalId = "anId3",
                     Icon = "https://cdn1.iconfinder.com/data/icons/MetroStation-PNG/128/MB__help.png",
                     Recommended = false,
+                    DefaultSubscription = false,
                     Title = "Helpful Guides",
                     Activities = new List<ParticipantActivity>()
                     {

@@ -7,6 +7,7 @@ using System.Web.SessionState;
 using System.Web.Http;
 using System.Web.Routing;
 using Crowd.Model;
+using Newtonsoft.Json;
 
 namespace Crowd.Service
 {
@@ -30,7 +31,14 @@ namespace Crowd.Service
                     routeTemplate: "api/{controller}/{id}",
                     defaults: new { id = RouteParameter.Optional }
                 );
+
+                config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore; 
             });
+
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
 
             ///* Initialise the database (Crowd.Model) */
             //CrowdContext db = new CrowdContext();

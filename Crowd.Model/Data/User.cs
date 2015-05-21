@@ -19,6 +19,7 @@ namespace Crowd.Model.Data
         public string Nickname { get; set; }
         public string Avatar { get; set; }
 
+        public virtual ICollection<ParticipantActivityCategory> SubscribedCategories { get; set; } 
         public virtual ICollection<ParticipantResult> Submissions { get; set; }
     }
 }

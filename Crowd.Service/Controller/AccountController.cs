@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using Crowd.Model.Data;
+using Crowd.Service.Common;
 using Newtonsoft.Json;
 
 namespace Crowd.Service.Controller
 {
     public class AccountController : BaseController
     {
+        [RequireHttps]
         public async Task<HttpResponseMessage> Post()
         {
             var req = this.Request;
@@ -23,7 +25,10 @@ namespace Crowd.Service.Controller
 
             if (existingUser == null)
             {
-                // User not found - add new
+                // User not found - add new, with default subscriptions
+                thisUser.SubscribedCategories = DB.ParticipantActivityCategories.Where(
+                    cat => cat.DefaultSubscription == true).ToList();
+
                 DB.Users.Add(thisUser);
                 existingUser = thisUser;
             }
@@ -47,7 +52,7 @@ namespace Crowd.Service.Controller
 
             return new HttpResponseMessage
             {
-                Content = new JsonContent(JsonConvert.SerializeObject(existingUser)),
+                Content = new JsonContent(existingUser),
                 StatusCode = HttpStatusCode.OK
             };
         }
