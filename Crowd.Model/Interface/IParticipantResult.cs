@@ -15,6 +15,7 @@ namespace Crowd.Model.Interface
         string ResourceDirectory { get; set; }
         int ParticipantActivityId { get; set; }
         int CrowdJobId { get; set; }
+        bool IsAssessment { get; set; }
         ParticipantActivity ParticipantActivity { get; set; }
         Dictionary<int, string> ParticipantTaskIdResults { get; set; }
     }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Crowd.Model.Common
+﻿namespace Crowd.Model.Common
 {
     public enum TaskType
     {
