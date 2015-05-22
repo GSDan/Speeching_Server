@@ -114,6 +114,7 @@
     <Compile Include="Controller\AccountController.cs" />
     <Compile Include="Controller\ActivityController.cs" />
     <Compile Include="Controller\ActivityResultController.cs" />
+    <Compile Include="Controller\AssessmentController.cs" />
     <Compile Include="Controller\BaseController.cs" />
     <Compile Include="Controller\CategoryController.cs" />
     <Compile Include="Controller\CFWebhookController.cs" />

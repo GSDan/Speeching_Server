@@ -17,6 +17,6 @@ namespace Crowd.Model.Data
         public virtual ICollection<ParticipantAssessmentTaskPrompt> Prompts { get; set; }
 
         //Only used in image description
-        public string Image;
+        public string Image { get; set; }
     }
 }
