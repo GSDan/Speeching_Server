@@ -29,7 +29,6 @@ C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Service\bin\Crowd.Se
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Service\bin\Crowd.Model.dll
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Service\bin\EntityFramework.dll
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Service\bin\EntityFramework.SqlServer.dll
-C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Service\bin\Ewk.Extensions.dll
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Service\bin\Ewk.SoundCloud.ApiLibrary.dll
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Service\bin\ICSharpCode.SharpZipLib.dll
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Service\bin\Newtonsoft.Json.dll

@@ -14,6 +14,7 @@ namespace Crowd.Model.Data
         public string Visual { get; set; }
         public string Audio { get; set; }
         public string Text { get; set; }
+
         public virtual ParticipantTask ParticipantTask { get; set; }
     }
 }

@@ -345,19 +345,64 @@ namespace Crowd.Model
                     new ParticipantResult()
                     {
                         Id = 1,
-                        ResourceUrl = "https://di.ncl.ac.uk/owncloud/remote.php/webdav/uploads/105578599171449888956/1431595798212.24_2.zip",
+                        ResourceUrl =
+                            "https://di.ncl.ac.uk/owncloud/remote.php/webdav/uploads/105578599171449888956/1431595798212.24_2.zip",
                         CrowdJobId = 727531,
                         ParticipantActivityId = 2
                     }
                 }
             });
 
+            context.ParticipantAssessments.Add(new ParticipantAssessment
+            {
+                Title = "Your first assessment!",
+                Description = "Doing this short assessment will help us determine which parts of your speech might need some practice!",
+                DateSet = DateTime.Now,
+                Tasks = new List<ParticipantAssessmentTask>
+                {
+                    new ParticipantAssessmentTask
+                    {
+                        TaskType = ParticipantAssessmentTask.AssessmentTaskType.QuickFire,
+                        Title = "QuickFire Speaking!",
+                        Instructions = "Press the record button and say the shown word as clearly as you can, then press stop.",
+                        Prompts = new List<ParticipantAssessmentTaskPrompt>
+                        {
+                            new ParticipantAssessmentTaskPrompt{Value = "Easy"},
+                            new ParticipantAssessmentTaskPrompt{Value = "Trickier"},
+                            new ParticipantAssessmentTaskPrompt{Value = "Simple"},
+                            new ParticipantAssessmentTaskPrompt{Value = "More Difficult"},
+                            new ParticipantAssessmentTaskPrompt{Value = "Exquisite"},
+                            new ParticipantAssessmentTaskPrompt{Value = "Borderline"}
+                        }
+                    },
+                    new ParticipantAssessmentTask
+                    {
+                        TaskType = ParticipantAssessmentTask.AssessmentTaskType.ImageDescription,
+                        Title = "Image Description",
+                        Instructions = "Press the 'Record' button and follow the instruction in the image's caption",
+                        Prompts = new List<ParticipantAssessmentTaskPrompt>
+                        {
+                            new ParticipantAssessmentTaskPrompt{Value = "What does the image show?"},
+                            new ParticipantAssessmentTaskPrompt{Value = "Describe the colours in the image."},
+                            new ParticipantAssessmentTaskPrompt{Value = "Describe the dominant feature of the image."},
+                            new ParticipantAssessmentTaskPrompt{Value = "What does the image make you think of?"},
+                        },
+                        Image = "http://th00.deviantart.net/fs71/PRE/i/2013/015/d/c/a_hobbit_hole_by_uberpicklemonkey-d5rmn8n.jpg"
+                    }
+                }
+            });
+
+            context.SaveChanges();
+
+            var users = context.Users.ToArray();
+            var tasks = context.ParticipantTasks.ToArray();
+
             context.CrowdRowResponses.Add(new CrowdRowResponse
             {
                 Id = "724408203",
                 CreatedAt = DateTime.Parse("18/05/2015 14:08:50"),
-                ParticipantResultId = 1,
-                ParticipantTaskId = 4,
+                ParticipantResultId = users.First().Submissions.First().Id,
+                ParticipantTaskId = tasks[0].Id,
                 TaskJudgements = new List<CrowdJudgement>
                 {
                     new CrowdJudgement

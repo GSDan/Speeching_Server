@@ -6,7 +6,6 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Ewk.SoundCloud;
-using Ewk.Extensions;
 using  Ewk.SoundCloud.ApiLibrary;
 using Ewk.SoundCloud.ApiLibrary.Entities;
 

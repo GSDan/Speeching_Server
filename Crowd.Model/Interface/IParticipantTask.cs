@@ -9,7 +9,7 @@ namespace Crowd.Model.Interface
         string ExternalId { get; set; }
         string Description { get; set; }
         string Title { get; set; }
-        int ParticipantActivityId { get; set; }
+        int? ParticipantActivityId { get; set; }
         ParticipantActivity ParticipantActivity { get; set; }
         ParticipantTaskContent ParticipantTaskContent { get; set; }
         ParticipantTaskResponse ParticipantTaskResponse { get; set; }

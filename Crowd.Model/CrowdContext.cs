@@ -11,18 +11,25 @@ namespace Crowd.Model
         {
             System.Console.WriteLine("*****start******");
             Database.SetInitializer<CrowdContext>(new CustomDBInitializer());
-            this.Database.Initialize(true);
+            Database.Initialize(true);
         }
+        
         public DbSet<ParticipantActivityCategory> ParticipantActivityCategories { get; set; }
+        public DbSet<ParticipantActivity> ParticipantActivities { get; set; }
         public DbSet<ParticipantTask> ParticipantTasks { get; set; }
-        public DbSet<ParticipantPage> ParticipantPages { get; set; }
         public DbSet<ParticipantTaskContent> ParticipantTaskContents { get; set; }
         public DbSet<ParticipantTaskResponse> ParticipantTaskResponses { get; set; }
+        public DbSet<ParticipantPage> ParticipantPages { get; set; }
+        public DbSet<ParticipantResult> ParticipantResults { get; set; }
+
+        public DbSet<ParticipantAssessment> ParticipantAssessments { get; set; }
+        public DbSet<ParticipantAssessmentTask> ParticipantAssessmentTasks { get; set; }
+        public DbSet<ParticipantAssessmentTaskPrompt> ParticipantAssessmentTaskPrompts { get; set; }
+
         public DbSet<CrowdJudgementData> CrowdJudgementDatas { get; set; }
         public DbSet<CrowdRowResponse> CrowdRowResponses { get; set; }
         public DbSet<CrowdJudgement> CrowdJudgements { get; set; }
-        public DbSet<ParticipantActivity> ParticipantActivities { get; set; }
-        public DbSet<ParticipantResult> ParticipantResults { get; set; }
+
         //public DbSet<SpeechingSample> SpeechingSamples { get; set; }
         //public DbSet<CrowdWorker> CrowdWorkers { get; set; }
         public DbSet<User> Users { get; set; }
@@ -37,9 +44,14 @@ namespace Crowd.Model
             .HasOptional(l => l.ParticipantTaskResponse)
             .WithRequired(r => r.ParticipantTask);
 
-            //modelBuilder.Entity<ParticipantTask>()
+            modelBuilder.Entity<ParticipantTask>()
+            .HasOptional(s => s.ParticipantActivity)
+            .WithMany()
+            .WillCascadeOnDelete(false);
+
+            //modelBuilder.Entity<TaskId>()
             //.HasOptional(l => l.ScientistTaskResponse)
-            //.WithRequired(r => r.ParticipantTask);
+            //.WithRequired(r => r.TaskId);
 
             //modelBuilder.Entity<CrowdTask>()
             //    .HasOptional(w => w.CrowdWorker)

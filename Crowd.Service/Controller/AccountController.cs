@@ -17,8 +17,7 @@ namespace Crowd.Service.Controller
         [RequireHttps]
         public async Task<HttpResponseMessage> Post()
         {
-            var req = this.Request;
-            string jsonData = HttpUtility.UrlDecode(await req.Content.ReadAsStringAsync());
+            string jsonData = HttpUtility.UrlDecode(await Request.Content.ReadAsStringAsync());
 
             User thisUser = JsonConvert.DeserializeObject<User>(jsonData);
             User existingUser = await DB.Users.FindAsync(thisUser.Email);
@@ -27,7 +26,7 @@ namespace Crowd.Service.Controller
             {
                 // User not found - add new, with default subscriptions
                 thisUser.SubscribedCategories = DB.ParticipantActivityCategories.Where(
-                    cat => cat.DefaultSubscription == true).ToList();
+                    cat => cat.DefaultSubscription).ToList();
 
                 DB.Users.Add(thisUser);
                 existingUser = thisUser;
@@ -35,7 +34,6 @@ namespace Crowd.Service.Controller
             else
             {
                 // Update the found user's details if they've been given
-                existingUser.Email = thisUser.Email ?? existingUser.Email;
                 existingUser.Name = thisUser.Name ?? existingUser.Email;
                 existingUser.Nickname = thisUser.Nickname ?? existingUser.Nickname;
                 existingUser.Avatar = thisUser.Avatar ?? existingUser.Avatar;
