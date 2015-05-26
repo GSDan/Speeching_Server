@@ -17,7 +17,7 @@ namespace Crowd.Service
             gvActivities.DataSource = null;
             gvActivities.DataBind();
             string id = Request.QueryString["id"];
-            var tasks = GetService<IEnumerable<ActivityModel>>("http://api.opescode.com/", "api/Activity/" + id);
+            var tasks = GetService<IEnumerable<ParticipantActivity>>("http://api.opescode.com/", "api/Activity/" + id);
 
             if (tasks.Any())
             {

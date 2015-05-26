@@ -21,18 +21,9 @@ namespace Crowd.Service.Controller
             var acts = DB.ParticipantActivities.ToList();
             return new HttpResponseMessage()
             {
-                Content = new JsonContent(ActivityModel.Convert(acts))
+                Content = new JsonContent(acts)
             };
         }
-        //public IEnumerable<ActivityModel> Get()
-        //{
-        //    var acts = DB.ParticipantActivities.ToList();
-        //    ActivityModel am = new ActivityModel();
-        //    //return am.Convert(acts);
-        //    return new List<ActivityModel>() { new ActivityModel() { Key = 3}, new ActivityModel() { Key = 4 } };
-        //    //System.Web.Script.Serialization.JavaScriptSerializer sr = new System.Web.Script.Serialization.JavaScriptSerializer();
-        //    //var x = sr.Serialize(acts);
-        //}
 
         // GET api/Activity/5
         public HttpResponseMessage Get(int id)
@@ -47,7 +38,7 @@ namespace Crowd.Service.Controller
             }
             return new HttpResponseMessage()
             {
-                Content = new JsonContent(ActivityModel.Convert(activity))
+                Content = new JsonContent(activity)
             };
         }
 

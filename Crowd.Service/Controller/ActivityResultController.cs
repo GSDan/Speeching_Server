@@ -25,7 +25,7 @@ namespace Crowd.Service.Controller
             var lst = DB.ParticipantResults.ToList();
             return new HttpResponseMessage()
             {
-                Content = new JsonContent(ActivityResultModel.Convert(lst))
+                Content = new JsonContent(lst)
             };
         }
 
@@ -42,7 +42,7 @@ namespace Crowd.Service.Controller
             }
             return new HttpResponseMessage()
             {
-                Content = new JsonContent(ActivityResultModel.Convert(result))
+                Content = new JsonContent(result)
             };
         }
 
@@ -57,7 +57,7 @@ namespace Crowd.Service.Controller
             {
                 return new HttpResponseMessage()
                 {
-                    Content = new JsonContent(ActivityResultModel.Convert(lst))
+                    Content = new JsonContent(lst)
                 };
             }
             else
@@ -65,7 +65,7 @@ namespace Crowd.Service.Controller
         }
 
         // PUT api/ActivityResult/5
-        public HttpResponseMessage Put(int id, ActivityResultModel result)
+        public HttpResponseMessage Put(int id, ParticipantResult result)
         {
             if (!ModelState.IsValid)
             {
@@ -75,7 +75,7 @@ namespace Crowd.Service.Controller
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
-            DB.ParticipantResults.Attach(ActivityResultModel.ConvertToEntity(result));
+            DB.ParticipantResults.Attach(result);
             DB.Entry(result).State = EntityState.Modified;
             try
             {
@@ -90,7 +90,7 @@ namespace Crowd.Service.Controller
         
         // POST api/ActivityResult
         [RequireHttps]
-        public async Task<HttpResponseMessage> Post(ActivityResultModel result)
+        public async Task<HttpResponseMessage> Post(ParticipantResult result)
         {
             User user = await AuthenticateUser(GetAuthentication());
             if (user == null)
@@ -102,10 +102,9 @@ namespace Crowd.Service.Controller
             {
                 if (result != null)
                 {
-                    ParticipantResult parRes = ActivityResultModel.ConvertToEntity(result);
-                    parRes.User = user;
-                    user.Submissions.Add(parRes);
-                    DB.ParticipantResults.Add(parRes);
+                    result.User = user;
+                    user.Submissions.Add(result);
+                    DB.ParticipantResults.Add(result);
                     try
                     {
                         DB.SaveChanges();
@@ -115,15 +114,15 @@ namespace Crowd.Service.Controller
                         throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.ExpectationFailed,
                             ex.Message));
                     }
-                    SvcStatus status = await CrowdFlowerApi.CreateJob(parRes);
+                    SvcStatus status = await CrowdFlowerApi.CreateJob(result);
                     if (status.Level == 0)
                     {
                         string json = await status.Response.Content.ReadAsStringAsync();
                         CFJobResponse jobRes = JsonConvert.DeserializeObject<CFJobResponse>(json);
-                        CrowdFlowerApi.UploadUnits(jobRes.id, parRes.ResourceUrl);
+                        CrowdFlowerApi.UploadUnits(jobRes.id, result.ResourceUrl);
                         CrowdFlowerApi.JobQualitySettings(jobRes.id);
 
-                        parRes.CrowdJobId = jobRes.id;
+                        result.CrowdJobId = jobRes.id;
 
                         if (status.CreatedRows != null)
                         {
@@ -180,31 +179,5 @@ namespace Crowd.Service.Controller
             }
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
-
-        public HttpResponseMessage PutExternalAccessKey(string key)
-        {
-            if (!ModelState.IsValid)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
-            }
-            ActivityResultModel arm = new ActivityResultModel()
-            {
-                Id = 4,
-                ParticipantActivityId = 1,
-                ResourceUrl = "https://di.ncl.ac.uk/owncloud/remote.php/webdav/uploads/7041992/1426180356968.87_1.zip",
-                ExternalAccessKey = Request.RequestUri.AbsoluteUri
-            };
-            DB.ParticipantResults.Attach(ActivityResultModel.ConvertToEntity(arm));
-            DB.Entry(arm).State = EntityState.Modified;
-            try
-            {
-                DB.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
-            }
-            return Request.CreateResponse(HttpStatusCode.OK);
-        } 
     }
 }

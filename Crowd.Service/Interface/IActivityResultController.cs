@@ -15,8 +15,8 @@ namespace Crowd.Service.Interface
         HttpResponseMessage Get();
         HttpResponseMessage Get(int id);
         HttpResponseMessage GetByActivityId(int id);
-        HttpResponseMessage Put(int id, ActivityResultModel crowdResult);
-        Task<HttpResponseMessage> Post(ActivityResultModel crowdResult);
+        HttpResponseMessage Put(int id, ParticipantResult crowdResult);
+        Task<HttpResponseMessage> Post(ParticipantResult crowdResult);
         HttpResponseMessage Delete(int id);
     }
 }

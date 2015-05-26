@@ -17,7 +17,8 @@ namespace Crowd.Service.Controller
                 return new HttpResponseMessage(HttpStatusCode.Unauthorized);
             }
 
-            var ordered = await (from assessment in DB.ParticipantAssessments
+            var ordered = await (from assessment in DB.ParticipantActivities
+                where assessment.AssessmentTasks.Count > 0
                 orderby assessment.DateSet descending
                 select assessment).ToArrayAsync();
 

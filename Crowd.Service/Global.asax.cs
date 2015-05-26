@@ -31,13 +31,12 @@ namespace Crowd.Service
                     routeTemplate: "api/{controller}/{id}",
                     defaults: new { id = RouteParameter.Optional }
                 );
-
-                config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore; 
             });
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                NullValueHandling = NullValueHandling.Ignore
             };
 
             ///* Initialise the database (Crowd.Model) */

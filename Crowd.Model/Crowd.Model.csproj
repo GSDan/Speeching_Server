@@ -72,7 +72,6 @@
     <Compile Include="Data\CrowdRowResponse.cs" />
     <Compile Include="Data\ParticipantActivity.cs" />
     <Compile Include="Data\ParticipantActivityCategory.cs" />
-    <Compile Include="Data\ParticipantAssessment.cs" />
     <Compile Include="Data\ParticipantAssessmentTask.cs" />
     <Compile Include="Data\ParticipantAssessmentTaskPrompt.cs" />
     <Compile Include="Data\ParticipantPage.cs" />

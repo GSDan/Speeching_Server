@@ -22,7 +22,6 @@ namespace Crowd.Model
         public DbSet<ParticipantPage> ParticipantPages { get; set; }
         public DbSet<ParticipantResult> ParticipantResults { get; set; }
 
-        public DbSet<ParticipantAssessment> ParticipantAssessments { get; set; }
         public DbSet<ParticipantAssessmentTask> ParticipantAssessmentTasks { get; set; }
         public DbSet<ParticipantAssessmentTaskPrompt> ParticipantAssessmentTaskPrompts { get; set; }
 

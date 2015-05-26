@@ -30,7 +30,7 @@ namespace Crowd.Service
             string id = Request.QueryString["id"];
             try
             {
-                var crowdCategories = GetService<IEnumerable<CategoryModel>>("http://api.opescode.com/",
+                var crowdCategories = GetService<IEnumerable<ParticipantActivity>>("http://api.opescode.com/",
                     "api/Category/" + id);
 
                 gvCategories.DataSource = crowdCategories.Any() ? crowdCategories : null;

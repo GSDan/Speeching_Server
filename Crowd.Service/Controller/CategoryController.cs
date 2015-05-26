@@ -29,7 +29,7 @@ namespace Crowd.Service.Controller
 
             return new HttpResponseMessage()
             {
-                Content = new JsonContent(CategoryModel.Convert(cats))
+                Content = new JsonContent(cats)
             };
 
         }
@@ -53,7 +53,7 @@ namespace Crowd.Service.Controller
             }
             return new HttpResponseMessage()
             {
-                Content = new JsonContent(CategoryModel.Convert(category))
+                Content = new JsonContent(category)
             };
         }
 

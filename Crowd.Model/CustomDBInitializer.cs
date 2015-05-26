@@ -33,6 +33,7 @@ namespace Crowd.Model
                           ExternalId = "testScenario",
                           Icon = "http://www.survivingamsterdam.com/public/files/e96fc9baf228c0cb8d210a1768995bb1.png",
                           Title = "Getting the Bus",
+                          DateSet = DateTime.Now,
                           Resource = "https://www.dropbox.com/s/0h2f8pyrh6xte3s/bus.zip?raw=1",
                           ParticipantTasks = new List<ParticipantTask>()
                           {
@@ -97,6 +98,7 @@ namespace Crowd.Model
                           ExternalId = "testScenario2",
                           Icon = "http://img3.wikia.nocookie.net/__cb20131231163822/cardfight/images/6/6f/Pizza_slice_combo_clipart.png",
                           Title = "Ordering a Pizza",
+                          DateSet = DateTime.Now,
                           Resource = "https://www.dropbox.com/s/8gt7pqh6zq6p18h/pizza.zip?raw=1",
                           ParticipantTasks = new List<ParticipantTask>()
                           {
@@ -190,6 +192,7 @@ namespace Crowd.Model
                           ExternalId = "dmentia1",
                           Icon = "http://img3.wikia.nocookie.net/__cb20110528210150/restaurantcity/images/4/46/Spaghetti_Bolognese.png",
                           Title = "Preparing Dinner",
+                          DateSet = DateTime.Now,
                           Resource = "https://www.dropbox.com/s/3isleqzen5gt0hf/dinner.zip?raw=1",
                           ParticipantTasks = new List<ParticipantTask>()
                           {
@@ -303,6 +306,7 @@ namespace Crowd.Model
                           ExternalId = "guide1",
                           Icon = "http://www.pursuittraining.co.uk/images/care-icon.gif",
                           Title = "Interaction Tips",
+                          DateSet = DateTime.Now,
                           Resource = "https://www.dropbox.com/s/pw1ubz20nwatxtl/guide.zip?raw=1",
                           CrowdPages = new List<ParticipantPage>()
                           {
@@ -325,6 +329,59 @@ namespace Crowd.Model
                           }
                       }
                     }
+                },
+                 new ParticipantActivityCategory()
+                {
+                    ExternalId = "Assessments",
+                    Icon = "https://cdn1.iconfinder.com/data/icons/MetroStation-PNG/128/MB__help.png",
+                    Recommended = false,
+                    DefaultSubscription = true,
+                    Title = "Progress Assessments",
+                    Activities = new List<ParticipantActivity>
+                    {
+                        new ParticipantActivity
+                        {
+                            ExternalId = "assess1",
+                            Title = "Your first assessment!",
+                            Description = "Doing this short assessment will help us determine which parts of your speech might need some practice!",
+                            DateSet = DateTime.Now,
+                            Icon = "http://www.pursuittraining.co.uk/images/care-icon.gif",
+                            AssessmentTasks = new List<ParticipantAssessmentTask>
+                            {
+                                new ParticipantAssessmentTask
+                                {
+                                    TaskType = ParticipantAssessmentTask.AssessmentTaskType.QuickFire,
+                                    Title = "QuickFire Speaking!",
+                                    Instructions = "Press the record button and say the shown word as clearly as you can, then press stop.",
+                                    Prompts = new List<ParticipantAssessmentTaskPrompt>
+                                    {
+                                        new ParticipantAssessmentTaskPrompt{Value = "Easy"},
+                                        new ParticipantAssessmentTaskPrompt{Value = "Trickier"},
+                                        new ParticipantAssessmentTaskPrompt{Value = "Simple"},
+                                        new ParticipantAssessmentTaskPrompt{Value = "More Difficult"},
+                                        new ParticipantAssessmentTaskPrompt{Value = "Exquisite"},
+                                        new ParticipantAssessmentTaskPrompt{Value = "Borderline"}
+                                    }
+                                },
+                                new ParticipantAssessmentTask
+                                {
+                                    TaskType = ParticipantAssessmentTask.AssessmentTaskType.ImageDescription,
+                                    Title = "Image Description",
+                                    Instructions = "Press the 'Record' button and follow the instruction in the image's caption",
+                                    Prompts = new List<ParticipantAssessmentTaskPrompt>
+                                    {
+                                        new ParticipantAssessmentTaskPrompt{Value = "What does the image show?"},
+                                        new ParticipantAssessmentTaskPrompt{Value = "Describe the colours in the image."},
+                                        new ParticipantAssessmentTaskPrompt{Value = "Describe the dominant feature of the image."},
+                                        new ParticipantAssessmentTaskPrompt{Value = "What does the image make you think of?"},
+                                    },
+                                    Image = "http://th00.deviantart.net/fs71/PRE/i/2013/015/d/c/a_hobbit_hole_by_uberpicklemonkey-d5rmn8n.jpg"
+                                }
+                            }
+                        }
+                    }
+                    
+                    
                 }
             });
             Console.WriteLine("*****Adding******");
@@ -333,6 +390,8 @@ namespace Crowd.Model
                 context.ParticipantActivityCategories.Add(cat);    
             }
 
+            context.SaveChanges();
+
             context.Users.Add(new User
             {
                 Email = "dan@dan.com",
@@ -340,6 +399,8 @@ namespace Crowd.Model
                 Key = 1,
                 Name = "Dan Richardson",
                 Nickname = "Dan",
+                SubscribedCategories = context.ParticipantActivityCategories.Where(
+                    cat => cat.DefaultSubscription).ToList(),
                 Submissions = new List<ParticipantResult>
                 {
                     new ParticipantResult()
@@ -349,45 +410,6 @@ namespace Crowd.Model
                             "https://di.ncl.ac.uk/owncloud/remote.php/webdav/uploads/105578599171449888956/1431595798212.24_2.zip",
                         CrowdJobId = 727531,
                         ParticipantActivityId = 2
-                    }
-                }
-            });
-
-            context.ParticipantAssessments.Add(new ParticipantAssessment
-            {
-                Title = "Your first assessment!",
-                Description = "Doing this short assessment will help us determine which parts of your speech might need some practice!",
-                DateSet = DateTime.Now,
-                Tasks = new List<ParticipantAssessmentTask>
-                {
-                    new ParticipantAssessmentTask
-                    {
-                        TaskType = ParticipantAssessmentTask.AssessmentTaskType.QuickFire,
-                        Title = "QuickFire Speaking!",
-                        Instructions = "Press the record button and say the shown word as clearly as you can, then press stop.",
-                        Prompts = new List<ParticipantAssessmentTaskPrompt>
-                        {
-                            new ParticipantAssessmentTaskPrompt{Value = "Easy"},
-                            new ParticipantAssessmentTaskPrompt{Value = "Trickier"},
-                            new ParticipantAssessmentTaskPrompt{Value = "Simple"},
-                            new ParticipantAssessmentTaskPrompt{Value = "More Difficult"},
-                            new ParticipantAssessmentTaskPrompt{Value = "Exquisite"},
-                            new ParticipantAssessmentTaskPrompt{Value = "Borderline"}
-                        }
-                    },
-                    new ParticipantAssessmentTask
-                    {
-                        TaskType = ParticipantAssessmentTask.AssessmentTaskType.ImageDescription,
-                        Title = "Image Description",
-                        Instructions = "Press the 'Record' button and follow the instruction in the image's caption",
-                        Prompts = new List<ParticipantAssessmentTaskPrompt>
-                        {
-                            new ParticipantAssessmentTaskPrompt{Value = "What does the image show?"},
-                            new ParticipantAssessmentTaskPrompt{Value = "Describe the colours in the image."},
-                            new ParticipantAssessmentTaskPrompt{Value = "Describe the dominant feature of the image."},
-                            new ParticipantAssessmentTaskPrompt{Value = "What does the image make you think of?"},
-                        },
-                        Image = "http://th00.deviantart.net/fs71/PRE/i/2013/015/d/c/a_hobbit_hole_by_uberpicklemonkey-d5rmn8n.jpg"
                     }
                 }
             });
