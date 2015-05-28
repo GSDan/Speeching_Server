@@ -14,10 +14,10 @@
                 
                 <asp:TemplateField>
                     <ItemTemplate>
-                        <asp:HyperLink ID="lnkActionId" runat="server" Text='<%# Eval("Id") %>' NavigateUrl='<%# "tasksContentResponse.aspx?id=" + Eval("Id") %>'></asp:HyperLink>
+                        <asp:HyperLink ID="lnkActionId" runat="server" Text='<%# Eval("Key") %>' NavigateUrl='<%# "tasksContentResponse.aspx?id=" + Eval("Key") %>'></asp:HyperLink>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:BoundField DataField="ExternalId" HeaderText="External Id"></asp:BoundField>
+                <asp:BoundField DataField="ExternalKey" HeaderText="External Key"></asp:BoundField>
                 <asp:BoundField DataField="Description" HeaderText="Description"></asp:BoundField>
                 <asp:BoundField DataField="Title" HeaderText="Title"></asp:BoundField>
             </Columns>

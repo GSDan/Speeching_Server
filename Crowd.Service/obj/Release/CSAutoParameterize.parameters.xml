@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <parameters>
-  <parameter name="CrowdScience-Web.config Connection String" description="CrowdScience Connection String used in web.config by the application to access the database." defaultValue="Data Source=184.168.47.10;Initial Catalog=CrowdScience;Persist Security Info=True;User ID=opessa;Password=Mc2000Mc2000" tags="SqlConnectionString">
-    <parameterEntry kind="XmlFile" scope="Z:\\Developments\\NCLUni\\Speeching\\Crowd\.Service\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='CrowdScience']/@connectionString" />
+  <parameter name="CrowdScience-Web.config Connection String" description="CrowdScience Connection String used in web.config by the application to access the database." defaultValue="server=46.101.19.97;user id=root;password=BlahBlah123;database=SpeechingTest;persistsecurityinfo=True" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\tgs03_000\\Documents\\Dev\\Uni\\speeching-server\\Crowd\.Service\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='CrowdScience']/@connectionString" />
   </parameter>
 </parameters>
