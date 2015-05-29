@@ -29,10 +29,10 @@ namespace Crowd.Model
         public DbSet<CrowdRowResponse> CrowdRowResponses { get; set; }
         public DbSet<CrowdJudgement> CrowdJudgements { get; set; }
 
-        //public DbSet<SpeechingSample> SpeechingSamples { get; set; }
-        //public DbSet<CrowdWorker> CrowdWorkers { get; set; }
         public DbSet<User> Users { get; set; }
-        //public DbSet<CrowdTaskRow> CrowdTaskRows { get; set; }
+        public DbSet<ParticipantFeedItem> ParticipantFeedItems { get; set; }
+
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ParticipantTask>()

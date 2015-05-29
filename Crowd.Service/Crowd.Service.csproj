@@ -38,9 +38,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Crowd.Model">
-      <HintPath>..\Crowd.Model\bin\Debug\Crowd.Model.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.dll</HintPath>
@@ -158,6 +155,7 @@
     <Compile Include="Controller\CFWebhookController.cs" />
     <Compile Include="Controller\CrowdsourceController.cs" />
     <Compile Include="Controller\FeedbackController.cs" />
+    <Compile Include="Controller\FeedController.cs" />
     <Compile Include="Controller\JobController.cs" />
     <Compile Include="Controller\TaskController.cs" />
     <Compile Include="Controller\UnitController.cs" />
@@ -176,16 +174,12 @@
     <Compile Include="Interface\ICategoryController.cs" />
     <Compile Include="Interface\ICFWebhookController.cs" />
     <Compile Include="Interface\IContextBase.cs" />
-    <Compile Include="Interface\IFeedbackItem.cs" />
     <Compile Include="Interface\IJob.cs" />
     <Compile Include="Interface\IScenario.cs" />
     <Compile Include="Interface\ITaskController.cs" />
     <Compile Include="JsonContent.cs" />
     <Compile Include="Model\AudioUnit.cs" />
     <Compile Include="Model\AuthenticationModel.cs" />
-    <Compile Include="Model\Feedback\FeedbackItem.cs" />
-    <Compile Include="Model\Feedback\FeedbackItemGraph.cs" />
-    <Compile Include="Model\Feedback\FeedbackItemRating.cs" />
     <Compile Include="Model\GuideModel.cs" />
     <Compile Include="Model\JobModel.cs" />
     <Compile Include="Model\ScenarioModel.cs" />
@@ -222,7 +216,12 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Crowd.Model\Crowd.Model.csproj">
+      <Project>{7ecb67bc-dbf2-457e-b183-7bcd72f6cdee}</Project>
+      <Name>Crowd.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

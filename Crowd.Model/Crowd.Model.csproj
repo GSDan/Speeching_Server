@@ -80,6 +80,7 @@
     <Compile Include="Data\ParticipantActivityCategory.cs" />
     <Compile Include="Data\ParticipantAssessmentTask.cs" />
     <Compile Include="Data\ParticipantAssessmentTaskPrompt.cs" />
+    <Compile Include="Data\ParticipantFeedItem.cs" />
     <Compile Include="Data\ParticipantPage.cs" />
     <Compile Include="Data\ParticipantResult.cs" />
     <Compile Include="Data\ParticipantTask.cs" />
@@ -100,6 +101,10 @@
     <Compile Include="Interface\ICrowdTaskModel.cs" />
     <Compile Include="Interface\IUser.cs" />
     <Compile Include="ITaskModel.cs" />
+    <Compile Include="Migrations\201505291239430_MoreFeeds.cs" />
+    <Compile Include="Migrations\201505291239430_MoreFeeds.Designer.cs">
+      <DependentUpon>201505291239430_MoreFeeds.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskModel.cs" />
@@ -127,7 +132,11 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201505291239430_MoreFeeds.resx">
+      <DependentUpon>201505291239430_MoreFeeds.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

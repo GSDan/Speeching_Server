@@ -7,8 +7,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Crowd.Model.Data;
-using Crowd.Service.Interface;
-using Crowd.Service.Model.Feedback;
 using Newtonsoft.Json;
 
 namespace Crowd.Service.Controller
@@ -37,7 +35,7 @@ namespace Crowd.Service.Controller
             return (float?) await queryRes.AverageAsync();
         }
 
-        private async Task<GraphPoint[]> GetGraphPoints(string resDataType, User user)
+        private async Task<TimeGraphPoint[]> GetGraphPoints(string resDataType, User user)
         {
             CrowdJudgement[] ordered = await (from res in DB.ParticipantResults
                 where res.User.Email == user.Email
@@ -46,7 +44,7 @@ namespace Crowd.Service.Controller
                 orderby judgement.CreatedAt
                 select judgement).ToArrayAsync();
 
-            List<GraphPoint> points = new List<GraphPoint>();
+            List<TimeGraphPoint> points = new List<TimeGraphPoint>();
 
             foreach (var judgement in ordered)
             {
@@ -54,7 +52,7 @@ namespace Crowd.Service.Controller
                     where data.DataType == resDataType
                     select data.NumResponse).Average();
 
-                points.Add(new GraphPoint
+                points.Add(new TimeGraphPoint
                 {
                     XVal = judgement.CreatedAt,
                     YVal = yVal
@@ -94,12 +92,12 @@ namespace Crowd.Service.Controller
                     }
                 }
 
-                List<IFeedbackItem> feedback = new List<IFeedbackItem>();
+                List<ParticipantFeedItem> feedback = new List<ParticipantFeedItem>();
 
                 float? accentRating = await AverageRating("rlstaccent", user, jobId);
                 if (accentRating != null)
                 {
-                    var accentFeedback = new FeedbackItemRating
+                    var accentFeedback = new ParticipantFeedItem
                     {
                         Rating = (float) accentRating,
                         Title = "Accent Influence",
@@ -115,7 +113,7 @@ namespace Crowd.Service.Controller
                 float? transRating = await AverageRating("rlsttrans", user, submissionId);
                 if (transRating != null)
                 {
-                    var transFeedback = new FeedbackItemRating
+                    var transFeedback = new ParticipantFeedItem
                     {
                         Rating = (float) transRating,
                         Title = "Difficulty of Understanding",
@@ -128,7 +126,7 @@ namespace Crowd.Service.Controller
                 }
 
 
-                FeedbackItemGraph graphFeedback = new FeedbackItemGraph
+                ParticipantFeedItem graphFeedback = new ParticipantFeedItem
                 {
                     Title = "Understanding Progress",
                     Description = "How understandable people have found you over time.",
