@@ -2,6 +2,8 @@
 *.dll
 web.config
 app.config
+Crowd.Model/obj
+Crowd.Service/obj
 Crowd.Service/Properties
 Crowd.Service/Uploads
 Admin
