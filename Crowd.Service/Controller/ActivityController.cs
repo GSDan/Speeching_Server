@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Crowd.Model;
 using Crowd.Model.Data;
 using Crowd.Model.Interface;
 using Crowd.Service.Interface;
@@ -18,11 +19,14 @@ namespace Crowd.Service.Controller
         // GET api/Activity
         public HttpResponseMessage Get()
         {
-            var acts = DB.ParticipantActivities.ToList();
-            return new HttpResponseMessage()
+            using (CrowdContext db = new CrowdContext())
             {
-                Content = new JsonContent(acts)
-            };
+                var acts = db.ParticipantActivities.ToList();
+                return new HttpResponseMessage()
+                {
+                    Content = new JsonContent(acts)
+                };
+            }
         }
 
         // GET api/Activity/5
@@ -31,15 +35,18 @@ namespace Crowd.Service.Controller
             if (id <= 0)
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
 
-            var activity = DB.ParticipantActivities.Find(id);
-            if (activity == null)
+            using (CrowdContext db = new CrowdContext())
             {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
+                var activity = db.ParticipantActivities.Find(id);
+                if (activity == null)
+                {
+                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
+                }
+                return new HttpResponseMessage()
+                {
+                    Content = new JsonContent(activity)
+                };
             }
-            return new HttpResponseMessage()
-            {
-                Content = new JsonContent(activity)
-            };
         }
 
         // GET api/task/5
@@ -48,11 +55,15 @@ namespace Crowd.Service.Controller
             if (id <= 0)
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
 
-            var acts = DB.ParticipantActivities.Where(c => c.CrowdCategoryId.Equals(id));
-            if (acts.Any())
-                return acts;
-            else
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
+            using (CrowdContext db = new CrowdContext())
+            {
+                var acts = db.ParticipantActivities.Where(c => c.CrowdCategoryId.Equals(id));
+                if (acts.Any())
+                    return acts;
+                else
+                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
+            }
+            
         }
 
         // PUT api/Activity/5
@@ -66,33 +77,37 @@ namespace Crowd.Service.Controller
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
-            DB.ParticipantActivities.Attach(activity);
-            DB.Entry(activity).State = EntityState.Modified;
-            try
+
+            using (CrowdContext db = new CrowdContext())
             {
-                DB.SaveChanges();
+                db.ParticipantActivities.Attach(activity);
+                db.Entry(activity).State = EntityState.Modified;
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
+                }
+                return Request.CreateResponse(HttpStatusCode.OK);
             }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
-            }
-            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         // POST api/Activity
         public HttpResponseMessage Post(ParticipantActivity activity)
         {
-            if (ModelState.IsValid)
-            {
-                DB.ParticipantActivities.Add(activity);
-                DB.SaveChanges();
-                var response = Request.CreateResponse(HttpStatusCode.Created, activity);
-                //response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = activity.Key }));
-                return response;
-            }
-            else
+            if (!ModelState.IsValid)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+            }
+
+            using (CrowdContext db = new CrowdContext())
+            {
+                db.ParticipantActivities.Add(activity);
+                db.SaveChanges();
+                var response = Request.CreateResponse(HttpStatusCode.Created, activity);
+                return response;
             }
         }
 
@@ -101,21 +116,25 @@ namespace Crowd.Service.Controller
         {
             if (id <= 0)
                 return Request.CreateResponse(HttpStatusCode.NotFound, "id must be greater than zero");
-            var activity = DB.ParticipantActivities.Find(id);
-            if (activity == null)
+
+            using (CrowdContext db = new CrowdContext())
             {
-                return Request.CreateResponse(HttpStatusCode.NotFound);
+                var activity = db.ParticipantActivities.Find(id);
+                if (activity == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound);
+                }
+                db.ParticipantActivities.Remove(activity);
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
+                }
+                return Request.CreateResponse(HttpStatusCode.OK, activity);
             }
-            DB.ParticipantActivities.Remove(activity);
-            try
-            {
-                DB.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
-            }
-            return Request.CreateResponse(HttpStatusCode.OK, activity);
         }
     }
 }

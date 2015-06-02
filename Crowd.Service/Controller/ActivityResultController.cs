@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Crowd.Model;
 using Crowd.Model.Data;
 using Crowd.Service.Common;
 using Crowd.Service.CrowdFlower;
@@ -22,11 +23,14 @@ namespace Crowd.Service.Controller
         // GET api/ActivityResult
         public HttpResponseMessage Get()
         {
-            var lst = DB.ParticipantResults.ToList();
-            return new HttpResponseMessage()
+            using (CrowdContext db = new CrowdContext())
             {
-                Content = new JsonContent(lst)
-            };
+                var lst = db.ParticipantResults.ToList();
+                return new HttpResponseMessage()
+                {
+                    Content = new JsonContent(lst)
+                };
+            }
         }
 
         // GET api/ActivityResult/5
@@ -35,15 +39,18 @@ namespace Crowd.Service.Controller
             if (id <= 0)
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
 
-            var result = DB.ParticipantResults.Find(id);
-            if (result == null)
+            using (CrowdContext db = new CrowdContext())
             {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
+                var result = db.ParticipantResults.Find(id);
+                if (result == null)
+                {
+                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
+                }
+                return new HttpResponseMessage()
+                {
+                    Content = new JsonContent(result)
+                };
             }
-            return new HttpResponseMessage()
-            {
-                Content = new JsonContent(result)
-            };
         }
 
         // GET api/task/5
@@ -52,16 +59,19 @@ namespace Crowd.Service.Controller
             if (id <= 0)
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
 
-            var lst = DB.ParticipantResults.Where(c => c.ParticipantActivityId.Equals(id));
-            if (lst.Any())
+            using (CrowdContext db = new CrowdContext())
             {
-                return new HttpResponseMessage()
+                var lst = db.ParticipantResults.Where(c => c.ParticipantActivityId.Equals(id));
+                if (lst.Any())
                 {
-                    Content = new JsonContent(lst)
-                };
+                    return new HttpResponseMessage()
+                    {
+                        Content = new JsonContent(lst)
+                    };
+                }
+                else
+                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
             }
-            else
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
         }
 
         // PUT api/ActivityResult/5
@@ -75,86 +85,91 @@ namespace Crowd.Service.Controller
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
-            DB.ParticipantResults.Attach(result);
-            DB.Entry(result).State = EntityState.Modified;
-            try
+
+            using (CrowdContext db = new CrowdContext())
             {
-                DB.SaveChanges();
+                db.ParticipantResults.Attach(result);
+                db.Entry(result).State = EntityState.Modified;
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
+                }
+                return Request.CreateResponse(HttpStatusCode.OK);  
             }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
-            }
-            return Request.CreateResponse(HttpStatusCode.OK);
         }
         
         // POST api/ActivityResult
         [RequireHttps]
         public async Task<HttpResponseMessage> Post(ParticipantResult result)
         {
-            User user = await AuthenticateUser(GetAuthentication());
-            if (user == null)
+            using (CrowdContext db = new CrowdContext())
             {
-                return new HttpResponseMessage(HttpStatusCode.Unauthorized);
-            }
-
-            if (ModelState.IsValid)
-            {
-                if (result != null)
+                User user = await AuthenticateUser(GetAuthentication(), db);
+                if (user == null)
                 {
-                    result.User = user;
-                    user.Submissions.Add(result);
-                    DB.ParticipantResults.Add(result);
-                    try
-                    {
-                        DB.SaveChanges();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.ExpectationFailed,
-                            ex.Message));
-                    }
-                    SvcStatus status = await CrowdFlowerApi.CreateJob(result);
-                    if (status.Level == 0)
-                    {
-                        string json = await status.Response.Content.ReadAsStringAsync();
-                        CFJobResponse jobRes = JsonConvert.DeserializeObject<CFJobResponse>(json);
-                        CrowdFlowerApi.UploadUnits(jobRes.id, result.ResourceUrl);
-                        CrowdFlowerApi.JobQualitySettings(jobRes.id);
+                    return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                }
 
-                        result.CrowdJobId = jobRes.id;
-
-                        if (status.CreatedRows != null)
-                        {
-                            foreach (CrowdRowResponse row in status.CreatedRows)
-                            {
-                                DB.CrowdRowResponses.Add(row);
-                            }
-                        }
-
+                if (ModelState.IsValid)
+                {
+                    if (result != null)
+                    {
+                        result.User = user;
+                        user.Submissions.Add(result);
+                        db.ParticipantResults.Add(result);
                         try
                         {
-                            DB.SaveChanges();
+                            db.SaveChanges();
                         }
-                        catch(Exception e)
+                        catch (Exception ex)
                         {
-                            throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.ExpectationFailed, e.Message));
+                            throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.ExpectationFailed,
+                                ex.Message));
                         }
+                        SvcStatus status = await CrowdFlowerApi.CreateJob(result);
+                        if (status.Level == 0)
+                        {
+                            string json = await status.Response.Content.ReadAsStringAsync();
+                            CFJobResponse jobRes = JsonConvert.DeserializeObject<CFJobResponse>(json);
+                            CrowdFlowerApi.UploadUnits(jobRes.id, result.ResourceUrl);
+                            CrowdFlowerApi.JobQualitySettings(jobRes.id);
 
-                        ////TODO: Save CF job response to database
-                        ////TODO: Launch the job
-                        //CrowdFlowerApi.LaunchJob(jobRes.id);
-                        return status.Response;
+                            result.CrowdJobId = jobRes.id;
+
+                            if (status.CreatedRows != null)
+                            {
+                                foreach (CrowdRowResponse row in status.CreatedRows)
+                                {
+                                    db.CrowdRowResponses.Add(row);
+                                }
+                            }
+
+                            try
+                            {
+                                db.SaveChanges();
+                            }
+                            catch (Exception e)
+                            {
+                                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.ExpectationFailed, e.Message));
+                            }
+
+                            CrowdFlowerApi.LaunchJob(jobRes.id);
+                            return status.Response;
+                        }
+                        else
+                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, status.Description);
                     }
                     else
-                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, status.Description);
+                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Activity result cannot be null");
                 }
                 else
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Activity result cannot be null");
-            }
-            else
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
             }
         }
 
@@ -163,21 +178,25 @@ namespace Crowd.Service.Controller
         {
             if (id <= 0)
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "id must be greater than zero");
-            var result = DB.ParticipantResults.Find(id);
-            if (result == null)
+
+            using (CrowdContext db = new CrowdContext())
             {
-                return Request.CreateResponse(HttpStatusCode.NotFound);
+                var result = db.ParticipantResults.Find(id);
+                if (result == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound);
+                }
+                db.ParticipantResults.Remove(result);
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
+                }
+                return Request.CreateResponse(HttpStatusCode.OK, result);
             }
-            DB.ParticipantResults.Remove(result);
-            try
-            {
-                DB.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
-            }
-            return Request.CreateResponse(HttpStatusCode.OK, result);
         }
     }
 }

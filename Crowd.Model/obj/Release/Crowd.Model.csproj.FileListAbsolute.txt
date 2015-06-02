@@ -33,3 +33,4 @@ C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Release\Cr
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\bin\Release\MySql.Data.Entity.EF6.dll
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Release\Crowd.Model.Migrations.MoreFeeds.resources
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Release\Crowd.Model.csproj.GenerateResource.Cache
+C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Release\Crowd.Model.csprojResolveAssemblyReference.cache

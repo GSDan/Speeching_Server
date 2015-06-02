@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using Crowd.Model;
 using Crowd.Model.Data;
 using Crowd.Service.Common;
 using Newtonsoft.Json;
@@ -17,42 +18,45 @@ namespace Crowd.Service.Controller
         [RequireHttps]
         public async Task<HttpResponseMessage> Post()
         {
-            string jsonData = HttpUtility.UrlDecode(await Request.Content.ReadAsStringAsync());
-
-            User thisUser = JsonConvert.DeserializeObject<User>(jsonData);
-            User existingUser = await DB.Users.FindAsync(thisUser.Email);
-
-            if (existingUser == null)
+            using (CrowdContext db = new CrowdContext())
             {
-                // User not found - add new, with default subscriptions
-                thisUser.SubscribedCategories = DB.ParticipantActivityCategories.Where(
-                    cat => cat.DefaultSubscription).ToList();
+                string jsonData = HttpUtility.UrlDecode(await Request.Content.ReadAsStringAsync());
 
-                DB.Users.Add(thisUser);
-                existingUser = thisUser;
+                User thisUser = JsonConvert.DeserializeObject<User>(jsonData);
+                User existingUser = await db.Users.FindAsync(thisUser.Email);
+
+                if (existingUser == null)
+                {
+                    // User not found - add new, with default subscriptions
+                    thisUser.SubscribedCategories = db.ParticipantActivityCategories.Where(
+                        cat => cat.DefaultSubscription).ToList();
+
+                    db.Users.Add(thisUser);
+                    existingUser = thisUser;
+                }
+                else
+                {
+                    // Update the found user's details if they've been given
+                    existingUser.Name = thisUser.Name ?? existingUser.Email;
+                    existingUser.Nickname = thisUser.Nickname ?? existingUser.Nickname;
+                    existingUser.Avatar = thisUser.Avatar ?? existingUser.Avatar;
+                }
+
+                try
+                {
+                    await db.SaveChangesAsync();
+                }
+                catch (Exception)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                }
+
+                return new HttpResponseMessage
+                {
+                    Content = new JsonContent(existingUser),
+                    StatusCode = HttpStatusCode.OK
+                };
             }
-            else
-            {
-                // Update the found user's details if they've been given
-                existingUser.Name = thisUser.Name ?? existingUser.Email;
-                existingUser.Nickname = thisUser.Nickname ?? existingUser.Nickname;
-                existingUser.Avatar = thisUser.Avatar ?? existingUser.Avatar;
-            }
-
-            try
-            {
-                await DB.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
-            }
-
-            return new HttpResponseMessage
-            {
-                Content = new JsonContent(existingUser),
-                StatusCode = HttpStatusCode.OK
-            };
         }
     }
 }

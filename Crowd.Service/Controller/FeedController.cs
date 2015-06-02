@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using Crowd.Model;
 using Crowd.Model.Data;
 using Newtonsoft.Json;
 
@@ -15,51 +16,107 @@ namespace Crowd.Service.Controller
 {
     public class FeedController : BaseController
     {
+        /// <summary>
+        /// Returns the user's subscription feed
+        /// </summary>
+        /// <returns></returns>
         public async Task<HttpResponseMessage> Get()
         {
-            User user = await AuthenticateUser(GetAuthentication());
-            if (user == null)
+            using (CrowdContext db = new CrowdContext())
             {
-                return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                User user = await AuthenticateUser(GetAuthentication(), db);
+                if (user == null)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                }
+
+                ICollection<ParticipantFeedItem> dismissed = user.DismissedPublicFeedItems;
+                ICollection<ParticipantFeedItem> userItems = user.FeedItems;
+
+                List<ParticipantFeedItem> items = await (from feedItem in db.ParticipantFeedItems
+                                                         where (feedItem.Global && !dismissed.Contains(feedItem)) || userItems.Contains(feedItem)
+                                                         select feedItem).ToListAsync();
+
+                TimeGraphPoint[] points = await GetGraphPoints("rlsttrans", user, db);
+                if (points != null && points.Length >= 2)
+                {
+                    ParticipantFeedItem graphFeedback = new ParticipantFeedItem
+                    {
+                        Title = "Understanding Progress",
+                        Description = "How understandable people have found you over time.",
+                        Date = DateTime.Now,
+                        Dismissable = false,
+                        Importance = 8,
+                        DataPoints = points
+                    };
+                    items.Add(graphFeedback);
+                }
+
+                float? accentRating = await AverageRating("rlstaccent", user, db);
+                if (accentRating != null)
+                {
+                    var accentFeedback = new ParticipantFeedItem
+                    {
+                        Rating = (float)accentRating,
+                        Title = "Accent Influence",
+                        Description =
+                            "This total average rating shows how much your accent affected listeners' understanding of your speech since you started.",
+                        Date = DateTime.Now,
+                        Dismissable = false,
+                        Importance = 10
+                    };
+                    items.Add(accentFeedback);
+                }
+
+                float? transRating = await AverageRating("rlsttrans", user, db);
+                if (transRating != null)
+                {
+                    var transFeedback = new ParticipantFeedItem
+                    {
+                        Rating = (float)transRating,
+                        Title = "Difficulty of Understanding",
+                        Description = "This rating shows how difficult listeners have found understanding what you say on average since you started.",
+                        Date = DateTime.Now,
+                        Dismissable = false,
+                        Importance = 10
+                    };
+                    items.Add(transFeedback);
+                }
+
+                return new HttpResponseMessage()
+                {
+                    Content = new JsonContent(items)
+                };
             }
-
-            ICollection<ParticipantFeedItem> dismissed = user.DismissedPublicFeedItems;
-            ICollection<ParticipantFeedItem> userItems = user.FeedItems;
-
-            ParticipantFeedItem[] items = await (from feedItem in DB.ParticipantFeedItems
-                where (feedItem.Global && !dismissed.Contains(feedItem)) || userItems.Contains(feedItem)
-                select feedItem).ToArrayAsync();
-
-            return new HttpResponseMessage()
-            {
-                Content = new JsonContent(items)
-            };
         }
 
         public async Task<HttpResponseMessage> Post()
         {
-            string jsonData = HttpUtility.UrlDecode(await Request.Content.ReadAsStringAsync());
-
-            ParticipantFeedItem newItem = JsonConvert.DeserializeObject<ParticipantFeedItem>(jsonData);
-
-            if (string.IsNullOrEmpty(newItem.Title) || string.IsNullOrEmpty(newItem.Description))
+            using (CrowdContext db = new CrowdContext())
             {
-                return new HttpResponseMessage(HttpStatusCode.ExpectationFailed);
-            }
+                string jsonData = HttpUtility.UrlDecode(await Request.Content.ReadAsStringAsync());
 
-            newItem.Global = true;
-            DB.ParticipantFeedItems.Add(newItem);
-            
-            try
-            {
-                await DB.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
-            }
+                ParticipantFeedItem newItem = JsonConvert.DeserializeObject<ParticipantFeedItem>(jsonData);
 
-            return new HttpResponseMessage(HttpStatusCode.Accepted);
+                if (string.IsNullOrEmpty(newItem.Title) || string.IsNullOrEmpty(newItem.Description))
+                {
+                    return new HttpResponseMessage(HttpStatusCode.ExpectationFailed);
+                }
+
+                newItem.Global = true;
+                db.ParticipantFeedItems.Add(newItem);
+
+                try
+                {
+                    await db.SaveChangesAsync();
+                }
+                catch (Exception)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                }
+
+                return new HttpResponseMessage(HttpStatusCode.Accepted);
+            }
         }
     }
 }

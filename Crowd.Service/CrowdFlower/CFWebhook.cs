@@ -7,39 +7,6 @@ using System.Web;
 
 namespace Crowd.Service.CrowdFlower
 {
-    public class CFWebhook
-    {
-        private string _json;
-
-        public string Signal { get; set; }
-
-        [JsonProperty(PropertyName = "payload")]
-        private string JsonPayload
-        {
-            get
-            {
-                return _json;
-            }
-            set
-            {
-                try
-                {
-                    // This property comes in as a serialized string, so have to deserialize it separately
-                    _json = value;
-                    PayloadData = JsonConvert.DeserializeObject<CFResponseData>(value);
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-                
-            }
-        }
-        public string Signature { get; set; }
-
-        public CFResponseData PayloadData { get; set; }
-    }
-
     public class CFResponseData
     {
         public int id { get; set; }

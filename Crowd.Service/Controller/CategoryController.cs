@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Crowd.Model;
 using Crowd.Model.Data;
 using Crowd.Model.Interface;
 using Crowd.Service.Interface;
@@ -19,123 +20,133 @@ namespace Crowd.Service.Controller
         // GET api/Category
         public async Task<HttpResponseMessage> Get()
         {
-            User user = await AuthenticateUser(GetAuthentication());
-            if (user == null)
+            using (CrowdContext db = new CrowdContext())
             {
-                return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                User user = await AuthenticateUser(GetAuthentication(), db);
+                if (user == null)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                }
+
+                var cats = user.SubscribedCategories;
+
+                return new HttpResponseMessage()
+                {
+                    Content = new JsonContent(cats)
+                };
             }
-
-            var cats = user.SubscribedCategories;
-
-            return new HttpResponseMessage()
-            {
-                Content = new JsonContent(cats)
-            };
-
         }
 
         // GET api/Category/5
         public async Task<HttpResponseMessage> Get(int id)
         {
-            User user = await AuthenticateUser(GetAuthentication());
-            if (user == null)
+            using (CrowdContext db = new CrowdContext())
             {
-                return new HttpResponseMessage(HttpStatusCode.Unauthorized);
-            }
+                User user = await AuthenticateUser(GetAuthentication(), db);
+                if (user == null)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                }
 
-            if (id <= 0)
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
+                if (id <= 0)
+                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
 
-            var category = DB.ParticipantActivityCategories.Find(id);
-            if (category == null)
-            {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
+                var category = db.ParticipantActivityCategories.Find(id);
+                if (category == null)
+                {
+                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
+                }
+                return new HttpResponseMessage()
+                {
+                    Content = new JsonContent(category)
+                };
             }
-            return new HttpResponseMessage()
-            {
-                Content = new JsonContent(category)
-            };
         }
 
         // PUT api/Category/5
         public async Task<HttpResponseMessage> Put(ParticipantActivityCategory category)
         {
-            User user = await AuthenticateUser(GetAuthentication());
-            if (user == null)
+            using (CrowdContext db = new CrowdContext())
             {
-                return new HttpResponseMessage(HttpStatusCode.Unauthorized);
-            }
+                User user = await AuthenticateUser(GetAuthentication(), db);
+                if (user == null)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                }
 
-            if (!ModelState.IsValid)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
+                if (category.Id <= 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest);
+                }
+                db.ParticipantActivityCategories.Attach(category);
+                db.Entry(category).State = EntityState.Modified;
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+                }
+                return Request.CreateResponse(HttpStatusCode.OK);
             }
-            if (category.Id <= 0)
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
-            }
-            DB.ParticipantActivityCategories.Attach(category);
-            DB.Entry(category).State = EntityState.Modified;
-            try
-            {
-                DB.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
-            }
-            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         // POST api/Category
         public async Task<HttpResponseMessage> Post(ParticipantActivityCategory category)
         {
-            User user = await AuthenticateUser(GetAuthentication());
-            if (user == null)
+            using (CrowdContext db = new CrowdContext())
             {
-                return new HttpResponseMessage(HttpStatusCode.Unauthorized);
-            }
+                User user = await AuthenticateUser(GetAuthentication(), db);
+                if (user == null)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                }
 
-            if (ModelState.IsValid)
-            {
-                DB.ParticipantActivityCategories.Add(category);
-                DB.SaveChanges();
+                if (!ModelState.IsValid) return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+
+                db.ParticipantActivityCategories.Add(category);
+                db.SaveChanges();
                 var response = Request.CreateResponse(HttpStatusCode.Created, category);
-                response.Headers.Location = new Uri(this.Request.RequestUri.AbsoluteUri + category.Id);//new Uri(Url.Link("DefaultApi", new { id = category.Key }));
+                response.Headers.Location = new Uri(Request.RequestUri.AbsoluteUri + category.Id);//new Uri(Url.Link("DefaultApi", new { id = category.Key }));
                 return response;
-            }
-            else
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
             }
         }
 
         // DELETE api/Category/5
         public async Task<HttpResponseMessage> Delete(int id)
         {
-            User user = await AuthenticateUser(GetAuthentication());
-            if (user == null)
+            using (CrowdContext db = new CrowdContext())
             {
-                return new HttpResponseMessage(HttpStatusCode.Unauthorized);
-            }
+                User user = await AuthenticateUser(GetAuthentication(), db);
+                if (user == null)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                }
 
-            if (id <= 0)
-                return Request.CreateResponse(HttpStatusCode.BadRequest, "id must be greater than zero");
-            var category = DB.ParticipantActivityCategories.Find(id);
-            if (category == null)
-            {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
+                if (id <= 0)
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "id must be greater than zero");
+                var category = db.ParticipantActivityCategories.Find(id);
+                if (category == null)
+                {
+                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
+                }
+                db.ParticipantActivityCategories.Remove(category);
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+                }
+                return Request.CreateResponse(HttpStatusCode.OK, category);
             }
-            DB.ParticipantActivityCategories.Remove(category);
-            try
-            {
-                DB.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
-            }
-            return Request.CreateResponse(HttpStatusCode.OK, category);
+            
         }
     }
 }
