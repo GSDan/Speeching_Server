@@ -120,16 +120,16 @@ namespace Crowd.Service.Controller
                     {
                         result.User = user;
                         user.Submissions.Add(result);
-                        db.ParticipantResults.Add(result);
+                        result = db.ParticipantResults.Add(result);
                         try
                         {
                             db.SaveChanges();
                         }
                         catch (Exception ex)
                         {
-                            throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.ExpectationFailed,
-                                ex.Message));
+                            return Request.CreateResponse(HttpStatusCode.ExpectationFailed, ex.Message);
                         }
+                        
                         SvcStatus status = await CrowdFlowerApi.CreateJob(result);
                         if (status.Level == 0)
                         {
@@ -154,14 +154,24 @@ namespace Crowd.Service.Controller
                             }
                             catch (Exception e)
                             {
-                                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.ExpectationFailed, e.Message));
+                                throw new HttpResponseException(Request.CreateResponse(
+                                    HttpStatusCode.ExpectationFailed, e.Message));
                             }
 
-                            CrowdFlowerApi.LaunchJob(jobRes.id);
+                            //CrowdFlowerApi.LaunchJob(jobRes.id);
                             return status.Response;
                         }
                         else
+                        {
+                            db.DebugMessages.Add(new DebugMessage
+                            {
+                                Message = status.Description,
+                                Filename = "ActivityResultController",
+                                FunctionName = "Post"
+                            });
                             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, status.Description);
+                        }
+                            
                     }
                     else
                         return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Activity result cannot be null");

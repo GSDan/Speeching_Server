@@ -3,7 +3,7 @@ namespace Crowd.Model.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class MoreFeeds : DbMigration
+    public partial class RecordingUrl : DbMigration
     {
         public override void Up()
         {

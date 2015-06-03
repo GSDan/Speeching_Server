@@ -32,6 +32,7 @@ namespace Crowd.Model
         public DbSet<User> Users { get; set; }
         public DbSet<ParticipantFeedItem> ParticipantFeedItems { get; set; }
 
+        public DbSet<DebugMessage> DebugMessages { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

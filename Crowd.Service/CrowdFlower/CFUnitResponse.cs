@@ -33,7 +33,8 @@ namespace Crowd.Service.CrowdFlower
                     {
                         Id = unit.Key.ToString(),
                         CreatedAt = DateTime.Now,
-                        ParticipantTaskId = int.Parse(Path.GetFileNameWithoutExtension(unit.Value.AudioUrl))
+                        ParticipantTaskId = int.Parse(Path.GetFileNameWithoutExtension(unit.Value.AudioUrl)),
+                        RecordingUrl = unit.Value.AudioUrl
                     };
                     _units.Add(res);
                 }

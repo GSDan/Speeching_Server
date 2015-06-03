@@ -13,6 +13,7 @@ namespace Crowd.Model.Data
 
         public int ParticipantResultId { get; set; }
         public int ParticipantTaskId { get; set; }
+        public string RecordingUrl { get; set; }
 
         [ForeignKey("ParticipantResultId")]
         public virtual ParticipantResult ParticipantResult { get; set; }

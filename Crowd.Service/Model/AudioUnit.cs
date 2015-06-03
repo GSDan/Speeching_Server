@@ -31,21 +31,16 @@ namespace Crowd.Service.Model
 
         public static string CreateCFUploadUnits(IEnumerable<string> audioPaths, string audioTypeCodec)
         {
-            List<KeyValuePair<string,string>> lst = new List<KeyValuePair<string,string>>();
             string json = "";
-            int count = 0;
+
             foreach (var path in audioPaths)
             {
                 var audioUrl = SvcUtil.GetAudioUrlFromPath(path);
-                json += String.Format("{{\"AudioUrl\":\"{0}\", \"AudioTypeCodec\":\"{1}\"}}\r\n", audioUrl, audioTypeCodec);
-                count += 1;
+                json += string.Format("{{\"AudioUrl\":\"{0}\", \"AudioTypeCodec\":\"{1}\"}}\r\n", audioUrl, audioTypeCodec);
             }
             json = json.TrimEnd();
-            //var retLst = audioPaths.Select(path => new KeyValuePair<string, string>("unit[data][AudioUrl]", jss)));
-            //jss = JsonConvert.SerializeObject(jss);
 
             return json;
-            //return new StringContent(jss, Encoding.UTF8, "application/json");
         }
     }
 }

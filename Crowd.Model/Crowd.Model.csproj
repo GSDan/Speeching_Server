@@ -74,6 +74,7 @@
     <Compile Include="Common\TaskType.cs" />
     <Compile Include="CrowdContext.cs" />
     <Compile Include="CustomDBInitializer.cs" />
+    <Compile Include="Data\DebugMessage.cs" />
     <Compile Include="Data\CrowdJudgement.cs" />
     <Compile Include="Data\CrowdRowResponse.cs" />
     <Compile Include="Data\ParticipantActivity.cs" />
@@ -101,9 +102,9 @@
     <Compile Include="Interface\ICrowdTaskModel.cs" />
     <Compile Include="Interface\IUser.cs" />
     <Compile Include="ITaskModel.cs" />
-    <Compile Include="Migrations\201505291239430_MoreFeeds.cs" />
-    <Compile Include="Migrations\201505291239430_MoreFeeds.Designer.cs">
-      <DependentUpon>201505291239430_MoreFeeds.cs</DependentUpon>
+    <Compile Include="Migrations\201506030823471_RecordingUrl.cs" />
+    <Compile Include="Migrations\201506030823471_RecordingUrl.Designer.cs">
+      <DependentUpon>201506030823471_RecordingUrl.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -133,8 +134,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201505291239430_MoreFeeds.resx">
-      <DependentUpon>201505291239430_MoreFeeds.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201506030823471_RecordingUrl.resx">
+      <DependentUpon>201506030823471_RecordingUrl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
