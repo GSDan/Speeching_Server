@@ -31,3 +31,4 @@ C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\bin\Release\Ne
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Release\Crowd.Model.dll
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Release\Crowd.Model.pdb
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\bin\Release\MySql.Data.Entity.EF6.dll
+C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Release\Crowd.Model.csprojResolveAssemblyReference.cache

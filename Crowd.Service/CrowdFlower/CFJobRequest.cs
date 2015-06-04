@@ -54,9 +54,10 @@ namespace Crowd.Service.CrowdFlower
 
         private const string AudioHtmlTag = "<audio src=\"{{AudioUrl}}\" type=\"{{AudioTypeCodec}}\" preload=\"auto\" controls=\"controls\"></audio>";
         private const string TextareaCml = "<cml:textarea name=\"txta\" label=\"{0}\" class=\"\" instructions=\"{1}\" validates=\"{2}\"/>";
-        private const string GroupCml = "<cml:group only-if=\"txta\">{0}</cml:group>";
+        private const string GroupCml = "<cml:group>{0}</cml:group>";
         private const string RadioParentCml = "<cml:radios name=\"rlst{0}\" label=\"{1}\" validates=\"{2}\">{3}</cml:radios>";
         private const string RadioCml = "<cml:radio label=\"{0}\" />";
+        private const string RatingCml = "<cml:ratings name=\"rlst{0}\" label=\"{1}\" points=\"{2}\" validates=\"{3}\" />";
 
         private static string CreateAudioCml()
         {
@@ -64,14 +65,14 @@ namespace Crowd.Service.CrowdFlower
             cml += AudioHtmlTag;
 
             cml += "{% if TaskType == \"MP\" %}\r\n";
-            cml += CreateMinimalPairsCml(12);
+            cml += CreateMinimalPairsCml("Which of these words was the one spoken?", 12, "required");
             cml += "{% else %}\r\n";
             cml += string.Format(TextareaCml, "Transcribe the above audio", "Please listen to the audio clip and transcribe it as accurately as you can.", "required");
             cml += "{% endif %}";
 
-            string ratingScales = CreateRatingScale("Trans", "How would you rate the ease of listening for this clip?", "required", 5, "Very easy", "Very difficult");
+            string ratingScales = CreateRatingScale("Trans", "How would you rate the ease of listening for this clip?", "required", 5);
 
-            ratingScales += CreateRatingScale("Accent", "How much more difficult did the person's accent make the task?", "required", 5, "Not at all", "Much more difficult");
+            ratingScales += CreateRatingScale("Accent", "How much more difficult did the person's accent make the task?", "required", 5);
 
             cml += string.Format(GroupCml, ratingScales) + "</div>";
 
@@ -83,34 +84,22 @@ namespace Crowd.Service.CrowdFlower
         /// </summary>
         /// <param name="validator"></param>
         /// <param name="num">Number of radio options</param>
-        /// <param name="firstLabel">Label on the first radio</param>
-        /// <param name="lastLabel">Label on the last radio</param>
         /// <param name="dataType"></param>
         /// <param name="desc"></param>
         /// <returns>CML string</returns>
-        private static string CreateRatingScale(string dataType, string desc, string validator, int num, string firstLabel = null, string lastLabel = null)
+        private static string CreateRatingScale(string dataType, string desc, string validator, int num)
         {
-            string radios = "";
-
-            for (int i = 1; i <= num; i++)
-            {
-                string label = i.ToString();
-
-                if (firstLabel != null && i == 1) label += " " + firstLabel;
-                if (lastLabel != null && i == num) label += " " + lastLabel;
-
-                radios += string.Format(RadioCml, label);
-            }
-
-            return string.Format(RadioParentCml, dataType, desc, validator, radios);
+            return string.Format(RatingCml, dataType, desc, num, validator);
         }
 
         /// <summary>
         /// Create a list of radio buttons
         /// </summary>
+        /// <param name="label"></param>
         /// <param name="numChoices"></param>
+        /// <param name="validator"></param>
         /// <returns></returns>
-        private static string CreateMinimalPairsCml(int numChoices)
+        private static string CreateMinimalPairsCml(string label, int numChoices, string validator)
         {
             string toRet = "";
 
@@ -118,8 +107,9 @@ namespace Crowd.Service.CrowdFlower
             {
                 toRet += string.Format(RadioCml, string.Format("{{{{choice{0}}}}}", i + 1));
             }
+            toRet += string.Format(RadioCml, "None of the above");
 
-            return toRet;
+            return string.Format(RadioParentCml, "MP", label, validator, toRet);
         }
 
         [Flags]

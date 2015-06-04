@@ -48,25 +48,6 @@ namespace Crowd.Model
             .HasOptional(s => s.ParticipantActivity)
             .WithMany()
             .WillCascadeOnDelete(false);
-
-            //modelBuilder.Entity<TaskId>()
-            //.HasOptional(l => l.ScientistTaskResponse)
-            //.WithRequired(r => r.TaskId);
-
-            //modelBuilder.Entity<CrowdTask>()
-            //    .HasOptional(w => w.CrowdWorker)
-            //    .WithMany(c=> c.SpeechingRecordings)
-            //    .WillCascadeOnDelete(false);
-
-            //modelBuilder.Entity<CrowdTask>()
-            //    .HasRequired(w => w.User)
-            //    .WithMany(c => c.SpeechingRecordings)
-            //    .WillCascadeOnDelete(false);
-
-            //To rename a column using Fluent API
-            //modelBuilder.Entity<SpeechingSample>()
-            //    .Property(s => s.Filename)
-            //    .HasColumnName("File_Name");
         }
     }
 }
