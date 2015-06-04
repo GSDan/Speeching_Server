@@ -13,6 +13,8 @@ namespace Crowd.Service.CrowdFlower
         {
             public string AudioUrl;
             public string AudioTypeCodec;
+            public int ParticipantTaskId;
+            public int ParticipantAssessmentTaskId;
         }
 
         public Dictionary<int, CFUnitItem> ReturnedUnits { get; set; }
@@ -33,7 +35,8 @@ namespace Crowd.Service.CrowdFlower
                     {
                         Id = unit.Key.ToString(),
                         CreatedAt = DateTime.Now,
-                        ParticipantTaskId = int.Parse(Path.GetFileNameWithoutExtension(unit.Value.AudioUrl)),
+                        ParticipantTaskId = (unit.Value.ParticipantTaskId == -1)? (int?) null : unit.Value.ParticipantTaskId,
+                        ParticipantAssessmentTaskId = (unit.Value.ParticipantAssessmentTaskId == -1)? (int?) null : unit.Value.ParticipantAssessmentTaskId,
                         RecordingUrl = unit.Value.AudioUrl
                     };
                     _units.Add(res);

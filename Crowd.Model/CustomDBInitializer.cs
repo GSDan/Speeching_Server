@@ -360,15 +360,21 @@ namespace Crowd.Model
                                     Title = "QuickFire Speaking!",
                                     Instructions =
                                         "Press the record button and say the shown word as clearly as you can, then press stop.",
-                                    Prompts = new List<ParticipantAssessmentTaskPrompt>
+                                    PromptCol = new ParticipantAssessmentTaskPromptCol
                                     {
-                                        new ParticipantAssessmentTaskPrompt {Value = "Easy"},
-                                        new ParticipantAssessmentTaskPrompt {Value = "Trickier"},
-                                        new ParticipantAssessmentTaskPrompt {Value = "Simple"},
-                                        new ParticipantAssessmentTaskPrompt {Value = "More Difficult"},
-                                        new ParticipantAssessmentTaskPrompt {Value = "Exquisite"},
-                                        new ParticipantAssessmentTaskPrompt {Value = "Borderline"}
+                                        Name = "Minimal Pairs 1",
+                                        PromptType = ParticipantAssessmentTaskPromptCol.PromptTaskType.MinimalPairs,
+                                        Prompts = new List<ParticipantAssessmentTaskPrompt>
+                                        {
+                                            new ParticipantAssessmentTaskPrompt {Value = "Cub"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Coop"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Cup"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Carp"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Keep"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Sheep"}
+                                        }
                                     }
+                                    
                                 },
                                 new ParticipantAssessmentTask
                                 {
@@ -376,21 +382,30 @@ namespace Crowd.Model
                                     Title = "Image Description",
                                     Instructions =
                                         "Press the 'Record' button and follow the instruction in the image's caption",
-                                    Prompts = new List<ParticipantAssessmentTaskPrompt>
+                                    PromptCol = new ParticipantAssessmentTaskPromptCol
                                     {
-                                        new ParticipantAssessmentTaskPrompt {Value = "What does the image show?"},
-                                        new ParticipantAssessmentTaskPrompt
+                                        Name = "Image Description 1",
+                                        PromptType = ParticipantAssessmentTaskPromptCol.PromptTaskType.ImageDesc,
+                                        Prompts = new List<ParticipantAssessmentTaskPrompt>
                                         {
-                                            Value = "Describe the colours in the image."
-                                        },
-                                        new ParticipantAssessmentTaskPrompt
-                                        {
-                                            Value = "Describe the dominant feature of the image."
-                                        },
-                                        new ParticipantAssessmentTaskPrompt
-                                        {
-                                            Value = "What does the image make you think of?"
-                                        },
+                                            new ParticipantAssessmentTaskPrompt
+                                            {
+                                                Value = "What does the image show?"
+                                            },
+                                            new ParticipantAssessmentTaskPrompt
+                                            {
+                                                Value = "Describe the colours in the image."
+                                            },
+                                            new ParticipantAssessmentTaskPrompt
+                                            {
+                                                Value = "Describe the dominant feature of the image."
+                                            },
+                                            new ParticipantAssessmentTaskPrompt
+                                            {
+                                                Value = "What does the image make you think of?"
+                                            }
+                                        }
+                                        ,
                                     },
                                     Image =
                                         "http://th00.deviantart.net/fs71/PRE/i/2013/015/d/c/a_hobbit_hole_by_uberpicklemonkey-d5rmn8n.jpg"

@@ -130,13 +130,13 @@ namespace Crowd.Service.Controller
                             return Request.CreateResponse(HttpStatusCode.ExpectationFailed, ex.Message);
                         }
                         
-                        SvcStatus status = await CrowdFlowerApi.CreateJob(result);
+                        SvcStatus status = await CrowdFlowerApi.CreateJob(result, await db.ParticipantActivities.FindAsync(result.ParticipantActivityId));
                         if (status.Level == 0)
                         {
                             string json = await status.Response.Content.ReadAsStringAsync();
                             CFJobResponse jobRes = JsonConvert.DeserializeObject<CFJobResponse>(json);
-                            CrowdFlowerApi.UploadUnits(jobRes.id, result.ResourceUrl);
-                            CrowdFlowerApi.JobQualitySettings(jobRes.id);
+                            //CrowdFlowerApi.UploadUnits(jobRes.id, result.ResourceUrl);
+                            //CrowdFlowerApi.JobQualitySettings(jobRes.id);
 
                             result.CrowdJobId = jobRes.id;
 
@@ -169,6 +169,7 @@ namespace Crowd.Service.Controller
                                 Filename = "ActivityResultController",
                                 FunctionName = "Post"
                             });
+                            await db.SaveChangesAsync();
                             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, status.Description);
                         }
                             

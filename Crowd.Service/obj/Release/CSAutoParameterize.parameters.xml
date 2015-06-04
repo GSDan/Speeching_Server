@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<parameters>
-  <parameter name="CrowdScience-Web.config Connection String" description="CrowdScience Connection String used in web.config by the application to access the database." defaultValue="server=46.101.19.97;user id=azure;password=SuperSecure;database=SpeechingTest;persistsecurityinfo=True" tags="SqlConnectionString">
-    <parameterEntry kind="XmlFile" scope="C:\\Users\\tgs03_000\\Documents\\Dev\\Uni\\speeching-server\\Crowd\.Service\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='CrowdScience']/@connectionString" />
-  </parameter>
-  <parameter name="Crowd.Model.CrowdContext-Web.config Connection String" description="Crowd.Model.CrowdContext Connection String used in web.config by the application to access the database." defaultValue="Crowd.Model.CrowdContext_ConnectionString" tags="SqlConnectionString">
-    <parameterEntry kind="XmlFile" scope="C:\\Users\\tgs03_000\\Documents\\Dev\\Uni\\speeching-server\\Crowd\.Service\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='Crowd.Model.CrowdContext']/@connectionString" />
-  </parameter>
-</parameters>

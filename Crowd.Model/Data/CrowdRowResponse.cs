@@ -12,13 +12,13 @@ namespace Crowd.Model.Data
         public DateTime CreatedAt { get; set; }
 
         public int ParticipantResultId { get; set; }
-        public int ParticipantTaskId { get; set; }
+        public int? ParticipantTaskId { get; set; }
+        public int? ParticipantAssessmentTaskId { get; set; }
         public string RecordingUrl { get; set; }
 
-        [ForeignKey("ParticipantResultId")]
         public virtual ParticipantResult ParticipantResult { get; set; }
-        [ForeignKey("ParticipantTaskId")]
         public virtual ParticipantTask ParticipantTask { get; set; }
+        public virtual ParticipantAssessmentTask ParticipantAssessmentTask { get; set; }
 
         // The judgements given for this row
         public virtual ICollection<CrowdJudgement> TaskJudgements { get; set; }

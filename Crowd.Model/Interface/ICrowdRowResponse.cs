@@ -14,11 +14,10 @@ namespace Crowd.Model.Interface
         DateTime CreatedAt { get; set; }
 
         int ParticipantResultId { get; set; }
-        int ParticipantTaskId { get; set; }
+        int? ParticipantTaskId { get; set; }
+        int? ParticipantAssessmentTaskId { get; set; }
 
-        [ForeignKey("ParticipantResultId")]
         ParticipantResult ParticipantResult { get; set; }
-        [ForeignKey("ParticipantTaskId")]
         ParticipantTask ParticipantTask { get; set; }
 
         // The judgements given for this row

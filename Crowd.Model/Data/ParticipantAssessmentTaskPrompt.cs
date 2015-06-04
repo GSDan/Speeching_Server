@@ -10,5 +10,7 @@ namespace Crowd.Model.Data
     {
         public int Id { get; set; }
         public string Value { get; set; }
+
+        public virtual ParticipantAssessmentTaskPromptCol Category { get; set; }
     }
 }

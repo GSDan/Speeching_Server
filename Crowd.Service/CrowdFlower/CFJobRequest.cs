@@ -17,60 +17,109 @@ namespace Crowd.Service.CrowdFlower
 {
     public class CFJobRequest
     {
-        private const string CROWDFLOWER_BASE_URI = "https://api.crowdflower.com/v1/";
-        private const string CROWDFLOWER_KEY = "yvQuiDN7zkaRQH8uhfnn";
-        private const string SERVICE_UPLOAD_URL = "http://api.opescode.com/uploads/";
-        private const string MP4_TYPE_CODEC = "audio/mp4; codec='mp4a.40.2'";
-        private const string AUDIO_HTML_TAG = "<audio src=\"{{AudioUrl}}\" type=\"{{AudioTypeCodec}}\" preload=\"auto\" controls=\"controls\"></audio>";
-        private const string TEXTAREA_CML =
-            "<cml:textarea name=\"txta\" label=\"{0}\" class=\"\" instructions=\"{1}\" validates=\"{2}\"/>";
+        private const string CrowdflowerBaseUri = "https://api.crowdflower.com/v1/";
+        private const string CrowdflowerKey = "yvQuiDN7zkaRQH8uhfnn";
+        private const string Mp4TypeCodec = "audio/mp4; codec='mp4a.40.2'";
 
-        private const string GROUP_CML = "<cml:group only-if=\"txta\">{0}</cml:group>";
-        private const string RADIOS_CML = "<cml:radios name=\"rlst{0}\" label=\"{1}\" validates=\"{2}\">{3}</cml:radios>";
-        private const string RADIO_CML = "<cml:radio label=\"{0}\" />";
+        public string ResourceUrl { get; set; }
+        public List<CrowdRowResponse> Rows;
 
-        public string resourceUrl { get; set; }
-        public List<CrowdRowResponse> rows;
+        public string Cml { get; set; }
+        public string Css { get; set; }
+        public string Instructions { get; set; }
+        public int JudgmentsPerUnit { get; set; }
+        public int PaymentCents { get; set; }
+        public string SupportEmail { get; set; }
+        public string Title { get; set; }
+        public int UnitsPerAssignment { get; set; }
+        public string WebhookUri { get; set; }
 
-        public int after_gold { get; set; }
-        public string alias { get; set; }
-        public int auto_order_threshold { get; set; }
-        public int auto_order_timeout { get; set; }
-        public bool auto_order { get; set; }
-        public string cml { get; set; }
-        public string css { get; set; }
-        public int expected_judgments_per_unit { get; set; }
-        public int gold_per_assignment { get; set; }
-        public bool include_unfinished { get; set; }
-        public string instructions { get; set; }
-        public string js { get; set; }
-        public int judgments_per_unit { get; set; }
-        public int max_judgments_per_unit { get; set; }
-        public int min_unit_confidence { get; set; }
-        public int payment_cents { get; set; }
-        public string problem { get; set; }
-        public string support_email { get; set; }
-        public string title { get; set; }
-        public int units_per_assignment { get; set; }
-        public bool units_remain_finalized { get; set; }
-        public string uri { get; set; }
-        public string variable_judgments_mode { get; set; }
-        public string webhook_uri { get; set; }
-        
         //Create the HttpContent for the form
         internal FormUrlEncodedContent CreateRequestCUrlData()
         {
-            List<KeyValuePair<string, string>> lstKeyValue = new List<KeyValuePair<string, string>>();
-
-            foreach (PropertyInfo property in typeof(CFJobRequest).GetProperties())
+            List<KeyValuePair<string, string>> lstKeyValue = new List<KeyValuePair<string, string>>
             {
-                if (property.CanRead && " title instructions cml css webhook_uri support_email payment_cents units_per_assignment ".IndexOf(" " + property.Name + " ") >= 0)
-                {
-                    lstKeyValue.Add(new KeyValuePair<string, string>("job[" + property.Name + "]", property.GetValue(this) + ""));
-                }
-            }
+                new KeyValuePair<string, string>("job[title]", Title),
+                new KeyValuePair<string, string>("job[instructions]", Instructions),
+                new KeyValuePair<string, string>("job[cml]", CreateAudioCml()),
+                new KeyValuePair<string, string>("job[css]", Css),
+                new KeyValuePair<string, string>("job[webhook_uri]", WebhookUri),
+                new KeyValuePair<string, string>("job[support_email]", SupportEmail),
+                new KeyValuePair<string, string>("job[payment_cents]", PaymentCents.ToString()),
+                new KeyValuePair<string, string>("job[units_per_assignment]", UnitsPerAssignment.ToString())
+            };
 
             return new FormUrlEncodedContent(lstKeyValue);
+        }
+
+        private const string AudioHtmlTag = "<audio src=\"{{AudioUrl}}\" type=\"{{AudioTypeCodec}}\" preload=\"auto\" controls=\"controls\"></audio>";
+        private const string TextareaCml = "<cml:textarea name=\"txta\" label=\"{0}\" class=\"\" instructions=\"{1}\" validates=\"{2}\"/>";
+        private const string GroupCml = "<cml:group only-if=\"txta\">{0}</cml:group>";
+        private const string RadioParentCml = "<cml:radios name=\"rlst{0}\" label=\"{1}\" validates=\"{2}\">{3}</cml:radios>";
+        private const string RadioCml = "<cml:radio label=\"{0}\" />";
+
+        private static string CreateAudioCml()
+        {
+            var cml = "<div class=\"grp\">";
+            cml += AudioHtmlTag;
+
+            cml += "{% if TaskType == \"MP\" %}\r\n";
+            cml += CreateMinimalPairsCml(12);
+            cml += "{% else %}\r\n";
+            cml += string.Format(TextareaCml, "Transcribe the above audio", "Please listen to the audio clip and transcribe it as accurately as you can.", "required");
+            cml += "{% endif %}";
+
+            string ratingScales = CreateRatingScale("Trans", "How would you rate the ease of listening for this clip?", "required", 5, "Very easy", "Very difficult");
+
+            ratingScales += CreateRatingScale("Accent", "How much more difficult did the person's accent make the task?", "required", 5, "Not at all", "Much more difficult");
+
+            cml += string.Format(GroupCml, ratingScales) + "</div>";
+
+            return cml;
+        }
+
+        /// <summary>
+        /// Creates the CML for a ratings scale
+        /// </summary>
+        /// <param name="validator"></param>
+        /// <param name="num">Number of radio options</param>
+        /// <param name="firstLabel">Label on the first radio</param>
+        /// <param name="lastLabel">Label on the last radio</param>
+        /// <param name="dataType"></param>
+        /// <param name="desc"></param>
+        /// <returns>CML string</returns>
+        private static string CreateRatingScale(string dataType, string desc, string validator, int num, string firstLabel = null, string lastLabel = null)
+        {
+            string radios = "";
+
+            for (int i = 1; i <= num; i++)
+            {
+                string label = i.ToString();
+
+                if (firstLabel != null && i == 1) label += " " + firstLabel;
+                if (lastLabel != null && i == num) label += " " + lastLabel;
+
+                radios += string.Format(RadioCml, label);
+            }
+
+            return string.Format(RadioParentCml, dataType, desc, validator, radios);
+        }
+
+        /// <summary>
+        /// Create a list of radio buttons
+        /// </summary>
+        /// <param name="numChoices"></param>
+        /// <returns></returns>
+        private static string CreateMinimalPairsCml(int numChoices)
+        {
+            string toRet = "";
+
+            for(int i = 0; i < numChoices; i++)
+            {
+                toRet += string.Format(RadioCml, string.Format("{{{{choice{0}}}}}", i + 1));
+            }
+
+            return toRet;
         }
 
         [Flags]
@@ -95,32 +144,32 @@ namespace Crowd.Service.CrowdFlower
             return new FormUrlEncodedContent(list);
         }
 
-        internal async Task<SvcStatus> CreateAudioJob(ParticipantResult result)
+        internal async Task<SvcStatus> CreateAudioJob(ParticipantResult result, ParticipantActivity activity)
         {
             SvcStatus status = new SvcStatus();
             try
             {
                 string userKey = result.User.Key.ToString();
-                ParticipantActivity activity = result.ParticipantActivity;
 
                 using (HttpClient client = new HttpClient())
                 {
-                    var reqContent = CreateRequestCUrlData();
-                    Uri baseAddress = new Uri(CROWDFLOWER_BASE_URI + "jobs.json?key=" + CROWDFLOWER_KEY);
-                    var response = client.PostAsync(baseAddress, reqContent).Result;
+                    FormUrlEncodedContent reqContent = CreateRequestCUrlData();
+                    Uri baseAddress = new Uri(CrowdflowerBaseUri + "jobs.json?key=" + CrowdflowerKey);
+                    HttpResponseMessage response = client.PostAsync(baseAddress, reqContent).Result;
+
                     if (response.IsSuccessStatusCode)
                     {
                         CFJobResponse jobRes = await response.Content.ReadAsAsync<CFJobResponse>();
-                        var lstAudioFiles = await SvcUtil.DownloadAndExtractZip(resourceUrl, jobRes.id.ToString(), userKey, activity.Id.ToString());
+                        List<string> audioFiles = await SvcUtil.DownloadAndExtractZip(ResourceUrl, jobRes.id.ToString(), userKey, activity.Id.ToString());
 
-                        if (!lstAudioFiles.Any()) return status;
+                        if (!audioFiles.Any()) return status;
 
                         CFUnitRequest unitsReq = new CFUnitRequest();
-                        string uploadUnitsJson = AudioUnit.CreateCFUploadUnits(lstAudioFiles, MP4_TYPE_CODEC);
+                        string uploadUnitsJson = AudioUnit.CreateCFData(audioFiles, Mp4TypeCodec, activity, result);
 
-                        rows = await unitsReq.UploadUnits(jobRes.id, uploadUnitsJson);
+                        Rows = await unitsReq.SendCfUnits(jobRes.id, uploadUnitsJson);
 
-                        foreach (CrowdRowResponse unit in rows)
+                        foreach (CrowdRowResponse unit in Rows)
                         {
                             unit.ParticipantResultId = result.Id;
                         }
@@ -128,9 +177,9 @@ namespace Crowd.Service.CrowdFlower
                         status = new SvcStatus()
                         {
                             Level = 0,
-                            Description = "Job created and launched",
+                            Description = "Job created",
                             Response = response,
-                            CreatedRows = rows
+                            CreatedRows = Rows
                         };
                     }
                     else
@@ -149,18 +198,18 @@ namespace Crowd.Service.CrowdFlower
 
         internal static SvcStatus LaunchJob(int jobId)
         {
-            var status = new SvcStatus();
+            SvcStatus status;
+
             if (jobId > 0)
             {
-                var baseAddress = new Uri(String.Format("{0}jobs/{1}/orders.json?key={2}",
-                    CROWDFLOWER_BASE_URI, jobId, CROWDFLOWER_KEY));
+                Uri baseAddress = new Uri(string.Format("{0}jobs/{1}/orders.json?key={2}", CrowdflowerBaseUri, jobId, CrowdflowerKey));
+
                 using (HttpClient client = new HttpClient())
                 {
                     CFJobRequest job = new CFJobRequest();
+
                     //TODO: what is unitCount? I use 20 for now
-                    var response =
-                        client.PostAsync(baseAddress, job.LaunchRequestCUrlData(CFJobRequest.CFWorkForce.Internally, 20))
-                            .Result;
+                    var response = client.PostAsync(baseAddress, job.LaunchRequestCUrlData(CFWorkForce.Internally, 20)).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         status = new SvcStatus() { Level = 0, Description = "Job launched", Response = response };

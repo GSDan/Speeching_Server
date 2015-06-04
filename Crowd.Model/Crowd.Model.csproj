@@ -81,6 +81,7 @@
     <Compile Include="Data\ParticipantActivityCategory.cs" />
     <Compile Include="Data\ParticipantAssessmentTask.cs" />
     <Compile Include="Data\ParticipantAssessmentTaskPrompt.cs" />
+    <Compile Include="Data\ParticipantAssessmentTaskPromptCol.cs" />
     <Compile Include="Data\ParticipantFeedItem.cs" />
     <Compile Include="Data\ParticipantPage.cs" />
     <Compile Include="Data\ParticipantResult.cs" />
@@ -102,10 +103,6 @@
     <Compile Include="Interface\ICrowdTaskModel.cs" />
     <Compile Include="Interface\IUser.cs" />
     <Compile Include="ITaskModel.cs" />
-    <Compile Include="Migrations\201506030823471_RecordingUrl.cs" />
-    <Compile Include="Migrations\201506030823471_RecordingUrl.Designer.cs">
-      <DependentUpon>201506030823471_RecordingUrl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskModel.cs" />
@@ -132,11 +129,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201506030823471_RecordingUrl.resx">
-      <DependentUpon>201506030823471_RecordingUrl.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
