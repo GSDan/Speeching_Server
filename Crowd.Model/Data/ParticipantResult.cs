@@ -14,6 +14,21 @@ namespace Crowd.Model.Data
         public int CrowdJobId { get; set; }
         public bool IsAssessment { get; set; }
         public ParticipantActivity ParticipantActivity { get; set; }
-        public Dictionary<int, string> ParticipantTaskIdResults { get; set; }
+        public virtual ICollection<ParticipantResultData> Data { get; set; }
+    }
+
+    public class ParticipantResultData
+    {
+        public int Id { get; set; }
+        public int? ParticipantTaskId { get; set; }
+        public int? ParticipantAssessmentTaskId { get; set; }
+        public int? ParticipantAssessmentTaskPromptId { get; set; }
+
+        public virtual ParticipantResult ParentSubmission { get; set; }
+        public virtual ParticipantTask ParticipantTask { get; set; }
+        public virtual ParticipantAssessmentTask ParticipantAssessmentTask { get; set; }
+        public virtual ParticipantAssessmentTaskPrompt ParticipantAssessmentTaskPrompt { get; set; }
+        public string FilePath { get; set; }
+        public string ExtraData { get; set; }
     }
 }

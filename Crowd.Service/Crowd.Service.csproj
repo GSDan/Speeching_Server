@@ -122,7 +122,6 @@
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />
     <Content Include="Tasks.aspx" />
-    <Content Include="Uploads\sc2ev1.mp3" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -221,6 +220,9 @@
       <Project>{7ecb67bc-dbf2-457e-b183-7bcd72f6cdee}</Project>
       <Name>Crowd.Model</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Uploads\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

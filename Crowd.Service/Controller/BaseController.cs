@@ -54,6 +54,47 @@ namespace Crowd.Service.Controller
             }
         }
 
+        protected async Task<float?> MinimalPairsScore(User user, CrowdContext db, int jobId = -1)
+        {
+            try
+            {
+                // Get all Quickfire submissions
+                var allSubmissions = from res in db.ParticipantResults
+                                    where res.User.Email == user.Email
+                                    from resData in res.Data
+                                    where resData.ParticipantAssessmentTask != null
+                                          && resData.ParticipantAssessmentTask.TaskType ==
+                                          ParticipantAssessmentTask.AssessmentTaskType.QuickFire
+                                    select resData;
+                
+                // Get total num of judgements 
+                int numTotal = await (from resData in allSubmissions
+                                    from judgement in db.CrowdJudgements
+                                    where judgement.JobId == resData.ParentSubmission.CrowdJobId
+                                    from data in judgement.Data
+                                    where data.DataType == "rlstmp"
+                                    select data).CountAsync();
+
+                // Get total num of correct judgements
+                int numCorrect = await (from resData in allSubmissions
+                                        from judgement in db.CrowdJudgements
+                                        where judgement.JobId == resData.ParentSubmission.CrowdJobId
+                                        from data in judgement.Data
+                                        where
+                                            data.DataType == "rlstmp" &&
+                                            data.StringResponse == resData.ParticipantAssessmentTaskPrompt.Value
+                                        select data).CountAsync();
+
+                float onePercent = numTotal/100f;
+
+                return numCorrect/onePercent;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
         protected async Task<float?> AverageRating(string resDataType, User user, CrowdContext db, int jobId = -1)
         {
             try

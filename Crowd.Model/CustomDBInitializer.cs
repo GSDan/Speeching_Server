@@ -371,7 +371,13 @@ namespace Crowd.Model
                                             new ParticipantAssessmentTaskPrompt {Value = "Cup"},
                                             new ParticipantAssessmentTaskPrompt {Value = "Carp"},
                                             new ParticipantAssessmentTaskPrompt {Value = "Keep"},
-                                            new ParticipantAssessmentTaskPrompt {Value = "Sheep"}
+                                            new ParticipantAssessmentTaskPrompt {Value = "Sheep"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Cape"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Heap"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Cop"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Hub"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Cap"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Hoop"}
                                         }
                                     }
                                     

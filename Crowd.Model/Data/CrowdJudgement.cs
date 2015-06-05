@@ -64,7 +64,9 @@ namespace Crowd.Model.Data
     public class CrowdJudgementData
     {
         public int Id { get; set; }
+
         public int CrowdJudgementId { get; set; }
+        public virtual CrowdJudgement CrowdJudgement { get; set; }
 
         public string DataType { get; set; }
         public string StringResponse { get; set; }

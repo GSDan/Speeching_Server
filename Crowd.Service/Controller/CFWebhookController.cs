@@ -48,8 +48,6 @@ namespace Crowd.Service.Controller
 
             using (CrowdContext db = new CrowdContext())
             {
-
-
                 int taskId = cfData.results.judgments[0].unit_id;
                 CrowdRowResponse resp = await db.CrowdRowResponses.FindAsync(taskId.ToString());
 

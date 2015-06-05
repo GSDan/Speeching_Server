@@ -27,6 +27,7 @@ namespace Crowd.Service.CrowdFlower
     {
         public List<Judgement> judgments { get; set; }
         public AggResult rlsttrans { get; set; }
+        public AggResult rlstmp { get; set; }
         public AggResult rlstaccent { get; set; }
     }
 

@@ -1,9 +1,5 @@
 ﻿using Crowd.Model.Data;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Crowd.Model.Interface
 {
@@ -17,6 +13,6 @@ namespace Crowd.Model.Interface
         int CrowdJobId { get; set; }
         bool IsAssessment { get; set; }
         ParticipantActivity ParticipantActivity { get; set; }
-        Dictionary<int, string> ParticipantTaskIdResults { get; set; }
+        ICollection<ParticipantResultData> Data { get; set; }
     }
 }

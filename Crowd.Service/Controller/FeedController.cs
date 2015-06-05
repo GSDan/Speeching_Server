@@ -83,6 +83,21 @@ namespace Crowd.Service.Controller
                     items.Add(transFeedback);
                 }
 
+                float? minPairsRating = await MinimalPairsScore(user, db);
+                if (minPairsRating != null)
+                {
+                    var mpFeedback = new ParticipantFeedItem
+                    {
+                        Percentage = minPairsRating,
+                        Title = "QuickFire Success",
+                        Description = "This is the success rating of people identifying the words spoken in your QuickFire tests!",
+                        Date = DateTime.Now,
+                        Dismissable = false,
+                        Importance = 10
+                    };
+                    items.Add(mpFeedback);
+                }
+
                 return new HttpResponseMessage()
                 {
                     Content = new JsonContent(items)
