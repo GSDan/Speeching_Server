@@ -114,10 +114,7 @@
     <Content Include="Activities.aspx" />
     <Content Include="Categories.aspx" />
     <Content Include="Global.asax" />
-    <None Include="Properties\PublishProfiles\api.opescode.com - Web Deploy %282%29.pubxml" />
-    <None Include="Properties\PublishProfiles\api.opescode.com - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\speeching - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\speeching - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\openlabspeeching.pubxml" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />

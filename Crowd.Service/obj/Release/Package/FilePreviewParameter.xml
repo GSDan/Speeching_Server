@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <parameters>
-  <parameter name="IIS Web Application Name" description="" value="speeching" tags="IisApp">
+  <parameter name="IIS Web Application Name" description="" value="openlab-speeching" tags="IisApp">
     <parameterEntry kind="ProviderPath" scope="IisApp" match="^C:\\Users\\tgs03_000\\Documents\\Dev\\Uni\\speeching-server\\Crowd\.Service\\obj\\Release\\Package\\PackageTmp$" />
     <parameterEntry kind="ProviderPath" scope="setAcl" match="^C:\\Users\\tgs03_000\\Documents\\Dev\\Uni\\speeching-server\\Crowd\.Service\\obj\\Release\\Package\\PackageTmp$" />
   </parameter>
-  <parameter name="Crowd.Model.CrowdContext-Web.config Connection String" description="" value="server=46.101.19.97;user id=azure;password=SuperSecure;database=SpeechingTest;persistsecurityinfo=True" tags="">
-    <parameterEntry kind="XmlFile" scope="C:\\Users\\tgs03_000\\Documents\\Dev\\Uni\\speeching-server\\Crowd\.Service\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='Crowd.Model.CrowdContext']/@connectionString" />
-  </parameter>
-  <parameter name="CrowdScience-Web.config Connection String" description="" value="server=46.101.19.97;user id=azure;password=SuperSecure;database=SpeechingTest;persistsecurityinfo=True" tags="">
+  <parameter name="CrowdScience-Web.config Connection String" description="" value="Data Source=speech.database.windows.net;Initial Catalog=speech;Integrated Security=False;User ID=speeching;Password=BlahBlah123;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False" tags="">
     <parameterEntry kind="XmlFile" scope="C:\\Users\\tgs03_000\\Documents\\Dev\\Uni\\speeching-server\\Crowd\.Service\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='CrowdScience']/@connectionString" />
+  </parameter>
+  <parameter name="Storage-Web.config Connection String" description="" value="DefaultEndpointsProtocol=https;AccountName=openlabdata;AccountKey=xVRVm3FhgIQcSdfhcecFtimcC1DBZaWCF3PuRtT/B1SrT2Pr8/vfPWY3C92Didphsj7TfMIYEwljjS/I4fhXiA==" tags="">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\tgs03_000\\Documents\\Dev\\Uni\\speeching-server\\Crowd\.Service\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='Storage']/@connectionString" />
   </parameter>
 </parameters>
