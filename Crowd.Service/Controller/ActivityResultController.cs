@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -13,7 +11,6 @@ using Crowd.Model.Data;
 using Crowd.Service.Common;
 using Crowd.Service.CrowdFlower;
 using Crowd.Service.Interface;
-using Crowd.Service.Model;
 using Newtonsoft.Json;
 
 namespace Crowd.Service.Controller
@@ -26,7 +23,7 @@ namespace Crowd.Service.Controller
             using (CrowdContext db = new CrowdContext())
             {
                 var lst = db.ParticipantResults.ToList();
-                return new HttpResponseMessage()
+                return new HttpResponseMessage
                 {
                     Content = new JsonContent(lst)
                 };
@@ -46,7 +43,7 @@ namespace Crowd.Service.Controller
                 {
                     throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
                 }
-                return new HttpResponseMessage()
+                return new HttpResponseMessage
                 {
                     Content = new JsonContent(result)
                 };
@@ -64,13 +61,12 @@ namespace Crowd.Service.Controller
                 var lst = db.ParticipantResults.Where(c => c.ParticipantActivityId.Equals(id));
                 if (lst.Any())
                 {
-                    return new HttpResponseMessage()
+                    return new HttpResponseMessage
                     {
                         Content = new JsonContent(lst)
                     };
                 }
-                else
-                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
+                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
             }
         }
 
@@ -98,10 +94,10 @@ namespace Crowd.Service.Controller
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
                 }
-                return Request.CreateResponse(HttpStatusCode.OK);  
+                return Request.CreateResponse(HttpStatusCode.OK);
             }
         }
-        
+
         // POST api/ActivityResult
         [RequireHttps]
         public async Task<HttpResponseMessage> Post(ParticipantResult result)
@@ -129,8 +125,11 @@ namespace Crowd.Service.Controller
                         {
                             return Request.CreateResponse(HttpStatusCode.ExpectationFailed, ex.Message);
                         }
-                        
-                        SvcStatus status = await CrowdFlowerApi.CreateJob(result, await db.ParticipantActivities.FindAsync(result.ParticipantActivityId));
+
+                        SvcStatus status =
+                            await
+                                CrowdFlowerApi.CreateJob(result,
+                                    await db.ParticipantActivities.FindAsync(result.ParticipantActivityId));
                         if (status.Level == 0)
                         {
                             string json = await status.Response.Content.ReadAsStringAsync();
@@ -158,29 +157,21 @@ namespace Crowd.Service.Controller
                                     HttpStatusCode.ExpectationFailed, e.Message));
                             }
 
-                            //CrowdFlowerApi.LaunchJob(jobRes.id);
+                            CrowdFlowerApi.LaunchJob(jobRes.id);
                             return status.Response;
                         }
-                        else
+                        db.DebugMessages.Add(new DebugMessage
                         {
-                            db.DebugMessages.Add(new DebugMessage
-                            {
-                                Message = status.Description,
-                                Filename = "ActivityResultController",
-                                FunctionName = "Post"
-                            });
-                            await db.SaveChangesAsync();
-                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, status.Description);
-                        }
-                            
+                            Message = status.Description,
+                            Filename = "ActivityResultController",
+                            FunctionName = "Post"
+                        });
+                        await db.SaveChangesAsync();
+                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, status.Description);
                     }
-                    else
-                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Activity result cannot be null");
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Activity result cannot be null");
                 }
-                else
-                {
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
-                }
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
             }
         }
 

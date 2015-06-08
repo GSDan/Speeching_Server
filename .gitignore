@@ -6,6 +6,7 @@ Crowd.Model/obj/
 Crowd.Service/obj/
 Crowd.Service/Properties
 Crowd.Service/Uploads
+Crowd.Service/ConfidentialData.cs
 Admin
 Admin.*
 packages

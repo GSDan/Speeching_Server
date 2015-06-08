@@ -7,6 +7,13 @@ using System.Web;
 
 namespace Crowd.Service.CrowdFlower
 {
+    public class CFWebhook
+    {
+        public string signature { get; set; }
+        public string payload { get; set; }
+        public string signal { get; set; }
+    }
+
     public class CFResponseData
     {
         public int id { get; set; }
