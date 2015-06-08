@@ -13,6 +13,7 @@ namespace Crowd.Model.Data
         public int ParticipantActivityId { get; set; }
         public int CrowdJobId { get; set; }
         public bool IsAssessment { get; set; }
+        public double UserRating { get; set; }
         public ParticipantActivity ParticipantActivity { get; set; }
         public virtual ICollection<ParticipantResultData> Data { get; set; }
     }

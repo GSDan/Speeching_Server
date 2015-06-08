@@ -66,7 +66,9 @@ namespace Crowd.Service.Controller
                                           && resData.ParticipantAssessmentTask.TaskType ==
                                           ParticipantAssessmentTask.AssessmentTaskType.QuickFire
                                     select resData;
-                
+
+                if ((await allSubmissions.ToArrayAsync()).Length == 0) return null;
+
                 // Get total num of judgements 
                 int numTotal = await (from resData in allSubmissions
                                     from judgement in db.CrowdJudgements
@@ -74,6 +76,8 @@ namespace Crowd.Service.Controller
                                     from data in judgement.Data
                                     where data.DataType == "rlstmp"
                                     select data).CountAsync();
+
+                if (numTotal <= 0) return null;
 
                 // Get total num of correct judgements
                 int numCorrect = await (from resData in allSubmissions
@@ -137,17 +141,33 @@ namespace Crowd.Service.Controller
 
                 List<TimeGraphPoint> points = new List<TimeGraphPoint>();
 
+                Dictionary<DateTime, List<double>> pointDictionary = new Dictionary<DateTime, List<double>>();
+
+                // Group the results by day, so that each day with results will be a point on the graph
+
                 foreach (var judgement in ordered)
                 {
                     double yVal = (from data in judgement.Data
                                    where data.DataType == resDataType
                                    select data.NumResponse).Average();
 
+                    if (pointDictionary.ContainsKey(judgement.CreatedAt.Date))
+                    {
+                        pointDictionary[judgement.CreatedAt.Date].Add(yVal);
+                    }
+                    else
+                    {
+                        pointDictionary.Add(judgement.CreatedAt.Date, new List<double>() { yVal });
+                    }
+                }
+
+                foreach (var pair in pointDictionary)
+                {
                     points.Add(new TimeGraphPoint
                     {
-                        XVal = judgement.CreatedAt,
-                        YVal = yVal
-                    });
+                        XVal = pair.Key,
+                        YVal = pair.Value.Average()
+                    }); 
                 }
 
                 return points.ToArray();

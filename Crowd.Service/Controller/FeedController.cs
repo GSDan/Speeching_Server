@@ -74,8 +74,8 @@ namespace Crowd.Service.Controller
                     var transFeedback = new ParticipantFeedItem
                     {
                         Rating = (float)transRating,
-                        Title = "Difficulty of Understanding",
-                        Description = "This rating shows how difficult listeners have found understanding what you say on average since you started.",
+                        Title = "Ease of Listening",
+                        Description = "This rating shows on average how easy listeners have found understanding what you say.",
                         Date = DateTime.Now,
                         Dismissable = false,
                         Importance = 10

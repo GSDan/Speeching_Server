@@ -12,6 +12,7 @@ namespace Crowd.Model.Interface
         int ParticipantActivityId { get; set; }
         int CrowdJobId { get; set; }
         bool IsAssessment { get; set; }
+        double UserRating { get; set; }
         ParticipantActivity ParticipantActivity { get; set; }
         ICollection<ParticipantResultData> Data { get; set; }
     }
