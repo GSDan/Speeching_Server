@@ -153,6 +153,7 @@
     <Compile Include="Controller\CrowdsourceController.cs" />
     <Compile Include="Controller\FeedbackController.cs" />
     <Compile Include="Controller\FeedController.cs" />
+    <Compile Include="Controller\HelpController.cs" />
     <Compile Include="Controller\JobController.cs" />
     <Compile Include="Controller\TaskController.cs" />
     <Compile Include="Controller\UnitController.cs" />
@@ -172,7 +173,6 @@
     <Compile Include="Interface\ICFWebhookController.cs" />
     <Compile Include="Interface\IContextBase.cs" />
     <Compile Include="Interface\IJob.cs" />
-    <Compile Include="Interface\IScenario.cs" />
     <Compile Include="Interface\ITaskController.cs" />
     <Compile Include="JsonContent.cs" />
     <Compile Include="Model\AudioUnit.cs" />

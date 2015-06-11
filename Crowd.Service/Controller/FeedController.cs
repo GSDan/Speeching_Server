@@ -52,6 +52,21 @@ namespace Crowd.Service.Controller
                     items.Add(graphFeedback);
                 }
 
+                float? transRating = await AverageRating("rlsttrans", user, db);
+                if (transRating != null)
+                {
+                    var transFeedback = new ParticipantFeedItem
+                    {
+                        Rating = (float)transRating,
+                        Title = "Ease of Listening",
+                        Description = "This rating shows on average how easy listeners have found understanding what you say.",
+                        Date = DateTime.Now,
+                        Dismissable = false,
+                        Importance = 10
+                    };
+                    items.Add(transFeedback);
+                }
+
                 float? accentRating = await AverageRating("rlstaccent", user, db);
                 if (accentRating != null)
                 {
@@ -66,21 +81,6 @@ namespace Crowd.Service.Controller
                         Importance = 10
                     };
                     items.Add(accentFeedback);
-                }
-
-                float? transRating = await AverageRating("rlsttrans", user, db);
-                if (transRating != null)
-                {
-                    var transFeedback = new ParticipantFeedItem
-                    {
-                        Rating = (float)transRating,
-                        Title = "Ease of Listening",
-                        Description = "This rating shows on average how easy listeners have found understanding what you say.",
-                        Date = DateTime.Now,
-                        Dismissable = false,
-                        Importance = 10
-                    };
-                    items.Add(transFeedback);
                 }
 
                 float? minPairsRating = await MinimalPairsScore(user, db);

@@ -358,8 +358,6 @@ namespace Crowd.Model
                                 {
                                     TaskType = ParticipantAssessmentTask.AssessmentTaskType.QuickFire,
                                     Title = "QuickFire Speaking!",
-                                    Instructions =
-                                        "Press the record button and say the shown word as clearly as you can, then press stop.",
                                     PromptCol = new ParticipantAssessmentTaskPromptCol
                                     {
                                         Name = "Minimal Pairs 1",
@@ -384,10 +382,8 @@ namespace Crowd.Model
                                 },
                                 new ParticipantAssessmentTask
                                 {
-                                    TaskType = ParticipantAssessmentTask.AssessmentTaskType.ImageDescription,
+                                    TaskType = ParticipantAssessmentTask.AssessmentTaskType.ImageDesc,
                                     Title = "Image Description",
-                                    Instructions =
-                                        "Press the 'Record' button and follow the instruction in the image's caption",
                                     PromptCol = new ParticipantAssessmentTaskPromptCol
                                     {
                                         Name = "Image Description 1",
@@ -600,6 +596,41 @@ namespace Crowd.Model
                         }
                     }
                 }
+            });
+
+            context.ActivityHelpers.AddRange(new ActivityHelper[]
+            {
+                new ActivityHelper
+                {
+                    ActivityType = ParticipantAssessmentTask.AssessmentTaskType.ImageDesc,
+                    ActivityName = "Describing Images",
+                    ActivityDescription = "Record yourself describing the shown image, following the given prompts.",
+                    HelpVideo = "https://ia700401.us.archive.org/19/items/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4"
+                },
+                new ActivityHelper
+                {
+                    ActivityType = ParticipantAssessmentTask.AssessmentTaskType.Loudness,
+                    ActivityName = "Controlling Loudness of Speech",
+                    ActivityDescription = "Try to control the volume of your voice, keeping it at a constant volume! " +
+                                          "The volume measurement will be red if you're below the volume target, green if you reach it." +
+                                          "\nTap 'Set New Target' if you want to raise or lower the target volume.",
+                    HelpVideo = "https://ia700401.us.archive.org/19/items/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4"
+                },
+                new ActivityHelper
+                {
+                    ActivityType = ParticipantAssessmentTask.AssessmentTaskType.Pacing,
+                    ActivityName = "Controlling Your Rate of Speech",
+                    ActivityDescription = "If you think you're talking to fast or too slow during conversations, try reading the given passage to the time of the metronome." +
+                                          "You can adjust the speed by tapping the up and down arrows!",
+                    HelpVideo = "https://ia700401.us.archive.org/19/items/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4"
+                },
+                new ActivityHelper
+                {
+                    ActivityType = ParticipantAssessmentTask.AssessmentTaskType.QuickFire,
+                    ActivityName = "QuickFire Words",
+                    ActivityDescription = "Press the record button and say the shown word as clearly as you can, then press stop.",
+                    HelpVideo = "https://ia700401.us.archive.org/19/items/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4"
+                },
             });
 
             try

@@ -4,8 +4,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web;
-using Crowd.Service.Common;
-using Crowd.Service.Model;
 using System.Threading.Tasks;
 using Crowd.Model.Data;
 using Newtonsoft.Json;

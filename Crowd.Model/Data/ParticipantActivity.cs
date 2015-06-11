@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Crowd.Model.Interface;
 
 namespace Crowd.Model.Data
@@ -29,7 +25,6 @@ namespace Crowd.Model.Data
 
         // For assessments
         public virtual ICollection<ParticipantAssessmentTask> AssessmentTasks { get; set; }
-        
 
         public virtual ICollection<ParticipantResult> ParticipantResults { get; set; }
     }

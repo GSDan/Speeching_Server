@@ -1,36 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
-using System.Web.Security;
-using System.Web.SessionState;
 using System.Web.Http;
-using System.Web.Routing;
-using Crowd.Model;
 using Newtonsoft.Json;
 
 namespace Crowd.Service
 {
-    public class Global : System.Web.HttpApplication
+    public class Global : HttpApplication
     {
-
         protected void Application_Start(object sender, EventArgs e)
         {
             GlobalConfiguration.Configure(config =>
             {
                 config.MapHttpAttributeRoutes();
 
-                config.Routes.MapHttpRoute(
-                    name: "DefaultApiAction",
-                    routeTemplate: "api/{controller}/{action}/{id}",
-                    defaults: new { id = RouteParameter.Optional }
-                ); 
-                
-                config.Routes.MapHttpRoute(
-                    name: "DefaultApi",
-                    routeTemplate: "api/{controller}/{id}",
-                    defaults: new { id = RouteParameter.Optional }
-                );
+                config.Routes.MapHttpRoute("Help", "api/Help/{activityType}",
+                    new { controller = "Help", activityType = "", action = "Get" });
+
+                config.Routes.MapHttpRoute("DefaultApiAction", "api/{controller}/{action}/{id}",
+                    new {id = RouteParameter.Optional}
+                    );
+
+                config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new {id = RouteParameter.Optional}
+                    );
             });
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
@@ -52,17 +43,14 @@ namespace Crowd.Service
 
         protected void Session_Start(object sender, EventArgs e)
         {
-
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
-
         }
 
         protected void Application_AuthenticateRequest(object sender, EventArgs e)
         {
-
         }
 
         protected void Application_Error(object sender, EventArgs e)
@@ -72,12 +60,10 @@ namespace Crowd.Service
 
         protected void Session_End(object sender, EventArgs e)
         {
-
         }
 
         protected void Application_End(object sender, EventArgs e)
         {
-
         }
     }
 }

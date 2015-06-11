@@ -15,7 +15,7 @@ namespace Crowd.Service.CrowdFlower
             CFJobRequest job = new CFJobRequest()
                 {
                     Title = "Speeching " + participantResult.Id,
-                    Instructions = "Please complete the following tasks, making sure that your computer's volume is loud enough to hear the voice samples clearly! :)",
+                    Instructions = "Please listen to the audio clip and complete the following tasks, making sure that your computer's volume is loud enough to hear the voice samples clearly",
                     PaymentCents = 5,
                     UnitsPerAssignment = 2,
                     Css = "div.grp { border: solid thin gray; margin: 10px 0; }",

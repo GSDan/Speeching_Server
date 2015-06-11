@@ -74,6 +74,7 @@
     <Compile Include="Common\TaskType.cs" />
     <Compile Include="CrowdContext.cs" />
     <Compile Include="CustomDBInitializer.cs" />
+    <Compile Include="Data\ActivityHelper.cs" />
     <Compile Include="Data\DebugMessage.cs" />
     <Compile Include="Data\CrowdJudgement.cs" />
     <Compile Include="Data\CrowdRowResponse.cs" />

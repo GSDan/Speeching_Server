@@ -1,14 +1,9 @@
-﻿using Crowd.Service.SoundCloud;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using System.Web;
 using Crowd.Model.Data;
 using Crowd.Service.Common;
 using Crowd.Service.Model;
@@ -19,7 +14,6 @@ namespace Crowd.Service.CrowdFlower
     {
         private const string CrowdflowerBaseUri = "https://api.crowdflower.com/v1/";
         private const string CrowdflowerKey = "yvQuiDN7zkaRQH8uhfnn";
-        private const string Mp4TypeCodec = "audio/mp4; codec='mp4a.40.2'";
 
         public string ResourceUrl { get; set; }
         public List<CrowdRowResponse> Rows;
@@ -52,29 +46,148 @@ namespace Crowd.Service.CrowdFlower
             return new FormUrlEncodedContent(lstKeyValue);
         }
 
-        private const string AudioHtmlTag = "<audio src=\"{{AudioUrl}}\" type=\"{{AudioTypeCodec}}\" preload=\"auto\" controls=\"controls\"></audio>";
-        private const string TextareaCml = "<cml:textarea name=\"txta\" label=\"{0}\" class=\"\" instructions=\"{1}\" validates=\"{2}\"/>";
-        private const string GroupCml = "<cml:group>{0}</cml:group>";
-        private const string RadioParentCml = "<cml:radios name=\"rlst{0}\" label=\"{1}\" validates=\"{2}\">{3}</cml:radios>";
-        private const string RadioCml = "<cml:radio label=\"{0}\" />";
-        private const string RatingCml = "<cml:ratings name=\"rlst{0}\" label=\"{1}\" points=\"{2}\" validates=\"{3}\" />";
+        private const string AudioHtmlTag = "<audio src=\"{0}\" type=\"audio/mp4; codec='mp4a.40.2'\" preload=\"auto\" controls=\"controls\">\r\n</audio>\r\n";
+        private const string TextareaCml = "<cml:textarea name=\"txta\" label=\"{0}\" class=\"\" instructions=\"{1}\" validates=\"{2}\"/><br/>\r\n";
+        private const string GroupCml = "<cml:group>\r\n{0}\r\n</cml:group>\r\n";
+        private const string RadioParentCml = "<cml:radios name=\"rlst{0}\" label=\"{1}\" validates=\"{2}\">\r\n{3}\r\n</cml:radios><br/>\r\n";
+        private const string RadioCml = "<cml:radio label=\"{0}\" />\r\n";
+        private const string RatingCml = "<cml:ratings name=\"rlst{0}\" label=\"{1}\" instructions=\"{2}\" points=\"{3}\"  validates=\"{4}\" />\r\n";
 
         private static string CreateAudioCml()
         {
-            var cml = "<div class=\"grp\">";
-            cml += AudioHtmlTag;
+            var cml = "<div class=\"grp\">\r\n";
+            cml += string.Format(AudioHtmlTag, "{{AudioUrl}}");
 
             cml += "{% if TaskType == \"MP\" %}\r\n";
-            cml += CreateMinimalPairsCml("Which of these words was the one spoken?", 12, "required");
+                cml += CreateMinimalPairsCml("Choose the word which is closest to what you heard:", "required");
             cml += "{% else %}\r\n";
-            cml += string.Format(TextareaCml, "Transcribe the above audio", "Please listen to the audio clip and transcribe it as accurately as you can.", "required");
-            cml += "{% endif %}";
+                cml += string.Format(
+                    TextareaCml, 
+                    "Please write down exactly what you heard the person say.", 
+                    "Please write exactly what you heard the person say, even if the spelling seems strange! " +
+                        "If you do not understand a word at all, put a question mark (?) in its place.", 
+                    "required");
+            cml += "{% endif %}\r\n";
 
-            string ratingScales = CreateRatingScale("Trans", "How would you rate the ease of listening for this clip?", "required", 5);
+            string ratingScales = CreateRatingScale(
+                "Trans",
+                "How hard was it to understand the person in this clip?",
+                "Please give a rating where 1 is 'I understood everything' and 5 is 'I couldn’t understand a thing they said'",
+                "required",
+                5) + "<br/>";
 
-            ratingScales += CreateRatingScale("Accent", "How much more difficult did the person's accent make the task?", "required", 5);
+            ratingScales += CreateRatingScale(
+                "Accent", 
+                "How much did the person's accent affect how easy they were to understand?",
+                "Please give a rating where 1 is 'Their accent wasn't an issue' and 5 is 'Their accent was so broad I couldn't understand a thing'",
+                "required",
+                5) + "<br/>";
 
-            cml += string.Format(GroupCml, ratingScales) + "</div>";
+            cml += "{% if TaskType != \"MP\" %}\r\n";
+
+                ratingScales += CreateRatingScale(
+                    "Volume",
+                    "How loud do you feel the person was speaking?",
+                    "Please give a rating where 1 is 'Could barely hear them' and 5 is 'Very loud'",
+                    "required",
+                    5);
+
+                ratingScales += CreateDropdown("VolumeChange", "Did the volume change over the course of the sentence?",
+                    new[]
+                    {
+                        new []{"The volume stayed constant", "constant"},
+                        new []{"The volume got louder as the sentence went on", "increase"},
+                        new []{"The volume got quieter as the sentence went on", "decrease"}
+                    }) + "<br/>";
+
+                ratingScales += CreateRatingScale(
+                    "Pace",
+                    "How fast do you feel the person was talking?",
+                    "Please give a rating where 1 is 'Very slow' and 5 is 'So fast I could barely understand them'",
+                    "required",
+                    5);
+
+                ratingScales += CreateDropdown("PaceChange", "Did the speed change over the course of the sentence?",
+                    new[]
+                    {
+                        new []{"The speed stayed constant", "constant"},
+                        new []{"The speech got faster", "increase"}, 
+                        new []{"The speech got slower", "decrease"}
+                    }) + "<br/>";
+
+                ratingScales += CreateRatingScale(
+                    "Pitch",
+                    "How much do you feel the person's pitch varied?",
+                    "Pitch refers to how much the person's voice goes up and down.\n" +
+                        "Please give a rating where 1 is 'None, very monotonous and sounded bored' and 5 is 'A lot, sounded very excited'",
+                    "required",
+                    5);
+
+                ratingScales += CreateDropdown("PitchChange", "Did the pitch change over the course of the sentence?",
+                    new[]
+                    {
+                        new []{"The pitch stayed constant", "constant"},
+                        new []{"The pitch got more excited", "increase"}, 
+                        new []{"The pitch got more bored sounding", "decrease"}
+                    }) + "<br/>";
+
+                ratingScales += "{% if Comparison and Comparison != \"\" %}\r\n";
+                    ratingScales += "<br/><p>Please listen to this second recording and compare it to the first one:</p>";
+                    ratingScales += string.Format(AudioHtmlTag, "{{Comparison}}");
+
+                    ratingScales += CreateRatingScale(
+                    "Volume2",
+                    "How loud do you feel the person was speaking in the second recording?",
+                    "Please give a rating where 1 is 'Could barely hear them' and 5 is 'Very loud'",
+                    "required",
+                    5);
+
+                    ratingScales += CreateDropdown("VolumeChange2", "Did the volume change over the course of the sentence?",
+                        new[]
+                    {
+                        new []{"The volume stayed constant", "constant"},
+                        new []{"The volume got louder as the sentence went on", "increase"},
+                        new []{"The volume got quieter as the sentence went on", "decrease"}
+                    }) + "<br/>";
+
+                    ratingScales += CreateRatingScale(
+                        "Pace2",
+                        "How fast do you feel the person was talking in the second recording?",
+                        "Please give a rating where 1 is 'Very slow' and 5 is 'So fast I could barely understand them'",
+                        "required",
+                        5);
+
+                    ratingScales += CreateDropdown("PaceChange2", "Did the speed change over the course of the sentence?",
+                        new[]
+                    {
+                        new []{"The speed stayed constant", "constant"},
+                        new []{"The speech got faster", "increase"}, 
+                        new []{"The speech got slower", "decrease"}
+                    }) + "<br/>";
+
+                    ratingScales += CreateRatingScale(
+                        "Pitch2",
+                        "How much do you feel the person's pitch varied in the second recording?",
+                        "Pitch refers to how much the person's voice goes up and down.\n" +
+                            "Please give a rating where 1 is 'None, very monotonous and sounded bored' and 5 is 'A lot, sounded very excited'",
+                        "required",
+                        5);
+
+                    ratingScales += CreateDropdown("PitchChange2", "Did the pitch change over the course of the sentence?",
+                        new[]
+                    {
+                        new []{"The pitch stayed constant", "constant"},
+                        new []{"The pitch got more excited", "increase"}, 
+                        new []{"The pitch got more bored sounding", "decrease"}
+                    }) + "<br/>";
+
+              ratingScales += "{% endif %}\r\n"; // End comparison
+
+            ratingScales += "{% endif %}\r\n"; // End != minimal pairs
+
+            cml += string.Format(GroupCml, ratingScales);
+
+            cml+= "</div>";
 
             return cml;
         }
@@ -82,34 +195,58 @@ namespace Crowd.Service.CrowdFlower
         /// <summary>
         /// Creates the CML for a ratings scale
         /// </summary>
+        /// <param name="instructions"></param>
         /// <param name="validator"></param>
         /// <param name="num">Number of radio options</param>
         /// <param name="dataType"></param>
         /// <param name="desc"></param>
         /// <returns>CML string</returns>
-        private static string CreateRatingScale(string dataType, string desc, string validator, int num)
+        private static string CreateRatingScale(string dataType, string desc, string instructions, string validator, int num)
         {
-            return string.Format(RatingCml, dataType, desc, num, validator);
+            return string.Format(RatingCml, dataType, desc, instructions, num, validator);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataType"></param>
+        /// <param name="label"></param>
+        /// <param name="args">[dropdown option: [label, value]]</param>
+        /// <returns></returns>
+        private static string CreateDropdown(string dataType, string label, IEnumerable<string[]> args)
+        {
+            string toRet = "<cml:select label=\"" + label + " \" name=\""+ dataType +"\"> ";
+
+            foreach (string[] option in args)
+            {
+                toRet += "<cml:option label=\""+ option[0] +"\" value=\""+ option[1] +"\" />\n";
+            }
+
+            toRet += "</cml:select>";
+            return toRet;
         }
 
         /// <summary>
         /// Create a list of radio buttons
         /// </summary>
         /// <param name="label"></param>
-        /// <param name="numChoices"></param>
         /// <param name="validator"></param>
         /// <returns></returns>
-        private static string CreateMinimalPairsCml(string label, int numChoices, string validator)
+        private static string CreateMinimalPairsCml(string label, string validator)
         {
-            string toRet = "";
+            string toRet = "{% assign array = Choices | split: \",\" %}\r\n";
 
-            for(int i = 0; i < numChoices; i++)
-            {
-                toRet += string.Format(RadioCml, string.Format("{{{{choice{0}}}}}", i + 1));
-            }
-            toRet += string.Format(RadioCml, "None of the above");
+            string inner = "{% for choice in array %}";
 
-            return string.Format(RadioParentCml, "MP", label, validator, toRet);
+            inner += string.Format(RadioCml, "{{choice}}");
+
+            inner += "{% endfor %}";
+
+            inner += string.Format(RadioCml, "None of the above");
+
+            toRet += string.Format(RadioParentCml, "MP", label, validator, inner);
+
+            return toRet;
         }
 
         [Flags]
@@ -155,7 +292,7 @@ namespace Crowd.Service.CrowdFlower
                         if (!audioFiles.Any()) return status;
 
                         CFUnitRequest unitsReq = new CFUnitRequest();
-                        string uploadUnitsJson = AudioUnit.CreateCFData(audioFiles, Mp4TypeCodec, activity, result);
+                        string uploadUnitsJson = AudioUnit.CreateCFData(audioFiles, activity, result);
 
                         Rows = await unitsReq.SendCfUnits(jobRes.id, uploadUnitsJson);
 

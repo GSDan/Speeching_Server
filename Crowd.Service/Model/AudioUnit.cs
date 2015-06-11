@@ -1,42 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Crowd.Model;
 using Crowd.Model.Data;
-using Crowd.Service.Common;
 
 namespace Crowd.Service.Model
 {
     public class AudioUnit
     {
-        public string AudioUrl { get; set; }
-        public string AudioTypeCodec { get; set; }
-        public int Id { get; set; }
-
-        public AudioUnit()
-        {
-        }
-
-        public AudioUnit(int id, string audioUrl, string audioTypeCodec)
-        {
-            AudioUrl = audioUrl;
-            AudioTypeCodec = audioTypeCodec;
-            Id = id;
-        }
-
-        public static string CreateCFData(IEnumerable<string> audioPaths, string audioTypeCodec,
-            ParticipantActivity activity, ParticipantResult result)
+        public static string CreateCFData(IEnumerable<string> audioPaths, ParticipantActivity activity, ParticipantResult result)
         {
             string json = "";
 
             using (CrowdContext db = new CrowdContext())
             {
                 result = db.ParticipantResults.Find(result.Id);
+                CrowdRowResponse[] lastResponses = null;
+                int lastAssessTaskId = -1;
 
                 foreach (var path in audioPaths)
                 {
                     string[] options = {"", "", "", "", "", "", "", "", "", "", "", ""};
                     string taskType = "Other";
+                    string comparisonPath = "";
 
                     ParticipantResultData thisData = (from data in result.Data
                         where data.FilePath == Path.GetFileName(path)
@@ -62,33 +50,60 @@ namespace Crowd.Service.Model
                         }
                         options = quickFireOptions.ToArray();
 
-                        if (task.TaskType == ParticipantAssessmentTask.AssessmentTaskType.QuickFire)
+                        switch (task.TaskType)
                         {
-                            taskType = "MP";
+                            case ParticipantAssessmentTask.AssessmentTaskType.QuickFire:
+                                taskType = "MP";
+                                break;
+                            case ParticipantAssessmentTask.AssessmentTaskType.ImageDesc:
+                                taskType = "Image";
+                                break;
                         }
-                        else if (task.TaskType == ParticipantAssessmentTask.AssessmentTaskType.ImageDescription)
+
+                        if (lastAssessTaskId != task.Id)
                         {
-                            taskType = "Image";
+                            lastResponses = (from rowResp in db.CrowdRowResponses
+                                            where rowResp.ParticipantAssessmentTaskId == task.Id &&
+                                                  rowResp.ParticipantResult.User.Key == result.User.Key
+                                            orderby rowResp.CreatedAt
+                                            select rowResp).ToArray();
+                            lastAssessTaskId = assTaskId;
                         }
+
+                        if (lastResponses != null)
+                        {
+                            foreach (CrowdRowResponse resp in lastResponses)
+                            {
+                                // Can't use GetFileName in LINQ expressions so have to do in memory
+                                bool matches = Path.GetFileName(resp.RecordingUrl) == Path.GetFileName(path);
+                                if (!matches) continue;
+
+                                comparisonPath = resp.RecordingUrl;
+                                break;
+                            }
+                        }
+                        
                     }
                     else if (thisData.ParticipantTask != null)
                     {
                         normTaskId = thisData.ParticipantTask.Id;
                     }
 
-                    json += string.Format("{{\"AudioUrl\":\"{0}\", " +
-                                          "\"AudioTypeCodec\":\"{1}\", " +
-                                          "\"TaskType\":\"{2}\"," +
-                                          "\"ParticipantAssessmentTaskId\":\"{3}\"," +
-                                          "\"ParticipantTaskId\":\"{4}\""
-                        , path, audioTypeCodec, taskType, assTaskId, normTaskId);
+                    string choices = "";
 
                     for (int i = 0; i < options.Length; i++)
                     {
-                        json += string.Format(",\"choice{0}\":\"{1}\"", i + 1, options[i]);
+                        choices += options[i];
+                        if (i < options.Length - 1) choices += ", ";
                     }
 
-                    json += "}\r\n";
+                    json += string.Format("{{\"AudioUrl\":\"{0}\", " +
+                                          "\"TaskType\":\"{1}\"," +
+                                          "\"ParticipantAssessmentTaskId\":\"{2}\"," +
+                                          "\"ParticipantTaskId\":\"{3}\"," +
+                                          "\"Choices\":\"{4}\"," +
+                                          "\"Comparison\":\"{5}\"}}\r\n"
+                        , path, taskType, assTaskId, normTaskId, choices, comparisonPath);
                 }
 
             }

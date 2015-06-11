@@ -1,6 +1,5 @@
 ﻿using System.Data.Entity;
 using Crowd.Model.Data;
-using Crowd.Model.Interface;
 
 namespace Crowd.Model
 {
@@ -13,7 +12,8 @@ namespace Crowd.Model
             Database.SetInitializer<CrowdContext>(new CustomDBInitializer());
             Database.Initialize(true);
         }
-        
+
+        public DbSet<ActivityHelper> ActivityHelpers { get; set; }
         public DbSet<ParticipantActivityCategory> ParticipantActivityCategories { get; set; }
         public DbSet<ParticipantActivity> ParticipantActivities { get; set; }
         public DbSet<ParticipantTask> ParticipantTasks { get; set; }
