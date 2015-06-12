@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Crowd.Model.Data;
-using Crowd.Model.Interface;
-using Crowd.Service.Model;
 
 namespace Crowd.Service.Interface
 {
     public interface IActivityResultController
     {
-        HttpResponseMessage Get();
-        HttpResponseMessage Get(int id);
-        HttpResponseMessage GetByActivityId(int id);
-        HttpResponseMessage Put(int id, ParticipantResult crowdResult);
+        Task<HttpResponseMessage> Get();
+        Task<HttpResponseMessage> Get(int id);
+        Task<HttpResponseMessage> GetByActivityId(int id);
+        Task<HttpResponseMessage> Put(int id, ParticipantResult crowdResult);
         Task<HttpResponseMessage> Post(ParticipantResult crowdResult);
-        HttpResponseMessage Delete(int id);
+        Task<HttpResponseMessage> Delete(int id);
     }
 }

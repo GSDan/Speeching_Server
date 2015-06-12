@@ -31,11 +31,16 @@ namespace Crowd.Service.Controller
                     thisUser.SubscribedCategories = db.ParticipantActivityCategories.Where(
                         cat => cat.DefaultSubscription).ToList();
 
+                    thisUser.IsAdmin = false;
                     db.Users.Add(thisUser);
                     existingUser = thisUser;
                 }
                 else
                 {
+                    if (thisUser.Key != existingUser.Key)
+                    {
+                        return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                    }
                     // Update the found user's details if they've been given
                     existingUser.Name = thisUser.Name ?? existingUser.Email;
                     existingUser.Nickname = thisUser.Nickname ?? existingUser.Nickname;

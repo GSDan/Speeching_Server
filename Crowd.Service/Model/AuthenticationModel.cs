@@ -8,6 +8,6 @@ namespace Crowd.Service.Model
     public class AuthenticationModel
     {
         public string Email;
-        public int Key;
+        public string Key;
     }
 }

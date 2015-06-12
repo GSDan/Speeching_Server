@@ -429,25 +429,15 @@ namespace Crowd.Model
 
             context.Users.Add(new User
             {
-                Email = "dan@dan.com",
+                Email = "dan@speeching",
                 Avatar = "https://backwardsandstupiddotcom.files.wordpress.com/2012/07/great-success.png",
-                Key = 1,
+                Key = "root",
                 Name = "Dan Richardson",
                 Nickname = "Dan",
+                IsAdmin = true,
                 SubscribedCategories = context.ParticipantActivityCategories.Where(
                     cat => cat.DefaultSubscription).ToList(),
-                Submissions = new List<ParticipantResult>
-                {
-                    new ParticipantResult()
-                    {
-                        Id = 1,
-                        ResourceUrl =
-                            "https://di.ncl.ac.uk/owncloud/remote.php/webdav/uploads/105578599171449888956/1431595798212.24_2.zip",
-                        CrowdJobId = 727531,
-                        ParticipantActivityId = 2
-                        //TODO
-                    }
-                }
+                Submissions = new List<ParticipantResult>()
             });
 
             var feedItems = new List<ParticipantFeedItem>
@@ -487,118 +477,9 @@ namespace Crowd.Model
             foreach (ParticipantFeedItem item in feedItems)
             {
                 context.ParticipantFeedItems.Add(item);
-            }
-                 
-            context.SaveChanges();
+            } 
 
-            var users = context.Users.ToArray();
-            var tasks = context.ParticipantTasks.ToArray();
-
-            context.CrowdRowResponses.Add(new CrowdRowResponse
-            {
-                Id = "724408203",
-                CreatedAt = DateTime.Parse("18/05/2015 14:08:50"),
-                ParticipantResultId = users.First().Submissions.First().Id,
-                ParticipantTaskId = tasks[0].Id,
-                TaskJudgements = new List<CrowdJudgement>
-                {
-                    new CrowdJudgement
-                    {
-                        CreatedAt = DateTime.Parse("18/05/2015 14:08:50"),
-                        City = "Polska",
-                        Country = "POL",
-                        JobId = 727531,
-                        WorkerId = 30615206,
-                        Tainted = false,
-                        Trust = 0.5,
-                        Data = new List<CrowdJudgementData>
-                        {
-                            new CrowdJudgementData
-                            {
-                                DataType = "txta",
-                                StringResponse = "Hello can I order a pizza please",
-                                NumResponse = 0
-                            },
-                            new CrowdJudgementData
-                            {
-                                DataType = "rlsttrans",
-                                StringResponse = "5 Very Easy",
-                                NumResponse = 5
-                            },
-                            new CrowdJudgementData
-                            {
-                                DataType = "rlstaccent",
-                                StringResponse = "5 Very much",
-                                NumResponse = 5
-                            },
-                        }
-                    },
-                    new CrowdJudgement
-                    {
-                        CreatedAt = DateTime.Parse("19/05/2015 14:08:50"),
-                        City = "Illescas",
-                        Country = "ESP",
-                        JobId = 727531,
-                        WorkerId = 24965948,
-                        Tainted = false,
-                        Trust = 0.5,
-                        Data = new List<CrowdJudgementData>
-                        {
-                            new CrowdJudgementData
-                            {
-                                DataType = "txta",
-                                StringResponse = "Yes",
-                                NumResponse = 0
-                            },
-                            new CrowdJudgementData
-                            {
-                                DataType = "rlsttrans",
-                                StringResponse = "4",
-                                NumResponse = 4
-                            },
-                            new CrowdJudgementData
-                            {
-                                DataType = "rlstaccent",
-                                StringResponse = "1 Not at all",
-                                NumResponse = 1
-                            },
-                        }
-                    },
-                    new CrowdJudgement
-                    {
-                        CreatedAt = DateTime.Parse("13/05/2015 14:08:50"),
-                        City = "Ciudad Real",
-                        Country = "ESP",
-                        JobId = 727531,
-                        WorkerId = 32070389,
-                        Tainted = false,
-                        Trust = 0.5,
-                        Data = new List<CrowdJudgementData>
-                        {
-                            new CrowdJudgementData
-                            {
-                                DataType = "txta",
-                                StringResponse = "Hi can i have a pizza please",
-                                NumResponse = 0
-                            },
-                            new CrowdJudgementData
-                            {
-                                DataType = "rlsttrans",
-                                StringResponse = "3",
-                                NumResponse = 3
-                            },
-                            new CrowdJudgementData
-                            {
-                                DataType = "rlstaccent",
-                                StringResponse = "5 Very much",
-                                NumResponse = 5
-                            },
-                        }
-                    }
-                }
-            });
-
-            context.ActivityHelpers.AddRange(new ActivityHelper[]
+            context.ActivityHelpers.AddRange(new []
             {
                 new ActivityHelper
                 {
@@ -610,7 +491,7 @@ namespace Crowd.Model
                 new ActivityHelper
                 {
                     ActivityType = ParticipantAssessmentTask.AssessmentTaskType.Loudness,
-                    ActivityName = "Controlling Loudness of Speech",
+                    ActivityName = "Loudness of Speech",
                     ActivityDescription = "Try to control the volume of your voice, keeping it at a constant volume! " +
                                           "The volume measurement will be red if you're below the volume target, green if you reach it." +
                                           "\nTap 'Set New Target' if you want to raise or lower the target volume.",
@@ -619,7 +500,7 @@ namespace Crowd.Model
                 new ActivityHelper
                 {
                     ActivityType = ParticipantAssessmentTask.AssessmentTaskType.Pacing,
-                    ActivityName = "Controlling Your Rate of Speech",
+                    ActivityName = "Rate of Speech",
                     ActivityDescription = "If you think you're talking to fast or too slow during conversations, try reading the given passage to the time of the metronome." +
                                           "You can adjust the speed by tapping the up and down arrows!",
                     HelpVideo = "https://ia700401.us.archive.org/19/items/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4"

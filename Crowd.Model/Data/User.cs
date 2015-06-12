@@ -9,12 +9,14 @@ namespace Crowd.Model.Data
         [Key]
         public string Email { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Key { get; set; }
+        [StringLength(450)]
+        [Index(IsUnique = true)]
+        public string Key { get; set; }
 
         public string Name { get; set; }
         public string Nickname { get; set; }
         public string Avatar { get; set; }
+        public bool IsAdmin { get; set; }
         public virtual ICollection<ParticipantActivityCategory> SubscribedCategories { get; set; }
         public virtual ICollection<ParticipantResult> Submissions { get; set; }
 

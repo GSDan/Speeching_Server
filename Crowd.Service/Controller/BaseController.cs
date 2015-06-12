@@ -45,7 +45,7 @@ namespace Crowd.Service.Controller
                 return new AuthenticationModel
                 {
                     Email = Request.Headers.GetValues("Email").First(),
-                    Key = int.Parse(Request.Headers.GetValues("Key").First())
+                    Key = Request.Headers.GetValues("Key").First()
                 };
             }
             catch (Exception)

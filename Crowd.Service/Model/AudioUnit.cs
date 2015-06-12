@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Crowd.Model;
 using Crowd.Model.Data;
 
@@ -17,12 +15,14 @@ namespace Crowd.Service.Model
             using (CrowdContext db = new CrowdContext())
             {
                 result = db.ParticipantResults.Find(result.Id);
-                CrowdRowResponse[] lastResponses = null;
+                CrowdRowResponse[] lastAssessResponses = null;
+                CrowdRowResponse[] lastNormResponses = null;
                 int lastAssessTaskId = -1;
+                int lastNormTaskId = -1;
 
                 foreach (var path in audioPaths)
                 {
-                    string[] options = {"", "", "", "", "", "", "", "", "", "", "", ""};
+                    string[] options = null;
                     string taskType = "Other";
                     string comparisonPath = "";
 
@@ -62,7 +62,7 @@ namespace Crowd.Service.Model
 
                         if (lastAssessTaskId != task.Id)
                         {
-                            lastResponses = (from rowResp in db.CrowdRowResponses
+                            lastAssessResponses = (from rowResp in db.CrowdRowResponses
                                             where rowResp.ParticipantAssessmentTaskId == task.Id &&
                                                   rowResp.ParticipantResult.User.Key == result.User.Key
                                             orderby rowResp.CreatedAt
@@ -70,9 +70,9 @@ namespace Crowd.Service.Model
                             lastAssessTaskId = assTaskId;
                         }
 
-                        if (lastResponses != null)
+                        if (lastAssessResponses != null)
                         {
-                            foreach (CrowdRowResponse resp in lastResponses)
+                            foreach (CrowdRowResponse resp in lastAssessResponses)
                             {
                                 // Can't use GetFileName in LINQ expressions so have to do in memory
                                 bool matches = Path.GetFileName(resp.RecordingUrl) == Path.GetFileName(path);
@@ -87,10 +87,32 @@ namespace Crowd.Service.Model
                     else if (thisData.ParticipantTask != null)
                     {
                         normTaskId = thisData.ParticipantTask.Id;
+                        if (lastNormTaskId != normTaskId)
+                        {
+                            lastNormResponses = (from rowResp in db.CrowdRowResponses
+                                             where rowResp.ParticipantTaskId == normTaskId &&
+                                                   rowResp.ParticipantResult.User.Key == result.User.Key
+                                             orderby rowResp.CreatedAt
+                                             select rowResp).ToArray();
+                            lastNormTaskId = normTaskId;
+                        }
+                        if (lastNormResponses != null)
+                        {
+                            foreach (CrowdRowResponse resp in lastNormResponses)
+                            {
+                                // Can't use GetFileName in LINQ expressions so have to do in memory
+                                bool matches = Path.GetFileName(resp.RecordingUrl) == Path.GetFileName(path);
+                                if (!matches) continue;
+
+                                comparisonPath = resp.RecordingUrl;
+                                break;
+                            }
+                        }
                     }
 
                     string choices = "";
 
+                    if(options != null)
                     for (int i = 0; i < options.Length; i++)
                     {
                         choices += options[i];
