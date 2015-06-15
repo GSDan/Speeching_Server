@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -7,7 +6,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Http;
 using Crowd.Model;
 using Crowd.Model.Data;
 using Newtonsoft.Json;
@@ -30,11 +28,13 @@ namespace Crowd.Service.Controller
                     return new HttpResponseMessage(HttpStatusCode.Unauthorized);
                 }
 
-                ICollection<ParticipantFeedItem> dismissed = user.DismissedPublicFeedItems;
-                ICollection<ParticipantFeedItem> userItems = user.FeedItems;
-
+                // Get a list of all feed items which are either
+                // 1- Globally visible and have not been dismissed by the user
+                // 2- On this user's list of personal feed items
                 List<ParticipantFeedItem> items = await (from feedItem in db.ParticipantFeedItems
-                                                         where (feedItem.Global && !dismissed.Contains(feedItem)) || userItems.Contains(feedItem)
+                                                         from thisUser in db.Users
+                                                         where thisUser.Email == user.Email
+                                                         where (feedItem.Global && !thisUser.DismissedPublicFeedItems.Contains(feedItem)) || thisUser.FeedItems.Contains(feedItem)
                                                          select feedItem).ToListAsync();
 
                 TimeGraphPoint[] points = await GetGraphPoints("rlsttrans", user, db);
@@ -102,6 +102,41 @@ namespace Crowd.Service.Controller
                 {
                     Content = new JsonContent(items)
                 };
+            }
+        }
+
+
+        public async Task<HttpResponseMessage> Dismiss(int id)
+        {
+            using (CrowdContext db = new CrowdContext())
+            {
+                User user = await AuthenticateUser(GetAuthentication(), db);
+                if (user == null)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                }
+
+                ParticipantFeedItem feedItem = await db.ParticipantFeedItems.FindAsync(id);
+
+                if (!user.DismissedPublicFeedItems.Contains(feedItem))
+                {
+                    user.DismissedPublicFeedItems.Add(feedItem);
+                }
+                if (user.FeedItems.Contains(feedItem))
+                {
+                    user.FeedItems.Remove(feedItem);
+                }
+
+                try
+                {
+                    await db.SaveChangesAsync();
+                }
+                catch (Exception)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                }
+
+                return new HttpResponseMessage(HttpStatusCode.OK);
             }
         }
 

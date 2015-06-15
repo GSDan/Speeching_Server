@@ -120,7 +120,12 @@ namespace Crowd.Service.Controller
                                where data.DataType == resDataType
                                select data.NumResponse;
 
-                return (float?)await queryRes.AverageAsync();
+                if (await queryRes.CountAsync() >= 1)
+                {
+                    return (float?)await queryRes.AverageAsync();
+                }
+
+                return null;
             }
             catch(Exception)
             {
