@@ -59,7 +59,7 @@ namespace Crowd.Service.Controller
                     {
                         Rating = (float)transRating,
                         Title = "Ease of Listening",
-                        Description = "This rating shows on average how easy listeners have found understanding what you say.",
+                        Description = "This rating shows on average how difficult listeners have found understanding what you say - the lower the better!",
                         Date = DateTime.Now,
                         Dismissable = false,
                         Importance = 10
@@ -153,6 +153,7 @@ namespace Crowd.Service.Controller
                     return new HttpResponseMessage(HttpStatusCode.ExpectationFailed);
                 }
 
+                newItem.Date = DateTime.Now;
                 newItem.Global = true;
                 db.ParticipantFeedItems.Add(newItem);
 

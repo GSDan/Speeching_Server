@@ -195,7 +195,7 @@ namespace Crowd.Service.Controller
                             HttpStatusCode.ExpectationFailed, e.Message));
                     }
 
-                    //CrowdFlowerApi.LaunchJob(jobRes.id);
+                    CrowdFlowerApi.LaunchJob(jobRes.id);
                     return status.Response;
                 }
                 db.DebugMessages.Add(new DebugMessage

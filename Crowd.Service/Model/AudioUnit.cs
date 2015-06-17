@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Crowd.Model;
 using Crowd.Model.Data;
 
@@ -24,7 +26,7 @@ namespace Crowd.Service.Model
                 {
                     string[] options = null;
                     string taskType = "Other";
-                    string comparisonPath = "";
+                    CrowdRowResponse comparionResponse = null;
 
                     ParticipantResultData thisData = (from data in result.Data
                         where data.FilePath == Path.GetFileName(path)
@@ -38,7 +40,7 @@ namespace Crowd.Service.Model
                     int assTaskId = -1;
                     int normTaskId = -1;
 
-                    if (thisData.ParticipantAssessmentTask != null)
+                    if (thisData.ParticipantAssessmentTask != null) // Is assessment
                     {
                         ParticipantAssessmentTask task = thisData.ParticipantAssessmentTask;
                         assTaskId = task.Id;
@@ -78,13 +80,13 @@ namespace Crowd.Service.Model
                                 bool matches = Path.GetFileName(resp.RecordingUrl) == Path.GetFileName(path);
                                 if (!matches) continue;
 
-                                comparisonPath = resp.RecordingUrl;
+                                comparionResponse = resp;
                                 break;
                             }
                         }
                         
                     }
-                    else if (thisData.ParticipantTask != null)
+                    else if (thisData.ParticipantTask != null) // Not assessment
                     {
                         normTaskId = thisData.ParticipantTask.Id;
                         if (lastNormTaskId != normTaskId)
@@ -104,19 +106,37 @@ namespace Crowd.Service.Model
                                 bool matches = Path.GetFileName(resp.RecordingUrl) == Path.GetFileName(path);
                                 if (!matches) continue;
 
-                                comparisonPath = resp.RecordingUrl;
+                                comparionResponse = resp;
                                 break;
                             }
                         }
                     }
 
                     string choices = "";
+                    string comparisonPath = "";
+                    int prevLoud = -1;
+                    int prevPace = -1;
+                    int prevPitch = -1;
 
-                    if(options != null)
-                    for (int i = 0; i < options.Length; i++)
+                    if (options != null)
                     {
-                        choices += options[i];
-                        if (i < options.Length - 1) choices += ", ";
+                        // Shuffle the words
+                        Random rnd = new Random();
+                        options = options.OrderBy(x => rnd.Next()).ToArray();  
+
+                        for (int i = 0; i < options.Length; i++)
+                        {
+                            choices += options[i];
+                            if (i < options.Length - 1) choices += ", ";
+                        } 
+                    }
+
+                    if (comparionResponse != null)
+                    {
+                        comparisonPath = comparionResponse.RecordingUrl;
+                        prevLoud = GetAverageRes(comparionResponse, "Volume");
+                        prevPace = GetAverageRes(comparionResponse, "Pace");
+                        prevPitch = GetAverageRes(comparionResponse, "Pitch");
                     }
 
                     json += string.Format("{{\"AudioUrl\":\"{0}\", " +
@@ -124,14 +144,37 @@ namespace Crowd.Service.Model
                                           "\"ParticipantAssessmentTaskId\":\"{2}\"," +
                                           "\"ParticipantTaskId\":\"{3}\"," +
                                           "\"Choices\":\"{4}\"," +
-                                          "\"Comparison\":\"{5}\"}}\r\n"
-                        , path, taskType, assTaskId, normTaskId, choices, comparisonPath);
+                                          "\"PrevLoud\":\"{5}\"," +
+                                          "\"PrevPace\":\"{6}\"," +
+                                          "\"PrevPitch\":\"{7}\"," +
+                                          "\"Comparison\":\"{8}\"}}\r\n"
+                        , path, taskType, assTaskId, normTaskId, choices, prevLoud, prevPace, prevPitch, comparisonPath);
                 }
 
             }
             json = json.TrimEnd();
 
             return json;
+        }
+
+        private static int GetAverageRes(CrowdRowResponse resp, string dataType)
+        {
+            double totalScore = 0;
+            int count = 0;
+
+            foreach (CrowdJudgement judgement in resp.TaskJudgements)
+            {
+                foreach (CrowdJudgementData data in judgement.Data)
+                {
+                    if (data.DataType == dataType)
+                    {
+                        totalScore += data.NumResponse;
+                        count++;
+                    }
+                }
+            }
+
+            return (int)(totalScore/count);
         }
     }
 }

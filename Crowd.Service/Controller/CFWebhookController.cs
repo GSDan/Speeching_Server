@@ -37,10 +37,15 @@ namespace Crowd.Service.Controller
         public async Task<HttpResponseMessage> Post()
         {
             var req = this.Request;
-            string content =  (await req.Content.ReadAsFormDataAsync())["payload"];
+            string content = "Not done yet";
+            IEnumerable<string> contentTypes = new[]{""};
+
             try
             {
+                Request.Headers.TryGetValues("Content-Type", out contentTypes);
+
                 //const string jsonData = "{\r\n    \"signature\": \"645d58c9e38fc4d7b00f215ce4a72b218cc4b52b\",\r\n    \"payload\": \"{\\\"id\\\":698113669,\\\"data\\\":{\\\"AudioUrl\\\":\\\"http://api.opescode.com/Uploads/710069/4.mp4\\\",\\\"AudioTypeCodec\\\":\\\"audio/mp4; codec='mp4a.40.2'\\\"},\\\"difficulty\\\":0,\\\"judgments_count\\\":3,\\\"state\\\":\\\"finalized\\\",\\\"agreement\\\":0.444444444444444,\\\"missed_count\\\":0,\\\"gold_pool\\\":null,\\\"created_at\\\":\\\"2015-04-02T15:13:54+00:00\\\",\\\"updated_at\\\":\\\"2015-04-02T15:54:26+00:00\\\",\\\"job_id\\\":710069,\\\"results\\\":{\\\"judgments\\\":[{\\\"id\\\":1604431321,\\\"created_at\\\":\\\"2015-04-02T15:17:33+00:00\\\",\\\"started_at\\\":\\\"2015-04-02T15:16:14+00:00\\\",\\\"acknowledged_at\\\":null,\\\"external_type\\\":\\\"clixsense\\\",\\\"golden\\\":false,\\\"missed\\\":null,\\\"rejected\\\":null,\\\"tainted\\\":false,\\\"country\\\":\\\"TUR\\\",\\\"region\\\":\\\"34\\\",\\\"city\\\":\\\"Istanbul\\\",\\\"job_id\\\":710069,\\\"unit_id\\\":698113669,\\\"worker_id\\\":29230631,\\\"trust\\\":1.0,\\\"worker_trust\\\":0.915,\\\"unit_state\\\":\\\"finalized\\\",\\\"data\\\":{\\\"txta\\\":\\\"hello, can i order a pizza please?\\\",\\\"rlsttrans\\\":\\\"3\\\",\\\"rlstaccent\\\":\\\"3\\\"},\\\"unit_data\\\":{\\\"AudioUrl\\\":\\\"http://api.opescode.com/Uploads/710069/4.mp4\\\",\\\"AudioTypeCodec\\\":\\\"audio/mp4; codec='mp4a.40.2'\\\"}},{\\\"id\\\":1604431382,\\\"created_at\\\":\\\"2015-04-02T15:18:02+00:00\\\",\\\"started_at\\\":\\\"2015-04-02T15:16:14+00:00\\\",\\\"acknowledged_at\\\":null,\\\"external_type\\\":\\\"clixsense\\\",\\\"golden\\\":false,\\\"missed\\\":null,\\\"rejected\\\":null,\\\"tainted\\\":false,\\\"country\\\":\\\"PRT\\\",\\\"region\\\":\\\"\\\",\\\"city\\\":\\\"\\\",\\\"job_id\\\":710069,\\\"unit_id\\\":698113669,\\\"worker_id\\\":23097572,\\\"trust\\\":0.5,\\\"worker_trust\\\":0.923636363636364,\\\"unit_state\\\":\\\"finalized\\\",\\\"data\\\":{\\\"txta\\\":\\\"Hello, can i order a pizza please?\\\",\\\"rlsttrans\\\":\\\"5 Very easy\\\",\\\"rlstaccent\\\":\\\"1 Not at all\\\"},\\\"unit_data\\\":{\\\"AudioUrl\\\":\\\"http://api.opescode.com/Uploads/710069/4.mp4\\\",\\\"AudioTypeCodec\\\":\\\"audio/mp4; codec='mp4a.40.2'\\\"}},{\\\"id\\\":1604449343,\\\"created_at\\\":\\\"2015-04-02T15:54:15+00:00\\\",\\\"started_at\\\":\\\"2015-04-02T15:46:15+00:00\\\",\\\"acknowledged_at\\\":null,\\\"external_type\\\":\\\"neodev\\\",\\\"golden\\\":false,\\\"missed\\\":null,\\\"rejected\\\":null,\\\"tainted\\\":false,\\\"country\\\":\\\"VEN\\\",\\\"region\\\":\\\"\\\",\\\"city\\\":\\\"\\\",\\\"job_id\\\":710069,\\\"unit_id\\\":698113669,\\\"worker_id\\\":32002644,\\\"trust\\\":0.5,\\\"worker_trust\\\":0.9,\\\"unit_state\\\":\\\"finalized\\\",\\\"data\\\":{\\\"txta\\\":\\\"Hello can i order a pizza please?\\\",\\\"rlsttrans\\\":\\\"5 Very easy\\\",\\\"rlstaccent\\\":\\\"5 Very much\\\"},\\\"unit_data\\\":{\\\"AudioUrl\\\":\\\"http://api.opescode.com/Uploads/710069/4.mp4\\\",\\\"AudioTypeCodec\\\":\\\"audio/mp4; codec='mp4a.40.2'\\\"}}],\\\"rlsttrans\\\":{\\\"agg\\\":null,\\\"confidence\\\":0},\\\"rlstaccent\\\":{\\\"agg\\\":null,\\\"confidence\\\":0}}}\",\r\n    \"signal\": \"unit_complete\"\r\n}";
+                content = (await req.Content.ReadAsFormDataAsync())["payload"];
 
                 CFResponseData cfData = JsonConvert.DeserializeObject<CFResponseData>(content);
 
@@ -90,7 +95,7 @@ namespace Crowd.Service.Controller
                 {
                     db.DebugMessages.Add(new DebugMessage
                     {
-                        Message = ex + "\nSENT CONTENT: " + content,
+                        Message = ex + "\nSENT CONTENT: " + content +", content-type: " + contentTypes,
                         Filename = "CFWebhookController",
                         FunctionName = "Post"
                     });

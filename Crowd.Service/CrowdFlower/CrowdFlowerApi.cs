@@ -38,7 +38,9 @@ namespace Crowd.Service.CrowdFlower
                 using (HttpClient client = new HttpClient())
                 {
                     CFJobRequest job = new CFJobRequest();
-                    //TODO: what is unitCount? I use 20 for now
+                    //TODO: what is units_count? I use 20 for now - Mo
+                    // Unit count is the number of rows ("units") that comprise the job - Dan
+                    // https://success.crowdflower.com/hc/en-us/articles/202703435-CrowdFlower-API-Jobs-Resource-Attributes
                     var response =
                         client.PostAsync(baseAddress, job.LaunchRequestCUrlData(CFJobRequest.CFWorkForce.Internally, 20))
                             .Result;

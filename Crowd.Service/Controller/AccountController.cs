@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using System.Xml;
 using Crowd.Model;
 using Crowd.Model.Data;
 using Crowd.Service.Common;
@@ -39,7 +41,24 @@ namespace Crowd.Service.Controller
                 {
                     if (thisUser.Key != existingUser.Key)
                     {
-                        return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                        //if (string.IsNullOrEmpty(thisUser.IdToken))
+                        //{
+                        return new HttpResponseMessage(HttpStatusCode.Unauthorized); 
+                        //}
+                        //TODO
+                        //JwtSecurityToken token = new JwtSecurityToken(thisUser.IdToken);
+                        //JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+
+                        //var validationParams = new TokenValidationParameters()
+                        //{
+                        //    ValidAudience = ConfidentialData.GoogleClientId,
+                        //    ValidIssuers = new[] {"accounts.google.com", "https://accounts.google.com"},
+                        //    RequireExpirationTime = true,
+                            
+                        //};
+                        
+                        //validationParams.s
+
                     }
                     // Update the found user's details if they've been given
                     existingUser.Name = thisUser.Name ?? existingUser.Email;

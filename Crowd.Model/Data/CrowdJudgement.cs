@@ -43,7 +43,11 @@ namespace Crowd.Model.Data
 
                 if (char.IsDigit(newData.StringResponse[0]))
                 {
-                    newData.NumResponse = (int)char.GetNumericValue(newData.StringResponse[0]);
+                    int num;
+                    if (int.TryParse(newData.StringResponse, out num))
+                    {
+                        newData.NumResponse = num;
+                    }
                 }
 
                 Data.Add(newData);

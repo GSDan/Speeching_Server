@@ -51,7 +51,8 @@ namespace Crowd.Service.CrowdFlower
         private const string GroupCml = "<cml:group>\r\n{0}\r\n</cml:group>\r\n";
         private const string RadioParentCml = "<cml:radios name=\"rlst{0}\" label=\"{1}\" validates=\"{2}\">\r\n{3}\r\n</cml:radios><br/>\r\n";
         private const string RadioCml = "<cml:radio label=\"{0}\" />\r\n";
-        private const string RatingCml = "<cml:ratings name=\"rlst{0}\" label=\"{1}\" instructions=\"{2}\" points=\"{3}\"  validates=\"{4}\" />\r\n";
+        private const string ScaleCml = "<cml:ratings name=\"rlst{0}\" label=\"{1}\" instructions=\"{2}\" points=\"{3}\"  validates=\"{4}\" />\r\n";
+        private const string IntRangeCml = "<cml:text name=\"rlst{0}\" label=\"{1}\" instructions=\"{2}\" validates=\"required integerRange:{{min:{3},max:{4}}}\"/>\r\n";
 
         private static string CreateAudioCml()
         {
@@ -59,13 +60,12 @@ namespace Crowd.Service.CrowdFlower
             cml += string.Format(AudioHtmlTag, "{{AudioUrl}}");
 
             cml += "{% if TaskType == \"MP\" %}\r\n";
-                cml += CreateMinimalPairsCml("Choose the word which is closest to what you heard:", "required");
+            cml += CreateMinimalPairsCml("Choose the word that is closest to what you can hear", "required");
             cml += "{% else %}\r\n";
                 cml += string.Format(
                     TextareaCml, 
-                    "Please write down exactly what you heard the person say.", 
-                    "Please write exactly what you heard the person say, even if the spelling seems strange! " +
-                        "If you do not understand a word at all, put a question mark (?) in its place.", 
+                    "In the box below please write down exactly what you heard the person say, even if the spelling seems strange.", 
+                    "If you do not understand a word at all put a question mark (?) in its place.", 
                     "required");
             cml += "{% endif %}\r\n";
 
@@ -76,112 +76,119 @@ namespace Crowd.Service.CrowdFlower
                 "required",
                 5) + "<br/>";
 
-            ratingScales += CreateRatingScale(
-                "Accent", 
-                "How much did the person's accent affect how easy they were to understand?",
-                "Please give a rating where 1 is 'Their accent wasn't an issue' and 5 is 'Their accent was so broad I couldn't understand a thing'",
-                "required",
-                5) + "<br/>";
+            ratingScales += "{% if TaskType != \"MP\" %}\r\n";
 
-            cml += "{% if TaskType != \"MP\" %}\r\n";
+            /* ************************* COMPARING ******************************/
+            // If the user has already uploaded a recording of them saying this content, 
+            // show the CrowdFlower user the recording and results for comparison
+            ratingScales += "{% if Comparison and Comparison != \"\" %}\r\n";
+#region comparisons
+            ratingScales += "<br/><p>Below you will hear two sentences being spoken. " +
+                            "Press the play buttons in each box (1 and then 2) to hear them separately. " +
+                            "Think about how the person was talking in sentence 1 compared to sentence 2. </p>";
+            ratingScales += string.Format(AudioHtmlTag, "{{AudioUrl}}") + string.Format(AudioHtmlTag, "{{Comparison}}");
 
-                ratingScales += CreateRatingScale(
-                    "Volume",
-                    "How loud do you feel the person was speaking?",
-                    "Please give a rating where 1 is 'Could barely hear them' and 5 is 'Very loud'",
-                    "required",
-                    5);
+            ratingScales += CreateIntRatingBox(
+                "Volume",
+                "On a scale of 0-100 please indicate how loud you felt the first sentence was. The second sentence was scored {{PrevLoud}}",
+                "Please give a rating where 0 is 'Could barely hear them' and 100 is 'Very loud'",
+                0, 100);
 
-                ratingScales += CreateDropdown("VolumeChange", "Did the volume change over the course of the sentence?",
-                    new[]
+            ratingScales += CreateDropdown("VolumeChange", "Did the volume change over the course of the first sentence?",
+                new[]
                     {
-                        new []{"The volume stayed constant", "constant"},
-                        new []{"The volume got louder as the sentence went on", "increase"},
-                        new []{"The volume got quieter as the sentence went on", "decrease"}
+                        new []{"No, it stayed the same", "constant"},
+                        new []{"It got louder as the sentence went on", "increase"},
+                        new []{"It got quieter as the sentence went on", "decrease"}
                     }) + "<br/>";
 
-                ratingScales += CreateRatingScale(
-                    "Pace",
-                    "How fast do you feel the person was talking?",
-                    "Please give a rating where 1 is 'Very slow' and 5 is 'So fast I could barely understand them'",
-                    "required",
-                    5);
+            ratingScales += CreateIntRatingBox(
+                "Pace",
+                "On a scale of 0-100 please indicate how fast you felt the person in the first sentence was talking.  The second sentence was scored {{PrevPace}}",
+                "Please give a rating where 0 is 'Very slow' and 100 is 'So fast I could barely understand them'",
+                0, 100);
 
-                ratingScales += CreateDropdown("PaceChange", "Did the speed change over the course of the sentence?",
-                    new[]
+            ratingScales += CreateDropdown("PaceChange", "Did the speed change over the course of the first sentence?",
+                new[]
                     {
-                        new []{"The speed stayed constant", "constant"},
-                        new []{"The speech got faster", "increase"}, 
-                        new []{"The speech got slower", "decrease"}
+                        new []{"No, it stayed the same", "constant"},
+                        new []{"It got faster as the sentence went on", "increase"}, 
+                        new []{"It got slower as the sentence went on", "decrease"}
                     }) + "<br/>";
 
-                ratingScales += CreateRatingScale(
-                    "Pitch",
-                    "How much do you feel the person's pitch varied?",
-                    "Pitch refers to how much the person's voice goes up and down.\n" +
-                        "Please give a rating where 1 is 'None, very monotonous and sounded bored' and 5 is 'A lot, sounded very excited'",
-                    "required",
-                    5);
+            ratingScales += "<p>Think about how much the person’s pitch varied in sentence 1 compared to sentence 2." +
+                            "(Pitch refers to the ups and downs in a person’s voice which give it feeling. " +
+                            "Someone with a varied pitch might sound excited and interested, someone with little " +
+                            "change to their pitch might sound monotonous or bored)</p>";
 
-                ratingScales += CreateDropdown("PitchChange", "Did the pitch change over the course of the sentence?",
-                    new[]
+            ratingScales += CreateIntRatingBox(
+                "Pitch",
+                "On a scale of 0-100 please indicate how much you felt the pitch in the first sentence varied. " +
+                    "The second sentence scored {{PrevPitch}}",
+                "Please give a rating where 0 is 'None, very monotonous voice and sounded bored' and 100 is 'A lot, they sounded excited and interested'",
+                0, 100);
+
+            ratingScales += CreateDropdown("PitchChange", "Did the pitch change over the course of the sentence?",
+                new[]
                     {
-                        new []{"The pitch stayed constant", "constant"},
-                        new []{"The pitch got more excited", "increase"}, 
-                        new []{"The pitch got more bored sounding", "decrease"}
+                        new []{"No, it stayed the same", "constant"},
+                        new []{"It got more excited as the sentence went on", "increase"}, 
+                        new []{"It got more bored as the sentence went on", "decrease"}
+                    }) + "<br/>";
+#endregion
+            /* ************************* FIRST RATING ***************************/
+            // There are no recordings to use as point of comparison so don't show them.
+
+            ratingScales += "{% else %}\r\n"; // Is first time recording this content
+#region firstRating
+            ratingScales += CreateIntRatingBox(
+                "Volume",
+                "On a scale of 0-100 please indicate how loud you felt the sentence was.",
+                "Please give a rating where 0 is 'Could barely hear them' and 100 is 'Very loud'",
+                0, 100);
+
+            ratingScales += CreateDropdown("VolumeChange", "Did the volume change over the course of the sentence?",
+                new[]
+                    {
+                        new []{"No, it stayed the same", "constant"},
+                        new []{"It got louder as the sentence went on", "increase"},
+                        new []{"It got quieter as the sentence went on", "decrease"}
                     }) + "<br/>";
 
-                ratingScales += "{% if Comparison and Comparison != \"\" %}\r\n";
-                    ratingScales += "<br/><p>Please listen to this second recording and compare it to the first one:</p>";
-                    ratingScales += string.Format(AudioHtmlTag, "{{Comparison}}");
+            ratingScales += CreateIntRatingBox(
+                "Pace",
+                "On a scale of 0-100 please indicate how fast you felt the person in the sentence was talking.",
+                "Please give a rating where 0 is 'Very slow' and 100 is 'So fast I could barely understand them'",
+                0, 100);
 
-                    ratingScales += CreateRatingScale(
-                    "Volume2",
-                    "How loud do you feel the person was speaking in the second recording?",
-                    "Please give a rating where 1 is 'Could barely hear them' and 5 is 'Very loud'",
-                    "required",
-                    5);
-
-                    ratingScales += CreateDropdown("VolumeChange2", "Did the volume change over the course of the sentence?",
-                        new[]
+            ratingScales += CreateDropdown("PaceChange", "Did the speed change over the course of the sentence?",
+                new[]
                     {
-                        new []{"The volume stayed constant", "constant"},
-                        new []{"The volume got louder as the sentence went on", "increase"},
-                        new []{"The volume got quieter as the sentence went on", "decrease"}
+                        new []{"No, it stayed the same", "constant"},
+                        new []{"It got faster as the sentence went on", "increase"}, 
+                        new []{"It got slower as the sentence went on", "decrease"}
                     }) + "<br/>";
 
-                    ratingScales += CreateRatingScale(
-                        "Pace2",
-                        "How fast do you feel the person was talking in the second recording?",
-                        "Please give a rating where 1 is 'Very slow' and 5 is 'So fast I could barely understand them'",
-                        "required",
-                        5);
+            ratingScales += "<p>Think about how much the person’s pitch varied in the recording." +
+                            "(Pitch refers to the ups and downs in a person’s voice which give it feeling. " +
+                            "Someone with a varied pitch might sound excited and interested, someone with little " +
+                            "change to their pitch might sound monotonous or bored)</p>";
 
-                    ratingScales += CreateDropdown("PaceChange2", "Did the speed change over the course of the sentence?",
-                        new[]
+            ratingScales += CreateIntRatingBox(
+                "Pitch",
+                "On a scale of 0-100 please indicate how much you felt the pitch in the sentence varied.",
+                "Please give a rating where 0 is 'None, very monotonous voice and sounded bored' and 100 is 'A lot, they sounded excited and interested'",
+                0, 100);
+
+            ratingScales += CreateDropdown("PitchChange", "Did the pitch change over the course of the sentence?",
+                new[]
                     {
-                        new []{"The speed stayed constant", "constant"},
-                        new []{"The speech got faster", "increase"}, 
-                        new []{"The speech got slower", "decrease"}
+                        new []{"No, it stayed the same", "constant"},
+                        new []{"It got more excited as the sentence went on", "increase"}, 
+                        new []{"It got more bored as the sentence went on", "decrease"}
                     }) + "<br/>";
-
-                    ratingScales += CreateRatingScale(
-                        "Pitch2",
-                        "How much do you feel the person's pitch varied in the second recording?",
-                        "Pitch refers to how much the person's voice goes up and down.\n" +
-                            "Please give a rating where 1 is 'None, very monotonous and sounded bored' and 5 is 'A lot, sounded very excited'",
-                        "required",
-                        5);
-
-                    ratingScales += CreateDropdown("PitchChange2", "Did the pitch change over the course of the sentence?",
-                        new[]
-                    {
-                        new []{"The pitch stayed constant", "constant"},
-                        new []{"The pitch got more excited", "increase"}, 
-                        new []{"The pitch got more bored sounding", "decrease"}
-                    }) + "<br/>";
-
-              ratingScales += "{% endif %}\r\n"; // End comparison
+#endregion
+            ratingScales += "{% endif %}\r\n"; // End comparison if
 
             ratingScales += "{% endif %}\r\n"; // End != minimal pairs
 
@@ -203,7 +210,12 @@ namespace Crowd.Service.CrowdFlower
         /// <returns>CML string</returns>
         private static string CreateRatingScale(string dataType, string desc, string instructions, string validator, int num)
         {
-            return string.Format(RatingCml, dataType, desc, instructions, num, validator);
+            return string.Format(ScaleCml, dataType, desc, instructions, num, validator);
+        }
+
+        private static string CreateIntRatingBox(string dataType, string desc, string instructions, int min, int max)
+        {
+            return string.Format(IntRangeCml, dataType, desc, instructions, min, max);
         }
 
         /// <summary>
@@ -256,14 +268,13 @@ namespace Crowd.Service.CrowdFlower
         {
             List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>();
 
-            if ((workforce & CFWorkForce.OnDemand) != 0)
+            if (workforce == CFWorkForce.OnDemand)
             {
                 list.Add(new KeyValuePair<string, string>("channels[0]", "on_demand"));
             }
-
-            if ((workforce & CFWorkForce.Internally) != 0)
+            else if (workforce == CFWorkForce.Internally)
             {
-                list.Add(new KeyValuePair<string, string>("channels[" + list.Count + "]", "on_demand"));
+                list.Add(new KeyValuePair<string, string>("channels[" + list.Count + "]", "cf_internal"));
             }
 
             list.Add(new KeyValuePair<string, string>("debit[units_count]", unitCount.ToString()));
@@ -276,7 +287,7 @@ namespace Crowd.Service.CrowdFlower
             SvcStatus status = new SvcStatus();
             try
             {
-                string userKey = result.User.Key.ToString();
+                string userKey = result.User.Email;
 
                 using (HttpClient client = new HttpClient())
                 {

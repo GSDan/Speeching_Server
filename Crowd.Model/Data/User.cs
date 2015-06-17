@@ -13,6 +13,9 @@ namespace Crowd.Model.Data
         [Index(IsUnique = true)]
         public string Key { get; set; }
 
+        public string IdToken { get; set; }
+        public string RefToken { get; set; }
+
         public string Name { get; set; }
         public string Nickname { get; set; }
         public string Avatar { get; set; }
