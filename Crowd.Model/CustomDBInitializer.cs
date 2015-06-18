@@ -340,14 +340,14 @@ namespace Crowd.Model
                     ExternalId = "Assessments",
                     Icon = "https://cdn1.iconfinder.com/data/icons/MetroStation-PNG/128/MB__help.png",
                     Recommended = false,
-                    DefaultSubscription = true,
+                    DefaultSubscription = false,
                     Title = "Progress Assessments",
                     Activities = new List<ParticipantActivity>
                     {
                         new ParticipantActivity
                         {
                             ExternalId = "assess1",
-                            Title = "Your first assessment!",
+                            Title = "Short Assessment",
                             Description =
                                 "Doing this short assessment will help us determine which parts of your speech might need some practice!",
                             DateSet = DateTime.Now,
@@ -374,8 +374,6 @@ namespace Crowd.Model
                                             new ParticipantAssessmentTaskPrompt {Value = "Heap"},
                                             new ParticipantAssessmentTaskPrompt {Value = "Cop"},
                                             new ParticipantAssessmentTaskPrompt {Value = "Hub"},
-                                            new ParticipantAssessmentTaskPrompt {Value = "Cap"},
-                                            new ParticipantAssessmentTaskPrompt {Value = "Hoop"}
                                         }
                                     }
                                     
@@ -387,13 +385,9 @@ namespace Crowd.Model
                                     PromptCol = new ParticipantAssessmentTaskPromptCol
                                     {
                                         Name = "Image Description 1",
-                                        PromptType = ParticipantAssessmentTaskPromptCol.PromptTaskType.ImageDesc,
+                                        PromptType = ParticipantAssessmentTaskPromptCol.PromptTaskType.ImagePrompt,
                                         Prompts = new List<ParticipantAssessmentTaskPrompt>
                                         {
-                                            new ParticipantAssessmentTaskPrompt
-                                            {
-                                                Value = "What does the image show?"
-                                            },
                                             new ParticipantAssessmentTaskPrompt
                                             {
                                                 Value = "Describe the colours in the image."
@@ -411,6 +405,200 @@ namespace Crowd.Model
                                     },
                                     Image =
                                         "http://th00.deviantart.net/fs71/PRE/i/2013/015/d/c/a_hobbit_hole_by_uberpicklemonkey-d5rmn8n.jpg"
+                                }
+                            }
+                        },
+
+                        new ParticipantActivity
+                        {
+                            ExternalId = "assess2",
+                            Title = "Short Assessment",
+                            Description =
+                                "Doing this short assessment will help us determine which parts of your speech might need some practice!",
+                            DateSet = DateTime.Now,
+                            Icon = "http://www.pursuittraining.co.uk/images/care-icon.gif",
+                            AssessmentTasks = new List<ParticipantAssessmentTask>
+                            {
+                                new ParticipantAssessmentTask
+                                {
+                                    TaskType = ParticipantAssessmentTask.AssessmentTaskType.QuickFire,
+                                    Title = "QuickFire Speaking!",
+                                    PromptCol = new ParticipantAssessmentTaskPromptCol
+                                    {
+                                        Name = "Minimal Pairs 2",
+                                        PromptType = ParticipantAssessmentTaskPromptCol.PromptTaskType.MinimalPairs,
+                                        Prompts = new List<ParticipantAssessmentTaskPrompt>
+                                        {
+                                            new ParticipantAssessmentTaskPrompt {Value = "One"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Fall"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "What"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Wash"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Waltz"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Wool"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Watts"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Was"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Wad"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Want"}
+                                        }
+                                    }
+                                    
+                                },
+                                new ParticipantAssessmentTask
+                                {
+                                    TaskType = ParticipantAssessmentTask.AssessmentTaskType.ImageDesc,
+                                    Title = "Describing Pizza",
+                                    PromptCol = new ParticipantAssessmentTaskPromptCol
+                                    {
+                                        Name = "Image Description 2",
+                                        PromptType = ParticipantAssessmentTaskPromptCol.PromptTaskType.ImagePrompt,
+                                        Prompts = new List<ParticipantAssessmentTaskPrompt>
+                                        {
+                                            new ParticipantAssessmentTaskPrompt
+                                            {
+                                                Value = "Describe your favourite pizza"
+                                            },
+                                            new ParticipantAssessmentTaskPrompt
+                                            {
+                                                Value = "Describe the worst pizza you can think of!"
+                                            },
+                                            new ParticipantAssessmentTaskPrompt
+                                            {
+                                                Value = "What's your favourite pizza topping and why?"
+                                            }
+                                        }
+                             
+                                    },
+                                    Image =
+                                        "http://guelphpizzawings.ca/wp-content/uploads/2011/12/justeat_14314357.jpg"
+                                }
+                            }
+                        },
+
+                         new ParticipantActivity
+                        {
+                            ExternalId = "assess3",
+                            Title = "Short Assessment",
+                            Description =
+                                "Doing this short assessment will help us determine which parts of your speech might need some practice!",
+                            DateSet = DateTime.Now,
+                            Icon = "http://www.pursuittraining.co.uk/images/care-icon.gif",
+                            AssessmentTasks = new List<ParticipantAssessmentTask>
+                            {
+                                new ParticipantAssessmentTask
+                                {
+                                    TaskType = ParticipantAssessmentTask.AssessmentTaskType.QuickFire,
+                                    Title = "QuickFire Speaking!",
+                                    PromptCol = new ParticipantAssessmentTaskPromptCol
+                                    {
+                                        Name = "Minimal Pairs 3",
+                                        PromptType = ParticipantAssessmentTaskPromptCol.PromptTaskType.MinimalPairs,
+                                        Prompts = new List<ParticipantAssessmentTaskPrompt>
+                                        {
+                                            new ParticipantAssessmentTaskPrompt {Value = "Bun"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Moon"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Budge"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Botch"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Bond"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Buzz"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Bus"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Bowl"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Butt"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Boss"}
+                                        }
+                                    }
+                                    
+                                },
+                                new ParticipantAssessmentTask
+                                {
+                                    TaskType = ParticipantAssessmentTask.AssessmentTaskType.ImageDesc,
+                                    Title = "Holiday Memories",
+                                    PromptCol = new ParticipantAssessmentTaskPromptCol
+                                    {
+                                        Name = "Image Description 3",
+                                        PromptType = ParticipantAssessmentTaskPromptCol.PromptTaskType.ImagePrompt,
+                                        Prompts = new List<ParticipantAssessmentTaskPrompt>
+                                        {
+                                            new ParticipantAssessmentTaskPrompt
+                                            {
+                                                Value = "Where do you like to go on holiday, and why?"
+                                            },
+                                            new ParticipantAssessmentTaskPrompt
+                                            {
+                                                Value = "What do you think of beach holidays?"
+                                            },
+                                            new ParticipantAssessmentTaskPrompt
+                                            {
+                                                Value = "What's your favourite way to travel?"
+                                            }
+                                        }
+                             
+                                    },
+                                    Image =
+                                        "http://luxurytravelspots.com/wp-content/uploads/2013/07/Plane-in-the-sunset.jpg"
+                                }
+                            }
+                        },
+
+                        new ParticipantActivity
+                        {
+                            ExternalId = "assess4",
+                            Title = "Short Assessment",
+                            Description =
+                                "Doing this short assessment will help us determine which parts of your speech might need some practice!",
+                            DateSet = DateTime.Now,
+                            Icon = "http://www.pursuittraining.co.uk/images/care-icon.gif",
+                            AssessmentTasks = new List<ParticipantAssessmentTask>
+                            {
+                                new ParticipantAssessmentTask
+                                {
+                                    TaskType = ParticipantAssessmentTask.AssessmentTaskType.QuickFire,
+                                    Title = "QuickFire Speaking!",
+                                    PromptCol = new ParticipantAssessmentTaskPromptCol
+                                    {
+                                        Name = "Minimal Pairs 4",
+                                        PromptType = ParticipantAssessmentTaskPromptCol.PromptTaskType.MinimalPairs,
+                                        Prompts = new List<ParticipantAssessmentTaskPrompt>
+                                        {
+                                            new ParticipantAssessmentTaskPrompt {Value = "Mat"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Cat"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Hat"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Fat"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Pat"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Vat"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "What"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Gnat"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Tat"},
+                                            new ParticipantAssessmentTaskPrompt {Value = "Bat"}
+                                        }
+                                    }
+                                    
+                                },
+                                new ParticipantAssessmentTask
+                                {
+                                    TaskType = ParticipantAssessmentTask.AssessmentTaskType.ImageDesc,
+                                    Title = "Super Powers",
+                                    PromptCol = new ParticipantAssessmentTaskPromptCol
+                                    {
+                                        Name = "Image Description 4",
+                                        PromptType = ParticipantAssessmentTaskPromptCol.PromptTaskType.ImagePrompt,
+                                        Prompts = new List<ParticipantAssessmentTaskPrompt>
+                                        {
+                                            new ParticipantAssessmentTaskPrompt
+                                            {
+                                                Value = "If you could have a super power, what would it be and why?"
+                                            },
+                                            new ParticipantAssessmentTaskPrompt
+                                            {
+                                                Value = "Describe what your costume would be!"
+                                            },
+                                            new ParticipantAssessmentTaskPrompt
+                                            {
+                                                Value = "Who's your favourite super hero and why?"
+                                            }
+                                        }
+                                    },
+                                    Image =
+                                        "http://2.bp.blogspot.com/-CxQhEy0wgbY/TcB-t9G_LwI/AAAAAAAACec/YBAw8oIeWo8/s1600/publicdomain03.jpg"
                                 }
                             }
                         }
@@ -484,8 +672,8 @@ namespace Crowd.Model
                 new ActivityHelper
                 {
                     ActivityType = ParticipantAssessmentTask.AssessmentTaskType.ImageDesc,
-                    ActivityName = "Describing Images",
-                    ActivityDescription = "Record yourself describing the shown image, following the given prompts.",
+                    ActivityName = "Topic Prompts",
+                    ActivityDescription = "Press the record button and respond to the prompt below the image. Press the button again to finish!",
                     HelpVideo = "https://ia700401.us.archive.org/19/items/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4"
                 },
                 new ActivityHelper

@@ -15,6 +15,24 @@ namespace Crowd.Service.Controller
     public class FeedController : BaseController
     {
         /// <summary>
+        /// Checks if the user has completed an assessment today, returning one if not
+        /// </summary>
+        /// <returns></returns>
+        private async Task<ParticipantActivity> GetAssessmentIfNeeded(CrowdContext db, User user)
+        {
+            var blob = await (from upload in db.ParticipantResults
+                where upload.User.Email == user.Email &&
+                      upload.IsAssessment
+                orderby upload.UploadedAt
+                select upload).ToArrayAsync();
+
+            Console.WriteLine(blob.Length);
+
+            return null;
+        }
+
+
+        /// <summary>
         /// Returns the user's subscription feed
         /// </summary>
         /// <returns></returns>
@@ -40,13 +58,18 @@ namespace Crowd.Service.Controller
                 TimeGraphPoint[] points = await GetGraphPoints("rlsttrans", user, db);
                 if (points != null && points.Length >= 2)
                 {
+                    foreach (TimeGraphPoint point in points)
+                    {
+                        point.YVal = 5 - point.YVal;
+                    }
+
                     ParticipantFeedItem graphFeedback = new ParticipantFeedItem
                     {
                         Title = "Understanding Progress",
                         Description = "How understandable people have found you over time.",
                         Date = DateTime.Now,
                         Dismissable = false,
-                        Importance = 8,
+                        Importance = 9,
                         DataPoints = points
                     };
                     items.Add(graphFeedback);
@@ -55,14 +78,16 @@ namespace Crowd.Service.Controller
                 float? transRating = await AverageRating("rlsttrans", user, db);
                 if (transRating != null)
                 {
+                    transRating = 5 - transRating;
+
                     var transFeedback = new ParticipantFeedItem
                     {
                         Rating = (float)transRating,
                         Title = "Ease of Listening",
-                        Description = "This rating shows on average how difficult listeners have found understanding what you say - the lower the better!",
+                        Description = "This rating shows on average how easy listeners have found understanding what you say.",
                         Date = DateTime.Now,
                         Dismissable = false,
-                        Importance = 10
+                        Importance = 9
                     };
                     items.Add(transFeedback);
                 }
@@ -70,15 +95,17 @@ namespace Crowd.Service.Controller
                 float? accentRating = await AverageRating("rlstaccent", user, db);
                 if (accentRating != null)
                 {
+                    accentRating = 5 - accentRating;
+
                     var accentFeedback = new ParticipantFeedItem
                     {
                         Rating = (float)accentRating,
-                        Title = "Accent Influence",
+                        Title = "Accent Clarity",
                         Description =
-                            "This total average rating shows how much your accent affected listeners' understanding of your speech since you started.",
+                            "This total average rating shows easy to understand people find your accent.",
                         Date = DateTime.Now,
                         Dismissable = false,
-                        Importance = 10
+                        Importance = 8
                     };
                     items.Add(accentFeedback);
                 }
@@ -93,10 +120,38 @@ namespace Crowd.Service.Controller
                         Description = "This is the success rating of people identifying the words spoken in your QuickFire tests!",
                         Date = DateTime.Now,
                         Dismissable = false,
-                        Importance = 10
+                        Importance = 8
                     };
                     items.Add(mpFeedback);
                 }
+
+                if (items.Count == 0)
+                {
+                    items.Add(new ParticipantFeedItem
+                    {
+                        Title = "No stories available",
+                        Description = "Your news feed is looking a bit empty! Complete assessments and activities to fill it up with results and feedback. Be sure to check back regularly!",
+                        Date = DateTime.Now,
+                        Dismissable = false,
+                        Importance = 5,
+                    });
+                }
+
+                await GetAssessmentIfNeeded(db, user);
+                items.Add( new ParticipantFeedItem
+                {
+                    Title = "A new assessment is available!",
+                    Description = "There's a new assessment available for you to complete! The feedback from completing this short activity will help you to keep track of your progress.",
+                    Date = DateTime.Now,
+                    Dismissable = false,
+                    Importance = 10,
+                    Interaction = new ParticipantFeedItemInteraction
+                    {
+                        Type = ParticipantFeedItemInteraction.InteractionType.Assessment,
+                        Value = "5",
+                        Label = "Start Assessment!"
+                    }
+                });
 
                 return new HttpResponseMessage()
                 {

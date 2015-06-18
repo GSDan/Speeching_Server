@@ -23,6 +23,8 @@ namespace Crowd.Model.Data
         public virtual ICollection<ParticipantActivityCategory> SubscribedCategories { get; set; }
         public virtual ICollection<ParticipantResult> Submissions { get; set; }
 
+        public virtual ParticipantResult LastAssessment { get; set; }
+
         public virtual ICollection<ParticipantFeedItem> FeedItems { get; set; }
         public virtual ICollection<ParticipantFeedItem> DismissedPublicFeedItems { get; set; } 
     }

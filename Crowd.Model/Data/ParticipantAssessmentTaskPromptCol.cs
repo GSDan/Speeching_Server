@@ -6,7 +6,7 @@ namespace Crowd.Model.Data
     {
         public enum PromptTaskType
         {
-            MinimalPairs, ImageDesc
+            MinimalPairs, ImagePrompt
         }
 
         public int Id { get; set; }

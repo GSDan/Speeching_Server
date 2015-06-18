@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Crowd.Model.Interface;
 
 namespace Crowd.Model.Data
@@ -14,6 +15,7 @@ namespace Crowd.Model.Data
         public int CrowdJobId { get; set; }
         public bool IsAssessment { get; set; }
         public double UserRating { get; set; }
+        public DateTime UploadedAt { get; set; }
         public ParticipantActivity ParticipantActivity { get; set; }
         public virtual ICollection<ParticipantResultData> Data { get; set; }
     }
