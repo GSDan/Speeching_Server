@@ -66,7 +66,15 @@ namespace Crowd.Service.CrowdFlower
     public class UnitData
     {
         public string AudioUrl { get; set; }
-        public string AudioTypeCodec { get; set; }
+        public string TaskType { get; set; }
+        public string ParticipantAssessmentTaskId { get; set; }
+        public string ParticipantTaskId { get; set; }
+        public string Choices { get; set; }
+        public string PrevLoud { get; set; }
+        public string PrevPace { get; set; }
+        public string PrevPitch { get; set; }
+        public string Comparison { get; set; }
+        public string ExtraData { get; set; }
     }
 
     public class Minimum_Requirements

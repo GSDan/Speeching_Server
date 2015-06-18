@@ -21,6 +21,7 @@ namespace Crowd.Service.Model
                 CrowdRowResponse[] lastNormResponses = null;
                 int lastAssessTaskId = -1;
                 int lastNormTaskId = -1;
+                string extraData = "";
 
                 foreach (var path in audioPaths)
                 {
@@ -60,6 +61,29 @@ namespace Crowd.Service.Model
                             case ParticipantAssessmentTask.AssessmentTaskType.ImageDesc:
                                 taskType = "Image";
                                 break;
+                        }
+
+                        string filename = Path.GetFileNameWithoutExtension(path);
+                        string promptId = "";
+                        bool started = false;
+
+                        // Get the prompt index from the filename
+                        foreach (char c in filename)
+                        {
+                            if(c == '-')
+                            {
+                                started = true;
+                                continue;
+                            }
+                            if (started && char.IsDigit(c))
+                            {
+                                promptId += c;
+                            }
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(promptId))
+                        {
+                            extraData = promptId;
                         }
 
                         if (lastAssessTaskId != task.Id)
@@ -147,8 +171,9 @@ namespace Crowd.Service.Model
                                           "\"PrevLoud\":\"{5}\"," +
                                           "\"PrevPace\":\"{6}\"," +
                                           "\"PrevPitch\":\"{7}\"," +
-                                          "\"Comparison\":\"{8}\"}}\r\n"
-                        , path, taskType, assTaskId, normTaskId, choices, prevLoud, prevPace, prevPitch, comparisonPath);
+                                          "\"Comparison\":\"{8}\"," +
+                                          "\"ExtraData\":\"{9}\"}}\r\n"
+                        , path, taskType, assTaskId, normTaskId, choices, prevLoud, prevPace, prevPitch, comparisonPath, extraData);
                 }
 
             }

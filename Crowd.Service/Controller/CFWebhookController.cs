@@ -57,6 +57,14 @@ namespace Crowd.Service.Controller
                     int taskId = cfData.results.judgments[0].unit_id;
                     CrowdRowResponse resp = await db.CrowdRowResponses.FindAsync(taskId.ToString());
 
+                    resp.TaskType = cfData.data.TaskType;
+                    resp.Choices = cfData.data.Choices;
+                    resp.PrevLoud = cfData.data.PrevLoud;
+                    resp.PrevPace = cfData.data.PrevPace;
+                    resp.PrevPitch = cfData.data.PrevPitch;
+                    resp.Comparison = cfData.data.Comparison;
+                    resp.ExtraData = cfData.data.ExtraData;
+
                     if (resp.TaskJudgements == null) resp.TaskJudgements = new List<CrowdJudgement>();
 
                     foreach (Judgement judgement in cfData.results.judgments)

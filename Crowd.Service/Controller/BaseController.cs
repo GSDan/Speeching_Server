@@ -58,36 +58,33 @@ namespace Crowd.Service.Controller
         {
             try
             {
-                // Get all Quickfire submissions
-                var allSubmissions = from res in db.ParticipantResults
-                                    where res.User.Email == user.Email
-                                    from resData in res.Data
-                                    where resData.ParticipantAssessmentTask != null
-                                          && resData.ParticipantAssessmentTask.TaskType ==
-                                          ParticipantAssessmentTask.AssessmentTaskType.QuickFire
-                                    select resData;
 
-                if ((await allSubmissions.ToArrayAsync()).Length == 0) return null;
+                // Get all responses made on these submissions
+                IQueryable<CrowdRowResponse> allResponses = from crowdResponse in db.CrowdRowResponses
+                            where crowdResponse.ParticipantAssessmentTask != null &&
+                                  crowdResponse.ParticipantAssessmentTask.TaskType ==
+                                  ParticipantAssessmentTask.AssessmentTaskType.QuickFire &&
+                                  crowdResponse.ParticipantResult.User.Email == user.Email
+                            select crowdResponse;
 
-                // Get total num of judgements 
-                int numTotal = await (from resData in allSubmissions
-                                    from judgement in db.CrowdJudgements
-                                    where judgement.JobId == resData.ParentSubmission.CrowdJobId
-                                    from data in judgement.Data
-                                    where data.DataType == "rlstmp"
-                                    select data).CountAsync();
+                int numResp = await allResponses.CountAsync();
 
-                if (numTotal <= 0) return null;
+                if (numResp <= 0) return null;
+
+                int numTotal = await (from crowdResponse in allResponses
+                    from judgement in crowdResponse.TaskJudgements
+                    from data in judgement.Data
+                    where data.DataType == "rlstmp"
+                    select data).CountAsync();
 
                 // Get total num of correct judgements
-                int numCorrect = await (from resData in allSubmissions
-                                        from judgement in db.CrowdJudgements
-                                        where judgement.JobId == resData.ParentSubmission.CrowdJobId
-                                        from data in judgement.Data
-                                        where
-                                            data.DataType == "rlstmp" &&
-                                            data.StringResponse == resData.ParticipantAssessmentTaskPrompt.Value
-                                        select data).CountAsync();
+                int numCorrect = await (from crowdResponse in allResponses
+                    from judgement in crowdResponse.TaskJudgements
+                    from prompt in db.ParticipantAssessmentTaskPrompts
+                    where prompt.Id.ToString() == crowdResponse.ExtraData
+                    from data in judgement.Data
+                    where data.StringResponse == prompt.Value && data.DataType == "rlstmp"
+                    select data).CountAsync();
 
                 float onePercent = numTotal/100f;
 
@@ -112,7 +109,7 @@ namespace Crowd.Service.Controller
                                           select data.NumResponse).AverageAsync();
                 }
 
-                var queryRes = from res in db.ParticipantResults
+                IQueryable<int> queryRes = from res in db.ParticipantResults
                                where res.User.Email == user.Email
                                from judgement in db.CrowdJudgements
                                where res.CrowdJobId == judgement.JobId
@@ -150,7 +147,7 @@ namespace Crowd.Service.Controller
 
                 // Group the results by day, so that each day with results will be a point on the graph
 
-                foreach (var judgement in ordered)
+                foreach (CrowdJudgement judgement in ordered)
                 {
                     double yVal = (from data in judgement.Data
                                    where data.DataType == resDataType
@@ -166,7 +163,7 @@ namespace Crowd.Service.Controller
                     }
                 }
 
-                foreach (var pair in pointDictionary)
+                foreach (KeyValuePair<DateTime, List<double>> pair in pointDictionary)
                 {
                     points.Add(new TimeGraphPoint
                     {

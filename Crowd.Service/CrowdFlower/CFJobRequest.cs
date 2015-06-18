@@ -49,7 +49,7 @@ namespace Crowd.Service.CrowdFlower
         private const string AudioHtmlTag = "<audio src=\"{0}\" type=\"audio/mp4; codec='mp4a.40.2'\" preload=\"auto\" controls=\"controls\">\r\n</audio>\r\n";
         private const string TextareaCml = "<cml:textarea name=\"txta\" label=\"{0}\" class=\"\" instructions=\"{1}\" validates=\"{2}\"/><br/>\r\n";
         private const string GroupCml = "<cml:group>\r\n{0}\r\n</cml:group>\r\n";
-        private const string RadioParentCml = "<cml:radios name=\"rlst{0}\" label=\"{1}\" validates=\"{2}\">\r\n{3}\r\n</cml:radios><br/>\r\n";
+        private const string RadioParentCml = "<cml:radios name=\"rlst{0}\" label=\"{1}\" validates=\"required\">\r\n{2}\r\n</cml:radios><br/>\r\n";
         private const string RadioCml = "<cml:radio label=\"{0}\" />\r\n";
         private const string ScaleCml = "<cml:ratings name=\"rlst{0}\" label=\"{1}\" instructions=\"{2}\" points=\"{3}\"  validates=\"{4}\" />\r\n";
         private const string IntRangeCml = "<cml:text name=\"rlst{0}\" label=\"{1}\" instructions=\"{2}\" validates=\"required integerRange:{{min:{3},max:{4}}}\"/>\r\n";
@@ -60,19 +60,30 @@ namespace Crowd.Service.CrowdFlower
             cml += string.Format(AudioHtmlTag, "{{AudioUrl}}");
 
             cml += "{% if TaskType == \"MP\" %}\r\n";
-            cml += CreateMinimalPairsCml("Choose the word that is closest to what you can hear", "required");
+
+                cml += CreateMinimalPairsCml("Choose the word that is closest to what you can hear");
+
             cml += "{% else %}\r\n";
+
                 cml += string.Format(
                     TextareaCml, 
                     "In the box below please write down exactly what you heard the person say, even if the spelling seems strange.", 
                     "If you do not understand a word at all put a question mark (?) in its place.", 
                     "required");
+
             cml += "{% endif %}\r\n";
 
             string ratingScales = CreateRatingScale(
                 "Trans",
                 "How hard was it to understand the person in this clip?",
                 "Please give a rating where 1 is 'I understood everything' and 5 is 'I couldn’t understand a thing they said'",
+                "required",
+                5) + "<br/>";
+
+            ratingScales += CreateRatingScale(
+                "Accent",
+                "How much did the person’s accent affect how easy they were to understand?  ",
+                "Please give a rating where 1 is 'Not at all' and 5 is 'Their accent was so broad I couldn’t understand a thing'",
                 "required",
                 5) + "<br/>";
 
@@ -85,16 +96,21 @@ namespace Crowd.Service.CrowdFlower
 #region comparisons
             ratingScales += "<br/><p>Below you will hear two sentences being spoken. " +
                             "Press the play buttons in each box (1 and then 2) to hear them separately. " +
-                            "Think about how the person was talking in sentence 1 compared to sentence 2. </p>";
+                            "The second one is the person's previous upload - think about how the person was talking in sentence 1 compared to sentence 2. </p>";
             ratingScales += string.Format(AudioHtmlTag, "{{AudioUrl}}") + string.Format(AudioHtmlTag, "{{Comparison}}");
+
+            ratingScales +=
+                "<p>The score representing the average loudness of the person’s voice the last time " +
+                "they submitted a recording for analysis was {{PrevLoud}},  where 0 is 'so quiet I could barely hear them' and 100 is 'very loud'. " +
+                "We are looking to see if there is a change.</p>";
 
             ratingScales += CreateIntRatingBox(
                 "Volume",
-                "On a scale of 0-100 please indicate how loud you felt the first sentence was. The second sentence was scored {{PrevLoud}}",
-                "Please give a rating where 0 is 'Could barely hear them' and 100 is 'Very loud'",
+                "Please enter a number from 0-100 indicating how loud you felt the first sentence was, where 0 is 'so quiet I could barely hear them' and 100 is 'very loud'",
+                "Please enter a number between 0-100, using the previous score given to the second recording as a comparison",
                 0, 100);
 
-            ratingScales += CreateDropdown("VolumeChange", "Did the volume change over the course of the first sentence?",
+            ratingScales += CreateRadios("VolumeChange", "Did the volume change over the course of the first sentence?",
                 new[]
                     {
                         new []{"No, it stayed the same", "constant"},
@@ -102,13 +118,18 @@ namespace Crowd.Service.CrowdFlower
                         new []{"It got quieter as the sentence went on", "decrease"}
                     }) + "<br/>";
 
+            ratingScales +=
+                "<p>The score representing the average speed of the person’s voice the last time " +
+                "they submitted a recording for analysis was {{PrevPace}},  where 0 is 'very slow' and 100 is 'So fast I could barely understand them'. " +
+                "We are looking to see if there is a change.</p>";
+
             ratingScales += CreateIntRatingBox(
                 "Pace",
-                "On a scale of 0-100 please indicate how fast you felt the person in the first sentence was talking.  The second sentence was scored {{PrevPace}}",
-                "Please give a rating where 0 is 'Very slow' and 100 is 'So fast I could barely understand them'",
+                "Please enter a number from 0-100 indicating how fast you felt the person in the first sentence was talking, where 0 is 'very slow' and 100 is 'So fast I could barely understand them'.",
+                "Please enter a number between 0-100, using the previous score given to the second recording as a comparison",
                 0, 100);
 
-            ratingScales += CreateDropdown("PaceChange", "Did the speed change over the course of the first sentence?",
+            ratingScales += CreateRadios("PaceChange", "Did the speed change over the course of the first sentence?",
                 new[]
                     {
                         new []{"No, it stayed the same", "constant"},
@@ -121,14 +142,20 @@ namespace Crowd.Service.CrowdFlower
                             "Someone with a varied pitch might sound excited and interested, someone with little " +
                             "change to their pitch might sound monotonous or bored)</p>";
 
+            ratingScales +=
+                "<p>The score representing how much the person's pitch varied in their voice the last time " +
+                "they submitted a recording for analysis was {{PrevPace}},  where 0 is 'not at all, they spoke with a" +
+                " monotonous voice and sounded bored' and 100 is 'a lot, they sounded excited and interested'. " +
+                "We are looking to see if there is a change.</p>";
+
             ratingScales += CreateIntRatingBox(
                 "Pitch",
-                "On a scale of 0-100 please indicate how much you felt the pitch in the first sentence varied. " +
-                    "The second sentence scored {{PrevPitch}}",
-                "Please give a rating where 0 is 'None, very monotonous voice and sounded bored' and 100 is 'A lot, they sounded excited and interested'",
+                "Please enter a number from 0-100 indicating how much you felt the pitch in the first sentence varied, where 0 is 'is not at all, " +
+                "they spoke with a monotonous voice and sounded bored' and 100 is 'a lot, they sounded excited and interested'",
+                "Please enter a number between 0-100, using the previous score given to the second recording as a comparison",
                 0, 100);
 
-            ratingScales += CreateDropdown("PitchChange", "Did the pitch change over the course of the sentence?",
+            ratingScales += CreateRadios("PitchChange", "Did the pitch change over the course of the sentence?",
                 new[]
                     {
                         new []{"No, it stayed the same", "constant"},
@@ -143,11 +170,11 @@ namespace Crowd.Service.CrowdFlower
 #region firstRating
             ratingScales += CreateIntRatingBox(
                 "Volume",
-                "On a scale of 0-100 please indicate how loud you felt the sentence was.",
-                "Please give a rating where 0 is 'Could barely hear them' and 100 is 'Very loud'",
+                "Please enter a number from 0-100 indicating how loud you felt the sentence was, where 0 is 'so quiet I could barely hear them' and 100 is 'very loud'",
+                "Please enter a number between 0-100",
                 0, 100);
 
-            ratingScales += CreateDropdown("VolumeChange", "Did the volume change over the course of the sentence?",
+            ratingScales += CreateRadios("VolumeChange", "Did the volume change over the course of the sentence?",
                 new[]
                     {
                         new []{"No, it stayed the same", "constant"},
@@ -157,11 +184,11 @@ namespace Crowd.Service.CrowdFlower
 
             ratingScales += CreateIntRatingBox(
                 "Pace",
-                "On a scale of 0-100 please indicate how fast you felt the person in the sentence was talking.",
-                "Please give a rating where 0 is 'Very slow' and 100 is 'So fast I could barely understand them'",
+                "Please enter a number from 0-100 indicating how fast you felt the person was talking, where 0 is 'very slow' and 100 is 'So fast I could barely understand them'.",
+                "Please enter a number between 0-100",
                 0, 100);
 
-            ratingScales += CreateDropdown("PaceChange", "Did the speed change over the course of the sentence?",
+            ratingScales += CreateRadios("PaceChange", "Did the speed change over the course of the sentence?",
                 new[]
                     {
                         new []{"No, it stayed the same", "constant"},
@@ -176,11 +203,12 @@ namespace Crowd.Service.CrowdFlower
 
             ratingScales += CreateIntRatingBox(
                 "Pitch",
-                "On a scale of 0-100 please indicate how much you felt the pitch in the sentence varied.",
-                "Please give a rating where 0 is 'None, very monotonous voice and sounded bored' and 100 is 'A lot, they sounded excited and interested'",
+                "Please enter a number from 0-100 indicating how much you felt the pitch in this sentence varied, where 0 is 'not at all, " +
+                "they spoke with a monotonous voice and sounded bored' and 100 is 'a lot, they sounded excited and interested'",
+                "Please enter a number between 0-100",
                 0, 100);
 
-            ratingScales += CreateDropdown("PitchChange", "Did the pitch change over the course of the sentence?",
+            ratingScales += CreateRadios("PitchChange", "Did the pitch change over the course of the sentence?",
                 new[]
                     {
                         new []{"No, it stayed the same", "constant"},
@@ -218,13 +246,6 @@ namespace Crowd.Service.CrowdFlower
             return string.Format(IntRangeCml, dataType, desc, instructions, min, max);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dataType"></param>
-        /// <param name="label"></param>
-        /// <param name="args">[dropdown option: [label, value]]</param>
-        /// <returns></returns>
         private static string CreateDropdown(string dataType, string label, IEnumerable<string[]> args)
         {
             string toRet = "<cml:select label=\"" + label + " \" name=\""+ dataType +"\"> ";
@@ -238,13 +259,25 @@ namespace Crowd.Service.CrowdFlower
             return toRet;
         }
 
+        private static string CreateRadios(string dataType, string label, IEnumerable<string[]> args)
+        {
+            string innerRadios = "";
+
+            foreach (string[] option in args)
+            {
+                innerRadios += "<cml:radio label=\""+option[0]+"\" value=\""+option[1]+"\"/>";
+            }
+
+            return string.Format(RadioParentCml, dataType, label, innerRadios);
+        }
+
         /// <summary>
         /// Create a list of radio buttons
         /// </summary>
         /// <param name="label"></param>
         /// <param name="validator"></param>
         /// <returns></returns>
-        private static string CreateMinimalPairsCml(string label, string validator)
+        private static string CreateMinimalPairsCml(string label)
         {
             string toRet = "{% assign array = Choices | split: \",\" %}\r\n";
 
@@ -256,7 +289,7 @@ namespace Crowd.Service.CrowdFlower
 
             inner += string.Format(RadioCml, "None of the above");
 
-            toRet += string.Format(RadioParentCml, "MP", label, validator, inner);
+            toRet += string.Format(RadioParentCml, "MP", label, inner);
 
             return toRet;
         }
