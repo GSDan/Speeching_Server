@@ -156,6 +156,7 @@ namespace Crowd.Service.Controller
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Activity result cannot be null");
 
                 result.User = user;
+                result.UploadedAt = DateTime.Now;
                 result = db.ParticipantResults.Add(result);
 
                 user.Submissions.Add(result);

@@ -20,13 +20,16 @@ namespace Crowd.Service.Controller
         /// <returns></returns>
         private async Task<ParticipantActivity> GetAssessmentIfNeeded(CrowdContext db, User user)
         {
-            var blob = await (from upload in db.ParticipantResults
+            ParticipantResult[] resentUploads = await (from upload in db.ParticipantResults
                 where upload.User.Email == user.Email &&
                       upload.IsAssessment
                 orderby upload.UploadedAt
                 select upload).ToArrayAsync();
 
-            Console.WriteLine(blob.Length);
+            if (resentUploads.Length == 0)
+            {
+                
+            }
 
             return null;
         }

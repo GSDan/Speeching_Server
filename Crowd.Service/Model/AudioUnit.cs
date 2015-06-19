@@ -158,9 +158,9 @@ namespace Crowd.Service.Model
                     if (comparionResponse != null)
                     {
                         comparisonPath = comparionResponse.RecordingUrl;
-                        prevLoud = GetAverageRes(comparionResponse, "Volume");
-                        prevPace = GetAverageRes(comparionResponse, "Pace");
-                        prevPitch = GetAverageRes(comparionResponse, "Pitch");
+                        prevLoud = GetAverageRes(comparionResponse, "rlstvolume");
+                        prevPace = GetAverageRes(comparionResponse, "rlstpace");
+                        prevPitch = GetAverageRes(comparionResponse, "rlstpitch");
                     }
 
                     json += string.Format("{{\"AudioUrl\":\"{0}\", " +

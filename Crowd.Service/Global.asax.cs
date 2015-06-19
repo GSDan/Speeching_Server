@@ -16,11 +16,11 @@ namespace Crowd.Service
                 config.Routes.MapHttpRoute("Help", "api/Help/{activityType}",
                     new { controller = "Help", activityType = "", action = "Get" });
 
-                config.Routes.MapHttpRoute("DefaultApiAction", "api/{controller}/{action}/{id}",
-                    new {id = RouteParameter.Optional}
+                config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new {id = RouteParameter.Optional}
                     );
 
-                config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new {id = RouteParameter.Optional}
+                config.Routes.MapHttpRoute("DefaultApiAction", "api/{controller}/{action}/{id}",
+                    new { id = RouteParameter.Optional }
                     );
             });
 

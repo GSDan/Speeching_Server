@@ -49,23 +49,6 @@ namespace Crowd.Service.Controller
             }
         }
 
-        // GET api/task/5
-        public IEnumerable<IParticipantActivity> GetByCategoryId(int id)
-        {
-            if (id <= 0)
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
-
-            using (CrowdContext db = new CrowdContext())
-            {
-                var acts = db.ParticipantActivities.Where(c => c.CrowdCategoryId.Equals(id));
-                if (acts.Any())
-                    return acts;
-                else
-                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
-            }
-            
-        }
-
         // PUT api/Activity/5
         public HttpResponseMessage Put(int id, ParticipantActivity activity)
         {
