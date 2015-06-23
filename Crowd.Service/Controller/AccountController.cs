@@ -29,10 +29,7 @@ namespace Crowd.Service.Controller
 
                 if (existingUser == null)
                 {
-                    // User not found - add new, with default subscriptions
-                    thisUser.SubscribedCategories = db.ParticipantActivityCategories.Where(
-                        cat => cat.DefaultSubscription).ToList();
-
+                    // User not found - add new
                     thisUser.IsAdmin = false;
                     db.Users.Add(thisUser);
                     existingUser = thisUser;

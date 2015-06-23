@@ -18,19 +18,44 @@ namespace Crowd.Service.Controller
         /// Checks if the user has completed an assessment today, returning one if not
         /// </summary>
         /// <returns></returns>
-        private async Task<ParticipantActivity> GetAssessmentIfNeeded(CrowdContext db, User user)
+        private static async Task<ParticipantActivity> GetAssessmentIfNeeded(CrowdContext db, User user)
         {
-            ParticipantResult[] resentUploads = await (from upload in db.ParticipantResults
-                where upload.User.Email == user.Email &&
-                      upload.IsAssessment
-                orderby upload.UploadedAt
-                select upload).ToArrayAsync();
-
-            if (resentUploads.Length == 0)
+            if (user.LastAssessment != null)
             {
-                
-            }
+                // We want the user to complete the same assessment each time, at most once a day
 
+                ParticipantResult recentUpload = await (from upload in db.ParticipantResults
+                    where upload.User.Email == user.Email &&
+                          upload.IsAssessment
+                    orderby upload.UploadedAt descending
+                    select upload).FirstAsync();
+
+                TimeSpan span = DateTime.Now - recentUpload.UploadedAt;
+
+                if (span.Days >= 1)
+                {
+                    if (recentUpload.ParticipantActivity != null)
+                    {
+                        return recentUpload.ParticipantActivity;
+                    }
+
+                    return await db.ParticipantActivities.FindAsync(recentUpload.ParticipantActivityId);
+                }
+            }
+            else
+            {
+                // User has yet to complete an assessment - choose a random one
+                ParticipantActivity[] assessments = await (
+                    from act in db.ParticipantActivities
+                    where act.AssessmentTasks.Count >= 1
+                    select act).ToArrayAsync();
+
+                if (assessments.Length >= 1)
+                {
+                    Random rand = new Random();
+                    return assessments[rand.Next(0, assessments.Length - 1)];
+                }
+            }
             return null;
         }
 
@@ -87,7 +112,7 @@ namespace Crowd.Service.Controller
                     {
                         Rating = (float)transRating,
                         Title = "Ease of Listening",
-                        Description = "This rating shows on average how easy listeners have found understanding what you say.",
+                        Description = "This rating shows how easy people found understanding what you said.",
                         Date = DateTime.Now,
                         Dismissable = false,
                         Importance = 9
@@ -105,7 +130,7 @@ namespace Crowd.Service.Controller
                         Rating = (float)accentRating,
                         Title = "Accent Clarity",
                         Description =
-                            "This total average rating shows easy to understand people find your accent.",
+                            "This total average rating shows how easy to understand people find your accent.",
                         Date = DateTime.Now,
                         Dismissable = false,
                         Importance = 8
@@ -140,21 +165,36 @@ namespace Crowd.Service.Controller
                     });
                 }
 
-                await GetAssessmentIfNeeded(db, user);
-                items.Add( new ParticipantFeedItem
+                ParticipantActivity assessment = await GetAssessmentIfNeeded(db, user);
+                if (assessment != null)
                 {
-                    Title = "A new assessment is available!",
-                    Description = "There's a new assessment available for you to complete! The feedback from completing this short activity will help you to keep track of your progress.",
-                    Date = DateTime.Now,
-                    Dismissable = false,
-                    Importance = 10,
-                    Interaction = new ParticipantFeedItemInteraction
+                    items.Add(new ParticipantFeedItem
                     {
-                        Type = ParticipantFeedItemInteraction.InteractionType.Assessment,
-                        Value = "5",
-                        Label = "Start Assessment!"
-                    }
-                });
+                        Title = "A new assessment is available!",
+                        Description =
+                            "There's a new assessment available for you to complete!\n" + assessment.Description,
+                        Date = DateTime.Now,
+                        Dismissable = false,
+                        Importance = 10,
+                        Interaction = new ParticipantFeedItemInteraction
+                        {
+                            Type = ParticipantFeedItemInteraction.InteractionType.Assessment,
+                            Value = assessment.Id.ToString(),
+                            Label = "Start Assessment!"
+                        }
+                    });
+                }
+                else
+                {
+                    items.Add(new ParticipantFeedItem
+                    {
+                        Title = "No Assessment Available",
+                        Description = "You submitted an assessment recently - please wait at least a day before doing another.",
+                        Date = DateTime.Now,
+                        Dismissable = false,
+                        Importance = 5
+                    });
+                }
 
                 return new HttpResponseMessage()
                 {

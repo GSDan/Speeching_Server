@@ -28,7 +28,16 @@ namespace Crowd.Service.Controller
                     return new HttpResponseMessage(HttpStatusCode.Unauthorized);
                 }
 
-                var cats = user.SubscribedCategories;
+                ICollection<ParticipantActivityCategory> cats = user.SubscribedCategories;
+
+                ParticipantActivityCategory[] defaults = await (from cat in db.ParticipantActivityCategories
+                    where cat.DefaultSubscription
+                    select cat).ToArrayAsync();
+
+                foreach (ParticipantActivityCategory category in defaults)
+                {
+                    if(!cats.Contains(category)) cats.Add(category);
+                }
 
                 return new HttpResponseMessage()
                 {

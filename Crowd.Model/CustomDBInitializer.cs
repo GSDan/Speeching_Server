@@ -634,7 +634,7 @@ namespace Crowd.Model
                 {
                     Title = "Welcome to Speeching!",
                     Description =
-                        "Speeching is a project designed to help you practice multiple aspects of your speech. Swipe over to the Practice area and pick an activity to start! " +
+                        "Speeching is a project designed to help you practice multiple aspects of your speech by completing short assessments and activities. " +
                         "\nYou can choose to upload your results, which will help you by giving you feedback from real people. Use the feedback to highlight areas to practice!",
                     Date = DateTime.Now,
                     Dismissable = true,
@@ -642,7 +642,19 @@ namespace Crowd.Model
                     Image = "https://www.dropbox.com/s/ks6iuo9ps6umn9e/splashIcon.png?dl=1",
                     Global = true
                 },
-            
+                
+                new ParticipantFeedItem
+                {
+                    Title = "Dismissing a story",
+                    Description =
+                        "Swipe a story card (like this one!) to the right to dismiss it from your feed. Please note that some cards are important and can't be dismissed!",
+                    Date = DateTime.Now,
+                    Dismissable = true,
+                    Importance = 9,
+                    Image = "https://www.dropbox.com/s/18tvj8x37xxtqsg/arrows.png?dl=1",
+                    Global = true
+                },
+
                 new ParticipantFeedItem
                 {
                     Title = "Featured Article: 'Stuttering is in the genes not the head, say scientists'",
@@ -673,8 +685,7 @@ namespace Crowd.Model
                 {
                     ActivityType = ParticipantAssessmentTask.AssessmentTaskType.ImageDesc,
                     ActivityName = "Topic Prompts",
-                    ActivityDescription = "Press the record button and respond to the prompt below the image. Press the button again to finish!",
-                    HelpVideo = "https://ia700401.us.archive.org/19/items/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4"
+                    ActivityDescription = "Press the record button and respond to the prompt below the image. Press the button again to finish!"
                 },
                 new ActivityHelper
                 {
@@ -683,7 +694,7 @@ namespace Crowd.Model
                     ActivityDescription = "Try to control the volume of your voice, keeping it at a constant volume! " +
                                           "The volume measurement will be red if you're below the volume target, green if you reach it." +
                                           "\nTap 'Set New Target' if you want to raise or lower the target volume.",
-                    HelpVideo = "https://ia700401.us.archive.org/19/items/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4"
+                    HelpVideo = "https://openlabdata.blob.core.windows.net/videotuts/volumeTut.mp4"
                 },
                 new ActivityHelper
                 {
@@ -691,14 +702,20 @@ namespace Crowd.Model
                     ActivityName = "Rate of Speech",
                     ActivityDescription = "If you think you're talking to fast or too slow during conversations, try reading the given passage to the time of the metronome." +
                                           "You can adjust the speed by tapping the up and down arrows!",
-                    HelpVideo = "https://ia700401.us.archive.org/19/items/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4"
+                    HelpVideo = "https://openlabdata.blob.core.windows.net/videotuts/pacingTut.mp4"
                 },
                 new ActivityHelper
                 {
                     ActivityType = ParticipantAssessmentTask.AssessmentTaskType.QuickFire,
                     ActivityName = "QuickFire Words",
-                    ActivityDescription = "Press the record button and say the shown word as clearly as you can, then press stop.",
-                    HelpVideo = "https://ia700401.us.archive.org/19/items/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4"
+                    ActivityDescription = "Press the record button and say the shown word as clearly as you can, then press stop."
+                },
+                new ActivityHelper
+                {
+                    ActivityType = ParticipantAssessmentTask.AssessmentTaskType.None,
+                    ActivityName = "Speeching",
+                    ActivityDescription = "Welcome to Speeching! Check for new activities in the Home Feed or practice your speech in the Practice Area.",
+                    HelpVideo = "https://openlabdata.blob.core.windows.net/videotuts/welcome.mp4"
                 },
             });
 
