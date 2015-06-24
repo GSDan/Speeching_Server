@@ -1381,7 +1381,7 @@
         </member>
         <member name="M:System.IdentityModel.Tokens.JwtSecurityTokenHandler.CreateActorValue(System.Security.Claims.ClaimsIdentity)">
             <summary>
-            Creates the 'value' for the actor claim: { actort, 'value' }
+            Creates the 'value' for the actor claim: { actor, 'value' }
             </summary>
             <param name="actor"><see cref="T:System.Security.Claims.ClaimsIdentity"/> as actor.</param>
             <returns><see cref="T:System.String"/> representing the actor.</returns>

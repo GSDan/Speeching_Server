@@ -118,3 +118,4 @@ C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Service\bin\System.I
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Service\bin\System.Net.Http.Extensions.xml
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Service\bin\System.Net.Http.Primitives.xml
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Service\obj\Debug\Crowd.Service.csproj.App.config
+C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Service\bin\System.IdentityModel.Tokens.Jwt.pdb
