@@ -12,6 +12,7 @@ using Crowd.Model.Data;
 using Crowd.Model.Interface;
 using Crowd.Service.Interface;
 using Crowd.Service.Model;
+using Newtonsoft.Json;
 
 namespace Crowd.Service.Controller
 {
@@ -28,21 +29,28 @@ namespace Crowd.Service.Controller
                     return new HttpResponseMessage(HttpStatusCode.Unauthorized);
                 }
 
-                ICollection<ParticipantActivityCategory> cats = user.SubscribedCategories;
+                var defaultCats = await (from category in db.ParticipantActivityCategories
+                    where category.DefaultSubscription
+                    select category).ToArrayAsync();
 
-                ParticipantActivityCategory[] defaults = await (from cat in db.ParticipantActivityCategories
-                    where cat.DefaultSubscription
-                    select cat).ToArrayAsync();
-
-                foreach (ParticipantActivityCategory category in defaults)
+                bool changed = false;
+                foreach (ParticipantActivityCategory category in defaultCats)
                 {
-                    if(!cats.Contains(category)) cats.Add(category);
+                    if (user.SubscribedCategories.Contains(category)) continue;
+                    user.SubscribedCategories.Add(category);
+                    changed = true;
+                }
+
+                if (changed)
+                {
+                    await db.SaveChangesAsync();
                 }
 
                 return new HttpResponseMessage()
                 {
-                    Content = new JsonContent(cats)
+                    Content = new JsonContent(user.SubscribedCategories)
                 };
+                
             }
         }
 

@@ -6,7 +6,7 @@ using Crowd.Model.Data;
 
 namespace Crowd.Model
 {
-    public class CustomDBInitializer : DropCreateDatabaseIfModelChanges<CrowdContext>
+    public class CustomDBInitializer : CreateDatabaseIfNotExists<CrowdContext>
     {
         protected override void Seed(CrowdContext context)
         {

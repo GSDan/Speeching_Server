@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Crowd.Model.Interface;
+using Newtonsoft.Json;
 
 namespace Crowd.Model.Data
 {
@@ -15,6 +16,7 @@ namespace Crowd.Model.Data
         public int CrowdCategoryId { get; set; }
         public string Description { get; set; }
         public DateTime DateSet { get; set; }
+        [JsonIgnore]
         public virtual ParticipantActivityCategory CrowdCategory { get; set; }
 
         // For scenarios
@@ -26,6 +28,7 @@ namespace Crowd.Model.Data
         // For assessments
         public virtual ICollection<ParticipantAssessmentTask> AssessmentTasks { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<ParticipantResult> ParticipantResults { get; set; }
     }
 }

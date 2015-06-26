@@ -1,11 +1,6 @@
-﻿using Crowd.Model.Common;
-using Crowd.Model.Interface;
-using System;
+﻿using Crowd.Model.Interface;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Crowd.Model.Data
 {
@@ -19,6 +14,8 @@ namespace Crowd.Model.Data
         public virtual ParticipantActivity ParticipantActivity { get; set; }
         public virtual ParticipantTaskContent ParticipantTaskContent { get; set; }
         public virtual ParticipantTaskResponse ParticipantTaskResponse { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<CrowdRowResponse> CrowdRowResponses { get; set; }
     }
 }
