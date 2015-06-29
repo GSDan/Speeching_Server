@@ -119,3 +119,5 @@ C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Service\obj\Debug\Cr
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Service\obj\Debug\Crowd.Service.csprojResolveAssemblyReference.cache
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Service\obj\Debug\Crowd.Service.dll
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Service\obj\Debug\Crowd.Service.pdb
+C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Service\bin\SendGrid.SmtpApi.dll
+C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Service\bin\SendGridMail.dll

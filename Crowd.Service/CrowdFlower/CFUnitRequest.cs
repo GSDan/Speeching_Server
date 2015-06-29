@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Mail;
 using System.Web;
 using System.Threading.Tasks;
 using Crowd.Model.Data;
 using Newtonsoft.Json;
+using SendGrid;
 
 namespace Crowd.Service.CrowdFlower
 {
@@ -19,6 +22,8 @@ namespace Crowd.Service.CrowdFlower
         {
             if (jobId <= 0 || string.IsNullOrWhiteSpace(uploadUnitsJson)) return null;
 
+            CFJobResponse jobResp;
+
             // Send the units (rows) to crowdflower to get added to the job
             using (var client = new HttpClient())
             {
@@ -30,8 +35,53 @@ namespace Crowd.Service.CrowdFlower
                 HttpResponseMessage response = await client.PostAsync(baseAddress, reqContent);
 
                 if (!response.IsSuccessStatusCode) return null;
+                string responseJson = await response.Content.ReadAsStringAsync();
+
+                jobResp = JsonConvert.DeserializeObject<CFJobResponse>(responseJson);
             }
 
+            try
+            {
+                NetworkCredential emailCreds = new NetworkCredential(ConfidentialData.SendGridUsername, ConfidentialData.SendGridPass);
+                var transportWeb = new Web(emailCreds);
+
+                string secretKey = "";
+
+                foreach (char cha in jobResp.secret)
+                {
+                    if (char.IsSymbol(cha))
+                    {
+                        secretKey += "%" + string.Format("{0:X}", Convert.ToInt32(cha));
+                    }
+                    else
+                    {
+                        secretKey += cha;
+                    }
+                }
+
+                string crowdTaskLink =
+                    string.Format("https://tasks.crowdflower.com/channels/cf_internal/jobs/{0}/work?secret={1}", jobId, secretKey);
+
+                
+
+                SendGridMessage emailMessage = new SendGridMessage
+                {
+                    From = new MailAddress("noreply@speeching.co.uk"),
+                    Subject = "A new Speeching Task has been submitted (" + jobId + ")",
+                    Html = string.Format("<p>Hi!</p><br/>" +
+                                    "<p>A participant has uploaded a new Speeching task for assessment. " +
+                                    "Please follow <a href='{0}'>this link</a> to give them feedback.</p>", crowdTaskLink)
+                };
+                emailMessage.AddTo(ConfidentialData.EmailList);
+
+                await transportWeb.DeliverAsync(emailMessage);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.ToString());   
+            }
+            
+            
             // Get the created rows back so we can keep the IDs (not included in the response to the above for some reason)
             using (HttpClient client = new HttpClient())
             {
