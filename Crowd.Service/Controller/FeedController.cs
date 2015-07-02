@@ -20,15 +20,25 @@ namespace Crowd.Service.Controller
         /// <returns></returns>
         private static async Task<ParticipantActivity> GetAssessmentIfNeeded(CrowdContext db, User user)
         {
+            bool existing = false;
+
             if (user.LastAssessment != null)
             {
-                // We want the user to complete the same assessment each time, at most once a day
+                ParticipantActivity act = await db.ParticipantActivities.FindAsync(user.LastAssessment.ParticipantActivityId);
+                if (act != null && act.AppType == user.App) existing = true;
+            }
 
+            if (existing)
+            {
+                // We want the user to complete the same assessment each time, at most once a day
                 ParticipantResult recentUpload = await (from upload in db.ParticipantResults
                     where upload.User.Email == user.Email &&
-                          upload.IsAssessment
+                          upload.IsAssessment &&
+                          (int)upload.ParticipantActivity.AppType == (int)user.App
                     orderby upload.UploadedAt descending
-                    select upload).FirstAsync();
+                    select upload).FirstOrDefaultAsync();
+
+                if(recentUpload == null) return null;
 
                 TimeSpan span = DateTime.Now - recentUpload.UploadedAt;
 
@@ -47,7 +57,8 @@ namespace Crowd.Service.Controller
                 // User has yet to complete an assessment - choose a random one
                 ParticipantActivity[] assessments = await (
                     from act in db.ParticipantActivities
-                    where act.AssessmentTasks.Count >= 1
+                    where act.AssessmentTasks.Count >= 1 &&
+                          act.AppType == user.App
                     select act).ToArrayAsync();
 
                 if (assessments.Length >= 1)
@@ -78,6 +89,7 @@ namespace Crowd.Service.Controller
                 // 1- Globally visible and have not been dismissed by the user
                 // 2- On this user's list of personal feed items
                 List<ParticipantFeedItem> items = await (from feedItem in db.ParticipantFeedItems
+                                                         where (int)feedItem.App == (int)Crowd.Model.Data.User.AppType.None || (int)feedItem.App == (int)user.App
                                                          from thisUser in db.Users
                                                          where thisUser.Email == user.Email
                                                          where (feedItem.Global && !thisUser.DismissedPublicFeedItems.Contains(feedItem)) || thisUser.FeedItems.Contains(feedItem)
@@ -192,7 +204,8 @@ namespace Crowd.Service.Controller
                         Description = "You submitted an assessment recently - please wait at least a day before doing another.",
                         Date = DateTime.Now,
                         Dismissable = false,
-                        Importance = 5
+                        Importance = 5,
+                        App = Crowd.Model.Data.User.AppType.None
                     });
                 }
 

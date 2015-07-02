@@ -16,6 +16,9 @@ namespace Crowd.Model.Data
         // Shown to all users?
         public bool Global { get; set; }
 
+        // Limit to an app?
+        public User.AppType App { get; set; }
+
         // Only used if the feed item is regarding a launchable activity
         public ParticipantActivity PracticeActivity { get; set; }
         public string[] Rationale { get; set; }

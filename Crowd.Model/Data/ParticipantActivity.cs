@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Crowd.Model.Interface;
 using Newtonsoft.Json;
 
@@ -16,6 +17,9 @@ namespace Crowd.Model.Data
         public int CrowdCategoryId { get; set; }
         public string Description { get; set; }
         public DateTime DateSet { get; set; }
+
+        public User.AppType AppType { get; set; }
+
         [JsonIgnore]
         public virtual ParticipantActivityCategory CrowdCategory { get; set; }
 

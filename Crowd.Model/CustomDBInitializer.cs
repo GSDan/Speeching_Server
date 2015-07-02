@@ -23,6 +23,7 @@ namespace Crowd.Model
                     Recommended = false,
                     DefaultSubscription = true,
                     Title = "Dysfluency",
+                    App = User.AppType.Fluent,
                     Activities = new List<ParticipantActivity>()
                     {
                         new ParticipantActivity()

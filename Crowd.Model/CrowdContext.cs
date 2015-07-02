@@ -9,7 +9,7 @@ namespace Crowd.Model
             : base("name=CrowdScience")
         {
             System.Console.WriteLine("*****start******");
-            Database.SetInitializer<CrowdContext>(new CustomDBInitializer());
+            Database.SetInitializer<CrowdContext>(null);
             Database.Initialize(true);
         }
 

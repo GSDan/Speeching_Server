@@ -6,6 +6,8 @@ namespace Crowd.Model.Data
 {
     public class User
     {
+        public enum AppType { None = 0, Speeching = 1, Fluent = 2 };
+
         [Key]
         public string Email { get; set; }
 
@@ -26,6 +28,8 @@ namespace Crowd.Model.Data
         public virtual ParticipantResult LastAssessment { get; set; }
 
         public virtual ICollection<ParticipantFeedItem> FeedItems { get; set; }
-        public virtual ICollection<ParticipantFeedItem> DismissedPublicFeedItems { get; set; } 
+        public virtual ICollection<ParticipantFeedItem> DismissedPublicFeedItems { get; set; }
+
+        public AppType App { get; set; }
     }
 }

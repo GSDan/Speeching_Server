@@ -30,7 +30,7 @@ namespace Crowd.Service.Controller
             return builder.ToString();
         }
 
-        private bool ValidateToken(string encodedToken, string userEmail)
+        private static bool ValidateToken(string encodedToken, string userEmail)
         {
             JwtSecurityToken token = new JwtSecurityToken(encodedToken);
 
@@ -53,14 +53,8 @@ namespace Crowd.Service.Controller
             DateTime expirationDate = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             expirationDate = expirationDate.AddSeconds(int.Parse(claimVals["exp"]));
 
-            if (expirationDate.ToLocalTime() < DateTime.Now)
-            {
-                // Expired!
-                return false;
-            }
-
-            // This is a valid token for this app!
-            return true;
+            // This is a valid token for this app if it's still in date!
+            return expirationDate.ToLocalTime() >= DateTime.Now;
         }
 
         /// <summary>
@@ -124,6 +118,7 @@ namespace Crowd.Service.Controller
                     existingUser.Name = thisUser.Name ?? existingUser.Email;
                     existingUser.Nickname = thisUser.Nickname ?? existingUser.Nickname;
                     existingUser.Avatar = thisUser.Avatar ?? existingUser.Avatar;
+                    existingUser.App = thisUser.App;
                 }
 
                 try

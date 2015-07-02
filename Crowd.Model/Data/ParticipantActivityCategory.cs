@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Crowd.Model.Interface;
 
 namespace Crowd.Model.Data
@@ -17,5 +13,7 @@ namespace Crowd.Model.Data
         public bool Recommended { get; set; }
         public bool DefaultSubscription { get; set; }
         public virtual ICollection<ParticipantActivity> Activities { get; set; }
+
+        public User.AppType App { get; set; }
     }
 }

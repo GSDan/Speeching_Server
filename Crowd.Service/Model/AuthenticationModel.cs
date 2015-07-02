@@ -9,5 +9,6 @@ namespace Crowd.Service.Model
     {
         public string Email;
         public string Key;
+        public string App;
     }
 }

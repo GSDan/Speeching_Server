@@ -24,11 +24,30 @@ namespace Crowd.Service.Controller
 
             User found = await db.Users.FindAsync(auth.Email);
 
+            
             if (found != null && found.Key == auth.Key)
             {
+                User.AppType app;
+                if (Enum.TryParse(auth.App, true, out app))
+                {
+                    if (app != found.App)
+                    {
+                        found.App = app;
+
+                        await db.SaveChangesAsync();
+                    }
+                }
+
                 return found;
             }
             return null;
+        }
+
+        protected async Task<ServiceUser> AuthenticateServiceUser(AuthenticationModel auth, CrowdContext db)
+        {
+            User rawUser = await AuthenticateUser(auth, db);
+
+            return rawUser == null ? null : new ServiceUser(rawUser);
         }
 
         /// <summary>
@@ -42,7 +61,8 @@ namespace Crowd.Service.Controller
                 return new AuthenticationModel
                 {
                     Email = Request.Headers.GetValues("Email").First(),
-                    Key = Request.Headers.GetValues("Key").First()
+                    Key = Request.Headers.GetValues("Key").First(),
+                    App = Request.Headers.GetValues("App").First()
                 };
             }
             catch (Exception)
@@ -61,7 +81,9 @@ namespace Crowd.Service.Controller
                             where crowdResponse.ParticipantAssessmentTask != null &&
                                   crowdResponse.ParticipantAssessmentTask.TaskType ==
                                   ParticipantAssessmentTask.AssessmentTaskType.QuickFire &&
-                                  crowdResponse.ParticipantResult.User.Email == user.Email
+                                  crowdResponse.ParticipantResult.User.Email == user.Email &&
+                                  ((int)crowdResponse.ParticipantResult.ParticipantActivity.AppType == (int)user.App ||
+                                  (int)crowdResponse.ParticipantResult.ParticipantActivity.AppType == (int)Crowd.Model.Data.User.AppType.None )
                             select crowdResponse;
 
                 int numResp = await allResponses.CountAsync();
@@ -73,6 +95,8 @@ namespace Crowd.Service.Controller
                     from data in judgement.Data
                     where data.DataType == "rlstmp"
                     select data).CountAsync();
+
+                if (numTotal <= 0) return null;
 
                 // Get total num of correct judgements
                 int numCorrect = await (from crowdResponse in allResponses
@@ -107,7 +131,9 @@ namespace Crowd.Service.Controller
                 }
 
                 IQueryable<int> queryRes = from res in db.ParticipantResults
-                               where res.User.Email == user.Email
+                               where res.User.Email == user.Email &&
+                               ((int)res.ParticipantActivity.AppType == (int)user.App ||
+                                  (int)res.ParticipantActivity.AppType == (int)Crowd.Model.Data.User.AppType.None )
                                from judgement in db.CrowdJudgements
                                where res.CrowdJobId == judgement.JobId
                                from data in judgement.Data
@@ -132,7 +158,9 @@ namespace Crowd.Service.Controller
             try
             {
                 CrowdJudgement[] ordered = await (from res in db.ParticipantResults
-                                                  where res.User.Email == user.Email
+                                                  where res.User.Email == user.Email &&
+                                                  ((int)res.ParticipantActivity.AppType == (int)user.App ||
+                                                    (int)res.ParticipantActivity.AppType == (int)Crowd.Model.Data.User.AppType.None )
                                                   from judgement in db.CrowdJudgements
                                                   where res.CrowdJobId == judgement.JobId
                                                   orderby judgement.CreatedAt
