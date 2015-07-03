@@ -30,7 +30,7 @@ namespace Crowd.Service.Controller
             return builder.ToString();
         }
 
-        private static bool ValidateToken(string encodedToken, string userEmail)
+        private static bool ValidateToken(string encodedToken, string userEmail, User.AppType appType)
         {
             JwtSecurityToken token = new JwtSecurityToken(encodedToken);
 
@@ -42,7 +42,7 @@ namespace Crowd.Service.Controller
             Dictionary<string, string> claimVals = token.Claims.ToDictionary(x => x.Type, x => x.Value);
 
             if (claimVals["iss"] != "accounts.google.com" ||
-                claimVals["azp"] != ConfidentialData.GoogleAndroidClientId ||
+                claimVals["azp"] != ConfidentialData.GoogleClientIdDictionary[appType] ||
                 claimVals["aud"] != ConfidentialData.GoogleWebAppClientId ||
                 claimVals["email"] != userEmail)
             {
@@ -93,7 +93,7 @@ namespace Crowd.Service.Controller
                 try
                 {
                     // bypass validation if debug
-                    bool validated = (isDebug) || ValidateToken(encodedToken, thisUser.Email);
+                    bool validated = (isDebug) || ValidateToken(encodedToken, thisUser.Email, thisUser.App);
 
                     if (!validated) return new HttpResponseMessage(HttpStatusCode.Unauthorized);
                 }

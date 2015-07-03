@@ -34,7 +34,8 @@ namespace Crowd.Service.Controller
                 ParticipantResult recentUpload = await (from upload in db.ParticipantResults
                     where upload.User.Email == user.Email &&
                           upload.IsAssessment &&
-                          (int)upload.ParticipantActivity.AppType == (int)user.App
+                          ((int)upload.ParticipantActivity.AppType == (int)user.App ||
+                          (int)upload.ParticipantActivity.AppType == (int)Crowd.Model.Data.User.AppType.None)
                     orderby upload.UploadedAt descending
                     select upload).FirstOrDefaultAsync();
 
@@ -58,7 +59,8 @@ namespace Crowd.Service.Controller
                 ParticipantActivity[] assessments = await (
                     from act in db.ParticipantActivities
                     where act.AssessmentTasks.Count >= 1 &&
-                          act.AppType == user.App
+                          ((int)act.AppType == (int)user.App ||
+                          (int)act.AppType == (int)Crowd.Model.Data.User.AppType.None)
                     select act).ToArrayAsync();
 
                 if (assessments.Length >= 1)
