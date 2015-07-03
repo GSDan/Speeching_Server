@@ -30,7 +30,8 @@ namespace Crowd.Service.Controller
                 }
 
                 var defaultCats = await (from category in db.ParticipantActivityCategories
-                    where category.DefaultSubscription
+                    where category.DefaultSubscription &&
+                    (category.App == Crowd.Model.Data.User.AppType.None || category.App == user.App)
                     select category).ToArrayAsync();
 
                 bool changed = false;
@@ -44,6 +45,14 @@ namespace Crowd.Service.Controller
                 if (changed)
                 {
                     await db.SaveChangesAsync();
+                }
+
+                for (int i = 0; i < user.SubscribedCategories.Count; i++)
+                {
+                    user.SubscribedCategories.ElementAt(i).Activities =
+                        (from act in user.SubscribedCategories.ElementAt(i).Activities
+                            where act.AppType == user.App || act.AppType == Crowd.Model.Data.User.AppType.None
+                            select act).ToList();
                 }
 
                 return new HttpResponseMessage()

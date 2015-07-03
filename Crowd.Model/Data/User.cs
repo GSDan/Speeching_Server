@@ -6,7 +6,7 @@ namespace Crowd.Model.Data
 {
     public class User
     {
-        public enum AppType { None = 0, Speeching = 1, Fluent = 2 };
+        public enum AppType { None = 0, Speeching = 1, Fluent = 2, DemCoach = 3 };
 
         [Key]
         public string Email { get; set; }

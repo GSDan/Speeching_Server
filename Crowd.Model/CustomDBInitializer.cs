@@ -33,6 +33,7 @@ namespace Crowd.Model
                             Title = "Getting the Bus",
                             DateSet = DateTime.Now,
                             Resource = "https://www.dropbox.com/s/0h2f8pyrh6xte3s/bus.zip?raw=1",
+                            AppType = User.AppType.Fluent,
                             ParticipantTasks = new List<ParticipantTask>()
                             {
                                 new ParticipantTask()
@@ -98,6 +99,7 @@ namespace Crowd.Model
                                 "http://img3.wikia.nocookie.net/__cb20131231163822/cardfight/images/6/6f/Pizza_slice_combo_clipart.png",
                             Title = "Ordering a Pizza",
                             DateSet = DateTime.Now,
+                            AppType = User.AppType.Fluent,
                             Resource = "https://www.dropbox.com/s/8gt7pqh6zq6p18h/pizza.zip?raw=1",
                             ParticipantTasks = new List<ParticipantTask>()
                             {
@@ -185,6 +187,7 @@ namespace Crowd.Model
                     Recommended = false,
                     DefaultSubscription = false,
                     Title = "Dementia",
+                    App = User.AppType.DemCoach,
                     Activities = new List<ParticipantActivity>()
                     {
                         new ParticipantActivity()
@@ -195,6 +198,7 @@ namespace Crowd.Model
                             Title = "Preparing Dinner",
                             DateSet = DateTime.Now,
                             Resource = "https://www.dropbox.com/s/3isleqzen5gt0hf/dinner.zip?raw=1",
+                            AppType = User.AppType.DemCoach,
                             ParticipantTasks = new List<ParticipantTask>()
                             {
                                 new ParticipantTask()
@@ -302,6 +306,7 @@ namespace Crowd.Model
                     Recommended = false,
                     DefaultSubscription = false,
                     Title = "Helpful Guides",
+                    App = User.AppType.None,
                     Activities = new List<ParticipantActivity>()
                     {
                         new ParticipantActivity()
@@ -311,6 +316,7 @@ namespace Crowd.Model
                             Title = "Interaction Tips",
                             DateSet = DateTime.Now,
                             Resource = "https://www.dropbox.com/s/pw1ubz20nwatxtl/guide.zip?raw=1",
+                            AppType = User.AppType.DemCoach,
                             CrowdPages = new List<ParticipantPage>()
                             {
                                 new ParticipantPage()
@@ -640,6 +646,7 @@ namespace Crowd.Model
                     Date = DateTime.Now,
                     Dismissable = true,
                     Importance = 10,
+                    App = User.AppType.Speeching,
                     Image = "https://www.dropbox.com/s/ks6iuo9ps6umn9e/splashIcon.png?dl=1",
                     Global = true
                 },
@@ -663,6 +670,7 @@ namespace Crowd.Model
                         "Stuttering is not to do with nervousness or a traumatic childhood as portrayed in the award winning film The King’s Speech but has its root cause in a genetic disorder, new research suggests.",
                     Date = DateTime.Now,
                     Dismissable = true,
+                    App = User.AppType.Fluent,
                     Importance = 5,
                     Image = "http://i.telegraph.co.uk/multimedia/archive/01830/speech_1830638c.jpg",
                     Interaction = new ParticipantFeedItemInteraction
