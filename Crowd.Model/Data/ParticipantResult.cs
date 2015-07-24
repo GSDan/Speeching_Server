@@ -15,6 +15,7 @@ namespace Crowd.Model.Data
         public int CrowdJobId { get; set; }
         public bool IsAssessment { get; set; }
         public double UserRating { get; set; }
+        public string FeedbackQuery { get; set; }
         public DateTime UploadedAt { get; set; }
         public ParticipantActivity ParticipantActivity { get; set; }
         public virtual ICollection<ParticipantResultData> Data { get; set; }
