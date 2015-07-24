@@ -6,7 +6,7 @@ namespace Crowd.Model
     public class CrowdContext : DbContext
     {
         public CrowdContext()
-            : base("name=CrowdScience_test")
+            : base("name=CrowdScience")
         {
             System.Console.WriteLine("*****start******");
             Database.SetInitializer<CrowdContext>(null);

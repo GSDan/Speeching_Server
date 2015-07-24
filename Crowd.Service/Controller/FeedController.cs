@@ -72,6 +72,20 @@ namespace Crowd.Service.Controller
             return null;
         }
 
+        private static async Task<ParticipantActivity> GetRandomScenario(CrowdContext db, User user)
+        {
+            ParticipantActivity[] acts = await (from act in db.ParticipantActivities
+                where (act.AppType == Crowd.Model.Data.User.AppType.None || act.AppType == user.App) &&
+                      act.ParticipantTasks.Count >= 1
+                select act).ToArrayAsync();
+
+            if (acts.Length >= 1)
+            {
+                Random rand = new Random();
+                return acts[rand.Next(0, acts.Length - 1)];
+            }
+            return null;
+        }
 
         /// <summary>
         /// Returns the user's subscription feed
@@ -179,36 +193,61 @@ namespace Crowd.Service.Controller
                     });
                 }
 
-                ParticipantActivity assessment = await GetAssessmentIfNeeded(db, user);
-                if (assessment != null)
+                if (user.App == Crowd.Model.Data.User.AppType.Speeching)
                 {
-                    items.Add(new ParticipantFeedItem
+                    ParticipantActivity assessment = await GetAssessmentIfNeeded(db, user);
+                    if (assessment != null)
                     {
-                        Title = "A new assessment is available!",
-                        Description =
-                            "There's a new assessment available for you to complete!\n" + assessment.Description,
-                        Date = DateTime.Now,
-                        Dismissable = false,
-                        Importance = 10,
-                        Interaction = new ParticipantFeedItemInteraction
+                        items.Add(new ParticipantFeedItem
                         {
-                            Type = ParticipantFeedItemInteraction.InteractionType.Assessment,
-                            Value = assessment.Id.ToString(),
-                            Label = "Start Assessment!"
-                        }
-                    });
-                }
-                else
-                {
-                    items.Add(new ParticipantFeedItem
+                            Title = "A new assessment is available!",
+                            Description =
+                                "There's a new assessment available for you to complete!\n" + assessment.Description,
+                            Date = DateTime.Now,
+                            Dismissable = false,
+                            Importance = 10,
+                            Interaction = new ParticipantFeedItemInteraction
+                            {
+                                Type = ParticipantFeedItemInteraction.InteractionType.Assessment,
+                                Value = assessment.Id.ToString(),
+                                Label = "Start Assessment!"
+                            }
+                        });
+                    }
+                    else
                     {
-                        Title = "No Assessment Available",
-                        Description = "You submitted an assessment recently - please wait at least a day before doing another.",
-                        Date = DateTime.Now,
-                        Dismissable = false,
-                        Importance = 5,
-                        App = Crowd.Model.Data.User.AppType.None
-                    });
+                        items.Add(new ParticipantFeedItem
+                        {
+                            Title = "No Assessment Available",
+                            Description = "You submitted an assessment recently - please wait at least a day before doing another.",
+                            Date = DateTime.Now,
+                            Dismissable = false,
+                            Importance = 5,
+                            App = Crowd.Model.Data.User.AppType.None
+                        });
+                    }
+                }
+                else if(user.App == Crowd.Model.Data.User.AppType.Fluent)
+                {
+                    ParticipantActivity scenario = await GetRandomScenario(db, user);
+                    if (scenario != null)
+                    {
+                        items.Add(new ParticipantFeedItem
+                        {
+                            Title = "Try this scenario!",
+                            Description =
+                                "There's a scenario available for you to complete!\n" + scenario.Description,
+                            Date = DateTime.Now,
+                            Dismissable = false,
+                            Importance = 10,
+                            Interaction = new ParticipantFeedItemInteraction
+                            {
+                                Type = ParticipantFeedItemInteraction.InteractionType.Activity,
+                                Value = scenario.Id.ToString(),
+                                Label = "Start Scenario!"
+                            }
+                        });
+                    }
                 }
 
                 return new HttpResponseMessage()

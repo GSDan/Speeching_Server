@@ -50,3 +50,5 @@ Z:\Developments\NCLUni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.pdb
 Z:\Developments\NCLUni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.Migrations.new_table_applicationdata.resources
 Z:\Developments\NCLUni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.Migrations.delete_applicationData2.resources
 Z:\Developments\NCLUni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.csprojResolveAssemblyReference.cache
+C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.Migrations.new_table_applicationdata.resources
+C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.Migrations.delete_applicationData2.resources
