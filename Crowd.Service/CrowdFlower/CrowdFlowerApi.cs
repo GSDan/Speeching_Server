@@ -14,17 +14,17 @@ namespace Crowd.Service.CrowdFlower
         {
             CFJobRequest job = new CFJobRequest()
                 {
-                    Title = "Speeching " + participantResult.Id,
-                    Instructions = "Please listen to the audio clip and complete the following tasks, making sure that your computer's volume is loud enough to hear the voice samples clearly",
+                    Title = (participantResult.User.App == Crowd.Model.Data.User.AppType.Speeching) ? "Speeching " : "Fluent" + participantResult.Id,
+                    Instructions = "Please listen to the audio clip(s) and complete the following tasks, making sure that your computer's volume is loud enough to hear the voice samples clearly",
                     PaymentCents = 5,
                     UnitsPerAssignment = 2,
                     Css = "div.grp { border: solid thin gray; margin: 10px 0; }",
                     WebhookUri = ConfidentialData.ApiUrl + "/api/CFWebhook/",
-                    SupportEmail = "dan.richardson@newcastle.ac.uk",
+                    SupportEmail = ConfidentialData.SupportEmail,
                     ResourceUrl = participantResult.ResourceUrl
                 };
 
-            return await job.CreateAudioJob(participantResult, activity);;
+            return await job.CreateAudioJob(participantResult, activity); ;
         }
 
         internal static SvcStatus LaunchJob(int jobId)

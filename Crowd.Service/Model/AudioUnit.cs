@@ -12,6 +12,8 @@ namespace Crowd.Service.Model
         public static string CreateCFData(IEnumerable<string> audioPaths, ParticipantActivity activity, ParticipantResult result)
         {
             string json = "";
+            if (!audioPaths.Any())
+                return json;
 
             using (CrowdContext db = new CrowdContext())
             {
@@ -21,158 +23,166 @@ namespace Crowd.Service.Model
                 int lastAssessTaskId = -1;
                 int lastNormTaskId = -1;
                 string extraData = "";
-
-                foreach (var path in audioPaths)
+                if (result.User.App == User.AppType.Speeching)
                 {
-                    string[] options = null;
-                    string taskType = "Other";
-                    CrowdRowResponse comparionResponse = null;
-
-                    ParticipantResultData thisData = (from data in result.Data
-                        where data.FilePath == Path.GetFileName(path)
-                        select data).FirstOrDefault();
-
-                    if (thisData == null)
+                    foreach (var path in audioPaths)
                     {
-                        continue;
-                    }
+                        string[] options = null;
+                        string taskType = "Other";
+                        CrowdRowResponse comparionResponse = null;
 
-                    int assTaskId = -1;
-                    int normTaskId = -1;
+                        ParticipantResultData thisData = (from data in result.Data
+                                                          where data.FilePath == Path.GetFileName(path)
+                                                          select data).FirstOrDefault();
 
-                    if (thisData.ParticipantAssessmentTask != null) // Is assessment
-                    {
-                        ParticipantAssessmentTask task = thisData.ParticipantAssessmentTask;
-                        assTaskId = task.Id;
-
-                        List<string> quickFireOptions = new List<string>();
-                        foreach (var prompt in task.PromptCol.Prompts)
+                        if (thisData == null)
                         {
-                            quickFireOptions.Add(prompt.Value);
-                        }
-                        options = quickFireOptions.ToArray();
-
-                        switch (task.TaskType)
-                        {
-                            case ParticipantAssessmentTask.AssessmentTaskType.QuickFire:
-                                taskType = "MP";
-                                break;
-                            case ParticipantAssessmentTask.AssessmentTaskType.ImageDesc:
-                                taskType = "Image";
-                                break;
+                            continue;
                         }
 
-                        string filename = Path.GetFileNameWithoutExtension(path);
-                        string promptId = "";
-                        bool started = false;
+                        int assTaskId = -1;
+                        int normTaskId = -1;
 
-                        // Get the prompt index from the filename
-                        foreach (char c in filename)
+                        if (thisData.ParticipantAssessmentTask != null) // Is assessment
                         {
-                            if(c == '-')
+                            ParticipantAssessmentTask task = thisData.ParticipantAssessmentTask;
+                            assTaskId = task.Id;
+
+                            List<string> quickFireOptions = new List<string>();
+                            foreach (var prompt in task.PromptCol.Prompts)
                             {
-                                started = true;
-                                continue;
+                                quickFireOptions.Add(prompt.Value);
                             }
-                            if (started && char.IsDigit(c))
+                            options = quickFireOptions.ToArray();
+
+                            switch (task.TaskType)
                             {
-                                promptId += c;
+                                case ParticipantAssessmentTask.AssessmentTaskType.QuickFire:
+                                    taskType = "MP";
+                                    break;
+                                case ParticipantAssessmentTask.AssessmentTaskType.ImageDesc:
+                                    taskType = "Image";
+                                    break;
                             }
-                        }
 
-                        if (!string.IsNullOrWhiteSpace(promptId))
-                        {
-                            extraData = promptId;
-                        }
+                            string filename = Path.GetFileNameWithoutExtension(path);
+                            string promptId = "";
+                            bool started = false;
 
-                        if (lastAssessTaskId != task.Id)
-                        {
-                            lastAssessResponses = (from rowResp in db.CrowdRowResponses
-                                            where rowResp.ParticipantAssessmentTaskId == task.Id &&
-                                                  rowResp.ParticipantResult.User.Key == result.User.Key
-                                            orderby rowResp.CreatedAt
-                                            select rowResp).ToArray();
-                            lastAssessTaskId = assTaskId;
-                        }
-
-                        if (lastAssessResponses != null)
-                        {
-                            foreach (CrowdRowResponse resp in lastAssessResponses)
+                            // Get the prompt index from the filename
+                            foreach (char c in filename)
                             {
-                                // Can't use GetFileName in LINQ expressions so have to do in memory
-                                bool matches = Path.GetFileName(resp.RecordingUrl) == Path.GetFileName(path);
-                                if (!matches) continue;
-
-                                comparionResponse = resp;
-                                break;
+                                if (c == '-')
+                                {
+                                    started = true;
+                                    continue;
+                                }
+                                if (started && char.IsDigit(c))
+                                {
+                                    promptId += c;
+                                }
                             }
-                        }
-                        
-                    }
-                    else if (thisData.ParticipantTask != null) // Not assessment
-                    {
-                        normTaskId = thisData.ParticipantTask.Id;
-                        if (lastNormTaskId != normTaskId)
-                        {
-                            lastNormResponses = (from rowResp in db.CrowdRowResponses
-                                             where rowResp.ParticipantTaskId == normTaskId &&
-                                                   rowResp.ParticipantResult.User.Key == result.User.Key
-                                             orderby rowResp.CreatedAt
-                                             select rowResp).ToArray();
-                            lastNormTaskId = normTaskId;
-                        }
-                        if (lastNormResponses != null)
-                        {
-                            foreach (CrowdRowResponse resp in lastNormResponses)
+
+                            if (!string.IsNullOrWhiteSpace(promptId))
                             {
-                                // Can't use GetFileName in LINQ expressions so have to do in memory
-                                bool matches = Path.GetFileName(resp.RecordingUrl) == Path.GetFileName(path);
-                                if (!matches) continue;
+                                extraData = promptId;
+                            }
 
-                                comparionResponse = resp;
-                                break;
+                            if (lastAssessTaskId != task.Id)
+                            {
+                                lastAssessResponses = (from rowResp in db.CrowdRowResponses
+                                                       where rowResp.ParticipantAssessmentTaskId == task.Id &&
+                                                             rowResp.ParticipantResult.User.Key == result.User.Key
+                                                       orderby rowResp.CreatedAt
+                                                       select rowResp).ToArray();
+                                lastAssessTaskId = assTaskId;
+                            }
+
+                            if (lastAssessResponses != null)
+                            {
+                                foreach (CrowdRowResponse resp in lastAssessResponses)
+                                {
+                                    // Can't use GetFileName in LINQ expressions so have to do in memory
+                                    bool matches = Path.GetFileName(resp.RecordingUrl) == Path.GetFileName(path);
+                                    if (!matches) continue;
+
+                                    comparionResponse = resp;
+                                    break;
+                                }
+                            }
+
+                        }
+                        else if (thisData.ParticipantTask != null) // Not assessment
+                        {
+                            normTaskId = thisData.ParticipantTask.Id;
+                            if (lastNormTaskId != normTaskId)
+                            {
+                                lastNormResponses = (from rowResp in db.CrowdRowResponses
+                                                     where rowResp.ParticipantTaskId == normTaskId &&
+                                                           rowResp.ParticipantResult.User.Key == result.User.Key
+                                                     orderby rowResp.CreatedAt
+                                                     select rowResp).ToArray();
+                                lastNormTaskId = normTaskId;
+                            }
+                            if (lastNormResponses != null)
+                            {
+                                foreach (CrowdRowResponse resp in lastNormResponses)
+                                {
+                                    // Can't use GetFileName in LINQ expressions so have to do in memory
+                                    bool matches = Path.GetFileName(resp.RecordingUrl) == Path.GetFileName(path);
+                                    if (!matches) continue;
+
+                                    comparionResponse = resp;
+                                    break;
+                                }
                             }
                         }
-                    }
 
-                    string choices = "";
-                    string comparisonPath = "";
-                    int prevLoud = -1;
-                    int prevPace = -1;
-                    int prevPitch = -1;
+                        string choices = "";
+                        string comparisonPath = "";
+                        int prevLoud = -1;
+                        int prevPace = -1;
+                        int prevPitch = -1;
 
-                    if (options != null)
-                    {
-                        // Shuffle the words
-                        Random rnd = new Random();
-                        options = options.OrderBy(x => rnd.Next()).ToArray();  
-
-                        for (int i = 0; i < options.Length; i++)
+                        if (options != null)
                         {
-                            choices += options[i];
-                            if (i < options.Length - 1) choices += ", ";
-                        } 
-                    }
+                            // Shuffle the words
+                            Random rnd = new Random();
+                            options = options.OrderBy(x => rnd.Next()).ToArray();
 
-                    if (comparionResponse != null)
-                    {
-                        comparisonPath = comparionResponse.RecordingUrl;
-                        prevLoud = GetAverageRes(comparionResponse, "rlstvolume");
-                        prevPace = GetAverageRes(comparionResponse, "rlstpace");
-                        prevPitch = GetAverageRes(comparionResponse, "rlstpitch");
-                    }
+                            for (int i = 0; i < options.Length; i++)
+                            {
+                                choices += options[i];
+                                if (i < options.Length - 1) choices += ", ";
+                            }
+                        }
 
-                    json += string.Format("{{\"AudioUrl\":\"{0}\", " +
-                                          "\"TaskType\":\"{1}\"," +
-                                          "\"ParticipantAssessmentTaskId\":\"{2}\"," +
-                                          "\"ParticipantTaskId\":\"{3}\"," +
-                                          "\"Choices\":\"{4}\"," +
-                                          "\"PrevLoud\":\"{5}\"," +
-                                          "\"PrevPace\":\"{6}\"," +
-                                          "\"PrevPitch\":\"{7}\"," +
-                                          "\"Comparison\":\"{8}\"," +
-                                          "\"ExtraData\":\"{9}\"}}\r\n"
-                        , path, taskType, assTaskId, normTaskId, choices, prevLoud, prevPace, prevPitch, comparisonPath, extraData);
+                        if (comparionResponse != null)
+                        {
+                            comparisonPath = comparionResponse.RecordingUrl;
+                            prevLoud = GetAverageRes(comparionResponse, "rlstvolume");
+                            prevPace = GetAverageRes(comparionResponse, "rlstpace");
+                            prevPitch = GetAverageRes(comparionResponse, "rlstpitch");
+                        }
+
+                        json += string.Format("{{\"AudioUrl\":\"{0}\", " +
+                                              "\"TaskType\":\"{1}\"," +
+                                              "\"ParticipantAssessmentTaskId\":\"{2}\"," +
+                                              "\"ParticipantTaskId\":\"{3}\"," +
+                                              "\"Choices\":\"{4}\"," +
+                                              "\"PrevLoud\":\"{5}\"," +
+                                              "\"PrevPace\":\"{6}\"," +
+                                              "\"PrevPitch\":\"{7}\"," +
+                                              "\"Comparison\":\"{8}\"," +
+                                              "\"ExtraData\":\"{9}\"}}\r\n"
+                            , path, taskType, assTaskId, normTaskId, choices, prevLoud, prevPace, prevPitch, comparisonPath, extraData);
+                    }
+                }
+                else //Fluent
+                {
+                    json += string.Format("{{\"AudioUrls\":\"{0}\", " +
+                                              "\"ExtraData\":\"{1}\"}}\r\n"
+                            , String.Join(",", audioPaths), extraData);
                 }
 
             }

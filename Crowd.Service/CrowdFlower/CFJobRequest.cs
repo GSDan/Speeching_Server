@@ -29,13 +29,13 @@ namespace Crowd.Service.CrowdFlower
         public string WebhookUri { get; set; }
 
         //Create the HttpContent for the form
-        internal FormUrlEncodedContent CreateRequestCUrlData()
+        internal FormUrlEncodedContent CreateRequestCUrlData(Crowd.Model.Data.User.AppType app)
         {
             List<KeyValuePair<string, string>> lstKeyValue = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("job[title]", Title),
                 new KeyValuePair<string, string>("job[instructions]", Instructions),
-                new KeyValuePair<string, string>("job[cml]", CreateAudioCml()),
+                new KeyValuePair<string, string>("job[cml]", (app == User.AppType.Speeching) ? CreateAudioCml() : CreateFluentAudioCml()),
                 new KeyValuePair<string, string>("job[css]", Css),
                 new KeyValuePair<string, string>("job[webhook_uri]", WebhookUri),
                 new KeyValuePair<string, string>("job[support_email]", SupportEmail),
@@ -53,6 +53,26 @@ namespace Crowd.Service.CrowdFlower
         private const string RadioCml = "<cml:radio label=\"{0}\" />\r\n";
         private const string ScaleCml = "<cml:ratings name=\"rlst{0}\" label=\"{1}\" instructions=\"{2}\" points=\"{3}\"  validates=\"{4}\" />\r\n";
         private const string IntRangeCml = "<cml:text name=\"rlst{0}\" label=\"{1}\" instructions=\"{2}\" validates=\"required integerRange:{{min:{3},max:{4}}}\"/>\r\n";
+
+        private static string CreateFluentAudioCml()
+        {
+            var cml = "<div class=\"grp\">\r\n";
+            string audioCml = "{% assign array = AudioUrls | split: \",\" %}\r\n";
+            audioCml += "{% for AudioUrl in array %}";
+            audioCml += string.Format(AudioHtmlTag, "{{AudioUrl}}") + "<br/>";
+            audioCml += "{% endfor %}";
+            cml += audioCml;
+            cml += "<br/>The user has entered the following: <br/>";
+            cml += "<span style='color:blue'>{{ExtraData}}</span><br/><br/>";
+            cml += string.Format(
+                    TextareaCml,
+                    "In the box below please write your feedback.",
+                    "ANY INSTRUCTIONS?!",
+                    "required");
+            cml += "</div>";
+
+            return cml;
+        }
 
         private static string CreateAudioCml()
         {
@@ -324,7 +344,7 @@ namespace Crowd.Service.CrowdFlower
 
                 using (HttpClient client = new HttpClient())
                 {
-                    FormUrlEncodedContent reqContent = CreateRequestCUrlData();
+                    FormUrlEncodedContent reqContent = CreateRequestCUrlData(result.User.App);
                     Uri baseAddress = new Uri(CrowdflowerBaseUri + "jobs.json?key=" + CrowdflowerKey);
                     HttpResponseMessage response = client.PostAsync(baseAddress, reqContent).Result;
 
