@@ -181,8 +181,8 @@ namespace Crowd.Service.Model
                 else //Fluent
                 {
                     json += string.Format("{{\"AudioUrls\":\"{0}\", " +
-                                              "\"ExtraData\":\"{1}\"}}\r\n"
-                            , String.Join(",", audioPaths), extraData);
+                                              "\"FeedbackQuery\":\"{1}\"}}\r\n"
+                            , String.Join(",", audioPaths), result.FeedbackQuery);
                 }
 
             }

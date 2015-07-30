@@ -63,11 +63,11 @@ namespace Crowd.Service.CrowdFlower
             audioCml += "{% endfor %}";
             cml += audioCml;
             cml += "<br/>The user has entered the following: <br/>";
-            cml += "<span style='color:blue'>{{ExtraData}}</span><br/><br/>";
+            cml += "<span style='color:blue'>{{FeedbackQuery}}</span><br/><br/>";
             cml += string.Format(
                     TextareaCml,
                     "In the box below please write your feedback.",
-                    "ANY INSTRUCTIONS?!",
+                    "",
                     "required");
             cml += "</div>";
 
