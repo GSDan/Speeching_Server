@@ -7,6 +7,7 @@ using System.Web.Http;
 using Crowd.Model.Data;
 using Crowd.Model;
 using Crowd.Service.Model;
+using Crowd.Service.Common;
 
 namespace Crowd.Service.Controller
 {
@@ -121,31 +122,28 @@ namespace Crowd.Service.Controller
         {
             try
             {
+                List<int> results;
+
                 if (jobId >= 0)
                 {
-                    return (float?)await (from judgement in db.CrowdJudgements
-                                          where judgement.JobId == jobId
-                                          from data in judgement.Data
-                                          where data.DataType == resDataType
-                                          select data.NumResponse).AverageAsync();
+                    results = db.CrowdJudgements.Where(j => j.JobId == jobId)
+                        .SelectMany(j => j.Data.Where(d => d.DataType == resDataType)
+                            .Select(d => d.NumResponse)).ToList();  
                 }
-
-                IQueryable<int> queryRes = from res in db.ParticipantResults
-                               where res.User.Email == user.Email &&
-                               ((int)res.ParticipantActivity.AppType == (int)user.App ||
-                                  (int)res.ParticipantActivity.AppType == (int)Crowd.Model.Data.User.AppType.None )
-                               from judgement in db.CrowdJudgements
-                               where res.CrowdJobId == judgement.JobId
-                               from data in judgement.Data
-                               where data.DataType == resDataType
-                               select data.NumResponse;
-
-                if (await queryRes.CountAsync() >= 1)
+                else
                 {
-                    return (float?)await queryRes.AverageAsync();
+
+                    var jobIds = db.ParticipantResults.Where(res => res.User.Email == user.Email &&
+                        ((int)res.ParticipantActivity.AppType == (int)user.App ||
+                                        (int)res.ParticipantActivity.AppType == (int)Crowd.Model.Data.User.AppType.None)).Select(r => r.CrowdJobId);
+
+                    results = db.CrowdJudgements.Where(j => jobIds.Contains(j.JobId))
+                                .Select(j => j.Data.Where(d => d.DataType == resDataType)
+                                    .Select(d => d.NumResponse)).SelectMany(r => r).ToList();  
+
                 }
 
-                return null;
+                return SvcUtil.GetMedian(results);
             }
             catch(Exception)
             {

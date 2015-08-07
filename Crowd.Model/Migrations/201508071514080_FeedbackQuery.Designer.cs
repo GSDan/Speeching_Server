@@ -7,13 +7,13 @@ namespace Crowd.Model.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.2-31219")]
-    public sealed partial class MultiApps : IMigrationMetadata
+    public sealed partial class FeedbackQuery : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(MultiApps));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(FeedbackQuery));
         
         string IMigrationMetadata.Id
         {
-            get { return "201507021247228_MultiApps"; }
+            get { return "201508071514080_FeedbackQuery"; }
         }
         
         string IMigrationMetadata.Source

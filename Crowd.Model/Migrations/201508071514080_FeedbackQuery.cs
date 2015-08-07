@@ -3,14 +3,16 @@ namespace Crowd.Model.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class MultiApps : DbMigration
+    public partial class FeedbackQuery : DbMigration
     {
         public override void Up()
         {
+            AddColumn("dbo.ParticipantResults", "FeedbackQuery", c => c.String());
         }
         
         public override void Down()
         {
+            DropColumn("dbo.ParticipantResults", "FeedbackQuery");
         }
     }
 }

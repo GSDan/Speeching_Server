@@ -14,6 +14,28 @@ namespace Crowd.Service.Common
 {
     public class SvcUtil
     {
+        public static int? GetMedian(List<int> source)
+        {
+            int[] temp = source.ToArray();
+            Array.Sort(temp);
+            int count = temp.Length;
+
+            if (count == 0) return null;
+
+            // If even average the middle two elements,
+            // else take the centre element
+            if (count % 2 == 0)
+            {
+                int a = temp[count / 2 - 1];
+                int b = temp[count / 2];
+                return (a + b) / 2;
+            }
+            else
+            {
+                return temp[count / 2];
+            }
+        }
+
         public static Stream GenerateStreamFromString(string s)
         {
             MemoryStream stream = new MemoryStream();

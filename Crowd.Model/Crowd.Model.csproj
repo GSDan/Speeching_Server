@@ -104,25 +104,9 @@
     <Compile Include="Interface\ICrowdTaskModel.cs" />
     <Compile Include="Interface\IUser.cs" />
     <Compile Include="ITaskModel.cs" />
-    <Compile Include="Migrations\201507021247228_MultiApps.cs" />
-    <Compile Include="Migrations\201507021247228_MultiApps.Designer.cs">
-      <DependentUpon>201507021247228_MultiApps.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201507021255392_MultiApps2.cs" />
-    <Compile Include="Migrations\201507021255392_MultiApps2.Designer.cs">
-      <DependentUpon>201507021255392_MultiApps2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201507021534533_MultiApps5.cs" />
-    <Compile Include="Migrations\201507021534533_MultiApps5.Designer.cs">
-      <DependentUpon>201507021534533_MultiApps5.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201507221440454_new_table_applicationdata.cs" />
-    <Compile Include="Migrations\201507221440454_new_table_applicationdata.Designer.cs">
-      <DependentUpon>201507221440454_new_table_applicationdata.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201507221508507_delete_applicationData2.cs" />
-    <Compile Include="Migrations\201507221508507_delete_applicationData2.Designer.cs">
-      <DependentUpon>201507221508507_delete_applicationData2.cs</DependentUpon>
+    <Compile Include="Migrations\201508071514080_FeedbackQuery.cs" />
+    <Compile Include="Migrations\201508071514080_FeedbackQuery.Designer.cs">
+      <DependentUpon>201508071514080_FeedbackQuery.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -152,20 +136,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201507021247228_MultiApps.resx">
-      <DependentUpon>201507021247228_MultiApps.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507021255392_MultiApps2.resx">
-      <DependentUpon>201507021255392_MultiApps2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507021534533_MultiApps5.resx">
-      <DependentUpon>201507021534533_MultiApps5.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507221440454_new_table_applicationdata.resx">
-      <DependentUpon>201507221440454_new_table_applicationdata.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507221508507_delete_applicationData2.resx">
-      <DependentUpon>201507221508507_delete_applicationData2.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201508071514080_FeedbackQuery.resx">
+      <DependentUpon>201508071514080_FeedbackQuery.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

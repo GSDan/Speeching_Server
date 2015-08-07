@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Crowd.Model;
 using Crowd.Model.Data;
+using Crowd.Service.Common;
 
 namespace Crowd.Service.Model
 {
@@ -193,8 +194,7 @@ namespace Crowd.Service.Model
 
         private static int GetAverageRes(CrowdRowResponse resp, string dataType)
         {
-            double totalScore = 0;
-            int count = 0;
+            List<int> results = new List<int>();
 
             foreach (CrowdJudgement judgement in resp.TaskJudgements)
             {
@@ -202,13 +202,12 @@ namespace Crowd.Service.Model
                 {
                     if (data.DataType == dataType)
                     {
-                        totalScore += data.NumResponse;
-                        count++;
+                        results.Add(data.NumResponse);
                     }
                 }
             }
 
-            return (int)(totalScore/count);
+            return SvcUtil.GetMedian(results) ?? default(int);
         }
     }
 }

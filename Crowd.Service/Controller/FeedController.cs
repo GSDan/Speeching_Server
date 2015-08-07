@@ -148,22 +148,85 @@ namespace Crowd.Service.Controller
                     items.Add(transFeedback);
                 }
 
-                float? accentRating = await AverageRating("rlstaccent", user, db);
-                if (accentRating != null)
-                {
-                    accentRating = 5 - accentRating;
+                //float? accentRating = await AverageRating("rlstaccent", user, db);
+                //if (accentRating != null)
+                //{
+                //    accentRating = 5 - accentRating;
 
-                    var accentFeedback = new ParticipantFeedItem
+                //    var accentFeedback = new ParticipantFeedItem
+                //    {
+                //        Rating = (float)accentRating,
+                //        Title = "Accent Clarity",
+                //        Description =
+                //            "This total average rating shows how easy to understand people find your accent.",
+                //        Date = DateTime.Now,
+                //        Dismissable = false,
+                //        Importance = 8
+                //    };
+                //    items.Add(accentFeedback);
+                //}
+
+                float? volumeRating = await AverageRating("rlstvolume", user, db);
+                if (volumeRating != null)
+                {
+                    string scoreDesc = "\nYou should be aiming for a score between 50 and 80.";
+
+                    if (volumeRating > 80) scoreDesc += " You might be talking a little too loudly!";
+                    else if (volumeRating < 50) scoreDesc += " Try talking a little bit louder.";
+
+                    var volumeFeedback = new ParticipantFeedItem
                     {
-                        Rating = (float)accentRating,
-                        Title = "Accent Clarity",
+                        Rating = (float)volumeRating,
+                        Title = "Speech Volume",
                         Description =
-                            "This total average rating shows how easy to understand people find your accent.",
+                            "This average rating shows how loud people think you speak." + scoreDesc,
                         Date = DateTime.Now,
                         Dismissable = false,
                         Importance = 8
                     };
-                    items.Add(accentFeedback);
+                    items.Add(volumeFeedback);
+                }
+
+                float? paceRating = await AverageRating("rlstpace", user, db);
+                if (paceRating != null)
+                {
+                    string scoreDesc = "\nYou should be aiming for a score between 40 and 60.";
+
+                    if (paceRating > 60) scoreDesc += " You might be talking a little too quickly!";
+                    else if (paceRating < 40) scoreDesc += " Try talking a little bit faster.";
+
+                    var pacingFeedback = new ParticipantFeedItem
+                    {
+                        Rating = (float)paceRating,
+                        Title = "Rate of Speech",
+                        Description =
+                            "This average rating shows how fast people think you speak." + scoreDesc,
+                        Date = DateTime.Now,
+                        Dismissable = false,
+                        Importance = 8
+                    };
+                    items.Add(pacingFeedback);
+                }
+
+                float? pitchRating = await AverageRating("rlstpitch", user, db);
+                if (pitchRating != null)
+                {
+                    string scoreDesc = "\nYou should be aiming for a score between 50 and 80.";
+
+                    if (pitchRating > 80) scoreDesc += " You might be talking a little too animatedly!";
+                    else if (pitchRating < 40) scoreDesc += " You might be speaking in a dull or monotonous tone.";
+
+                    var pitchFeedback = new ParticipantFeedItem
+                    {
+                        Rating = (float)pitchRating,
+                        Title = "Pitch Change",
+                        Description =
+                            "This average rating shows how much people think your pitch changes over the course of a sentence." + scoreDesc,
+                        Date = DateTime.Now,
+                        Dismissable = false,
+                        Importance = 8
+                    };
+                    items.Add(pitchFeedback);
                 }
 
                 float? minPairsRating = await MinimalPairsScore(user, db);
