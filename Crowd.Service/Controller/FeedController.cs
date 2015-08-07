@@ -176,7 +176,7 @@ namespace Crowd.Service.Controller
 
                     var volumeFeedback = new ParticipantFeedItem
                     {
-                        Rating = (float)volumeRating,
+                        Percentage = (float)volumeRating,
                         Title = "Speech Volume",
                         Description =
                             "This average rating shows how loud people think you speak." + scoreDesc,
@@ -197,7 +197,7 @@ namespace Crowd.Service.Controller
 
                     var pacingFeedback = new ParticipantFeedItem
                     {
-                        Rating = (float)paceRating,
+                        Percentage = (float)paceRating,
                         Title = "Rate of Speech",
                         Description =
                             "This average rating shows how fast people think you speak." + scoreDesc,
@@ -218,7 +218,7 @@ namespace Crowd.Service.Controller
 
                     var pitchFeedback = new ParticipantFeedItem
                     {
-                        Rating = (float)pitchRating,
+                        Percentage = (float)pitchRating,
                         Title = "Pitch Change",
                         Description =
                             "This average rating shows how much people think your pitch changes over the course of a sentence." + scoreDesc,
