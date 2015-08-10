@@ -37,14 +37,9 @@ Z:\Developments\NCLUni\speeching-server\Crowd.Model\bin\Debug\Newtonsoft.Json.dl
 Z:\Developments\NCLUni\speeching-server\Crowd.Model\bin\Debug\EntityFramework.xml
 Z:\Developments\NCLUni\speeching-server\Crowd.Model\bin\Debug\EntityFramework.SqlServer.xml
 Z:\Developments\NCLUni\speeching-server\Crowd.Model\bin\Debug\Newtonsoft.Json.xml
-Z:\Developments\NCLUni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.Migrations.MultiApps.resources
-Z:\Developments\NCLUni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.Migrations.MultiApps2.resources
-Z:\Developments\NCLUni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.Migrations.MultiApps5.resources
 Z:\Developments\NCLUni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.csproj.GenerateResource.Cache
 Z:\Developments\NCLUni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.dll
 Z:\Developments\NCLUni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.pdb
-Z:\Developments\NCLUni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.Migrations.new_table_applicationdata.resources
-Z:\Developments\NCLUni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.Migrations.delete_applicationData2.resources
-Z:\Developments\NCLUni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.csprojResolveAssemblyReference.cache
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.Migrations.FeedbackQuery.resources
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.csproj.GenerateResource.Cache
+Z:\Developments\NCLUni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.Migrations.FeedbackQuery.resources

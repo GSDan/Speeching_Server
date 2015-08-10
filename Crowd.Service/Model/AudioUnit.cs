@@ -10,8 +10,9 @@ namespace Crowd.Service.Model
 {
     public class AudioUnit
     {
-        public static string CreateCFData(IEnumerable<string> audioPaths, ParticipantActivity activity, ParticipantResult result)
+        public static string CreateCFData(IEnumerable<string> audioPaths, ParticipantActivity activity, ParticipantResult result, out int count)
         {
+            count = 0;
             string json = "";
             if (!audioPaths.Any())
                 return json;
@@ -177,6 +178,8 @@ namespace Crowd.Service.Model
                                               "\"Comparison\":\"{8}\"," +
                                               "\"ExtraData\":\"{9}\"}}\r\n"
                             , path, taskType, assTaskId, normTaskId, choices, prevLoud, prevPace, prevPitch, comparisonPath, extraData);
+
+                        count += 1;
                     }
                 }
                 else //Fluent
@@ -184,6 +187,7 @@ namespace Crowd.Service.Model
                     json += string.Format("{{\"AudioUrls\":\"{0}\", " +
                                               "\"FeedbackQuery\":\"{1}\"}}\r\n"
                             , String.Join(",", audioPaths), result.FeedbackQuery);
+                    count += 1;
                 }
 
             }

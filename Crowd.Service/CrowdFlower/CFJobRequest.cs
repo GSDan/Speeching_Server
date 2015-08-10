@@ -331,7 +331,7 @@ namespace Crowd.Service.CrowdFlower
             }
 
             list.Add(new KeyValuePair<string, string>("debit[units_count]", unitCount.ToString()));
-
+            list.Add(new KeyValuePair<string, string>("country", "GB"));
             return new FormUrlEncodedContent(list);
         }
 
@@ -356,7 +356,8 @@ namespace Crowd.Service.CrowdFlower
                         if (!audioFiles.Any()) return status;
 
                         CFUnitRequest unitsReq = new CFUnitRequest();
-                        string uploadUnitsJson = AudioUnit.CreateCFData(audioFiles, activity, result);
+                        int count = 0;
+                        string uploadUnitsJson = AudioUnit.CreateCFData(audioFiles, activity, result, out count);
 
                         Rows = await unitsReq.SendCfUnits(jobRes.id, uploadUnitsJson);
 
@@ -368,6 +369,7 @@ namespace Crowd.Service.CrowdFlower
                         status = new SvcStatus()
                         {
                             Level = 0,
+                            Count = count,
                             Description = "Job created",
                             Response = response,
                             CreatedRows = Rows

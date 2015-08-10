@@ -23,11 +23,10 @@ namespace Crowd.Service.CrowdFlower
                     SupportEmail = ConfidentialData.SupportEmail,
                     ResourceUrl = participantResult.ResourceUrl
                 };
-
-            return await job.CreateAudioJob(participantResult, activity); ;
+            return await job.CreateAudioJob(participantResult, activity);
         }
 
-        internal static SvcStatus LaunchJob(int jobId)
+        internal static SvcStatus LaunchJob(int jobId, int unitCount)
         {
             SvcStatus status;
 
@@ -42,7 +41,7 @@ namespace Crowd.Service.CrowdFlower
                     // Unit count is the number of rows ("units") that comprise the job - Dan
                     // https://success.crowdflower.com/hc/en-us/articles/202703435-CrowdFlower-API-Jobs-Resource-Attributes
                     var response =
-                        client.PostAsync(baseAddress, job.LaunchRequestCUrlData(CFJobRequest.CFWorkForce.Internally, 20))
+                        client.PostAsync(baseAddress, job.LaunchRequestCUrlData(CFJobRequest.CFWorkForce.OnDemand, unitCount))
                             .Result;
                     if (response.IsSuccessStatusCode)
                     {

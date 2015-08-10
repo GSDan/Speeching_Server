@@ -18,6 +18,7 @@ namespace Crowd.Service.Common
         /// </summary>
         public int Level { get; set; }
         public string Description { get; set;}
+        public int Count { get; set; }
         public HttpResponseMessage Response { get; set; }
         public List<CrowdRowResponse> CreatedRows;
     }

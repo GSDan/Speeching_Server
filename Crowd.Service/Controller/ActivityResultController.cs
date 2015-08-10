@@ -174,7 +174,6 @@ namespace Crowd.Service.Controller
                 {
                     return Request.CreateResponse(HttpStatusCode.ExpectationFailed, ex.Message);
                 }
-
                 SvcStatus status = await CrowdFlowerApi.CreateJob(result,
                     await db.ParticipantActivities.FindAsync(result.ParticipantActivityId));
 
@@ -203,7 +202,7 @@ namespace Crowd.Service.Controller
                             HttpStatusCode.ExpectationFailed, e.Message));
                     }
 
-                    CrowdFlowerApi.LaunchJob(jobRes.id);
+                    CrowdFlowerApi.LaunchJob(jobRes.id, status.Count);
                     return status.Response;
                 }
                 db.DebugMessages.Add(new DebugMessage
