@@ -40,7 +40,8 @@ namespace Crowd.Service.CrowdFlower
                 new KeyValuePair<string, string>("job[webhook_uri]", WebhookUri),
                 new KeyValuePair<string, string>("job[support_email]", SupportEmail),
                 new KeyValuePair<string, string>("job[payment_cents]", PaymentCents.ToString()),
-                new KeyValuePair<string, string>("job[units_per_assignment]", UnitsPerAssignment.ToString())
+                new KeyValuePair<string, string>("job[units_per_assignment]", UnitsPerAssignment.ToString()),
+                new KeyValuePair<string, string>("job[included_countries]", new string[2]{"GB", "US"}.ToString())
             };
 
             return new FormUrlEncodedContent(lstKeyValue);
@@ -331,7 +332,6 @@ namespace Crowd.Service.CrowdFlower
             }
 
             list.Add(new KeyValuePair<string, string>("debit[units_count]", unitCount.ToString()));
-            list.Add(new KeyValuePair<string, string>("country", "GB"));
             return new FormUrlEncodedContent(list);
         }
 
@@ -386,46 +386,6 @@ namespace Crowd.Service.CrowdFlower
                 status = new SvcStatus() { Level = 2, Description = e.Message, Response = new HttpResponseMessage(HttpStatusCode.InternalServerError) };
             }
             
-            return status;
-        }
-
-        internal static SvcStatus LaunchJob(int jobId)
-        {
-            SvcStatus status;
-
-            if (jobId > 0)
-            {
-                Uri baseAddress = new Uri(string.Format("{0}jobs/{1}/orders.json?key={2}", CrowdflowerBaseUri, jobId, CrowdflowerKey));
-
-                using (HttpClient client = new HttpClient())
-                {
-                    CFJobRequest job = new CFJobRequest();
-
-                    //TODO: what is unitCount? I use 20 for now
-                    var response = client.PostAsync(baseAddress, job.LaunchRequestCUrlData(CFWorkForce.Internally, 20)).Result;
-                    if (response.IsSuccessStatusCode)
-                    {
-                        status = new SvcStatus() { Level = 0, Description = "Job launched", Response = response };
-                    }
-                    else
-                    {
-                        status = new SvcStatus()
-                        {
-                            Level = 2,
-                            Description = "Failed to launch",
-                            Response = response
-                        };
-                    }
-                }
-            }
-            else
-            {
-                status = new SvcStatus()
-                {
-                    Level = 2,
-                    Description = "Job Key must be greater than 0"
-                };
-            }
             return status;
         }
     }

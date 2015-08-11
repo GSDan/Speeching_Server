@@ -212,7 +212,7 @@ namespace Crowd.Service.Controller
                     FunctionName = "Post"
                 });
                 await db.SaveChangesAsync();
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, status.Description);
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, status.Description + " \n\n " + status.Response.ToString());
             }
         }
 
