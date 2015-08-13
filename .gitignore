@@ -10,3 +10,5 @@ Crowd.Service/ConfidentialData.cs
 Admin
 Admin.*
 packages
+Crowd.Service/obj
+Crowd.Model/obj
