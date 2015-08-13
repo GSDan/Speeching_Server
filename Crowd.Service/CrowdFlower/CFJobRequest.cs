@@ -41,7 +41,8 @@ namespace Crowd.Service.CrowdFlower
                 new KeyValuePair<string, string>("job[support_email]", SupportEmail),
                 new KeyValuePair<string, string>("job[payment_cents]", PaymentCents.ToString()),
                 new KeyValuePair<string, string>("job[units_per_assignment]", UnitsPerAssignment.ToString()),
-                new KeyValuePair<string, string>("job[included_countries]", new string[2]{"GB", "US"}.ToString())
+                new KeyValuePair<string, string>("job[judgments_per_unit]", "5"),
+                new KeyValuePair<string, string>("job[tags]", "audio,transcription,rating")
             };
 
             return new FormUrlEncodedContent(lstKeyValue);
@@ -97,14 +98,14 @@ namespace Crowd.Service.CrowdFlower
             string ratingScales = CreateRatingScale(
                 "Trans",
                 "How hard was it to understand the person in this clip?",
-                "Please give a rating where 1 is 'I understood everything' and 5 is 'I couldn’t understand a thing they said'",
+                "Please give a rating where 1 is &#39;I understood everything&#39; and 5 is &#39;I couldn&#39;t understand a thing they said&#39;",
                 "required",
                 5) + "<br/>";
 
             ratingScales += CreateRatingScale(
                 "Accent",
-                "How much did the person’s accent affect how easy they were to understand?  ",
-                "Please give a rating where 1 is 'Not at all' and 5 is 'Their accent was so broad I couldn’t understand a thing'",
+                "How much did the person&#39;s accent affect how easy they were to understand?  ",
+                "Please give a rating where 1 is &#39;Not at all&#39; and 5 is &#39;Their accent was so broad I couldn&#39;t understand a thing&#39;",
                 "required",
                 5) + "<br/>";
 
@@ -117,17 +118,17 @@ namespace Crowd.Service.CrowdFlower
 #region comparisons
             ratingScales += "<br/><p>Below you will hear two sentences being spoken. " +
                             "Press the play buttons in each box (1 and then 2) to hear them separately. " +
-                            "The second one is the person's previous upload - think about how the person was talking in sentence 1 compared to sentence 2. </p>";
+                            "The second one is the person&#39;s previous upload - think about how the person was talking in sentence 1 compared to sentence 2. </p>";
             ratingScales += string.Format(AudioHtmlTag, "{{AudioUrl}}") + string.Format(AudioHtmlTag, "{{Comparison}}");
 
             ratingScales +=
-                "<p>The score representing the average loudness of the person’s voice the last time " +
-                "they submitted a recording for analysis was {{PrevLoud}},  where 0 is 'so quiet I could barely hear them' and 100 is 'very loud'. " +
+                "<p>The score representing the average loudness of the person&#39;s voice the last time " +
+                "they submitted a recording for analysis was {{PrevLoud}},  where 0 is &#39;so quiet I could barely hear them&#39; and 100 is &#39;very loud&#39;. " +
                 "We are looking to see if there is a change.</p>";
 
             ratingScales += CreateIntRatingBox(
                 "Volume",
-                "Please enter a number from 0-100 indicating how loud you felt the first sentence was, where 0 is 'so quiet I could barely hear them' and 100 is 'very loud'",
+                "Please enter a number from 0-100 indicating how loud you felt the first sentence was, where 0 is &#39;so quiet I could barely hear them&#39; and 100 is &#39;very loud&#39;",
                 "Please enter a number between 0-100, using the previous score given to the second recording as a comparison",
                 0, 100);
 
@@ -140,13 +141,13 @@ namespace Crowd.Service.CrowdFlower
                     }) + "<br/>";
 
             ratingScales +=
-                "<p>The score representing the average speed of the person’s voice the last time " +
-                "they submitted a recording for analysis was {{PrevPace}},  where 0 is 'very slow' and 100 is 'So fast I could barely understand them'. " +
+                "<p>The score representing the average speed of the person&#39;s voice the last time " +
+                "they submitted a recording for analysis was {{PrevPace}},  where 0 is &#39;very slow&#39; and 100 is &#39;So fast I could barely understand them&#39;. " +
                 "We are looking to see if there is a change.</p>";
 
             ratingScales += CreateIntRatingBox(
                 "Pace",
-                "Please enter a number from 0-100 indicating how fast you felt the person in the first sentence was talking, where 0 is 'very slow' and 100 is 'So fast I could barely understand them'.",
+                "Please enter a number from 0-100 indicating how fast you felt the person in the first sentence was talking, where 0 is &#39;very slow&#39; and 100 is &#39;So fast I could barely understand them&#39;.",
                 "Please enter a number between 0-100, using the previous score given to the second recording as a comparison",
                 0, 100);
 
@@ -158,21 +159,21 @@ namespace Crowd.Service.CrowdFlower
                         new []{"It got slower as the sentence went on", "decrease"}
                     }) + "<br/>";
 
-            ratingScales += "<p>Think about how much the person’s pitch varied in sentence 1 compared to sentence 2." +
-                            "(Pitch refers to the ups and downs in a person’s voice which give it feeling. " +
+            ratingScales += "<p>Think about how much the person&#39;s pitch varied in sentence 1 compared to sentence 2." +
+                            "(Pitch refers to the ups and downs in a person&#39;s voice which give it feeling. " +
                             "Someone with a varied pitch might sound excited and interested, someone with little " +
                             "change to their pitch might sound monotonous or bored)</p>";
 
             ratingScales +=
-                "<p>The score representing how much the person's pitch varied in their voice the last time " +
-                "they submitted a recording for analysis was {{PrevPace}},  where 0 is 'not at all, they spoke with a" +
-                " monotonous voice and sounded bored' and 100 is 'a lot, they sounded excited and interested'. " +
+                "<p>The score representing how much the person&#39;s pitch varied in their voice the last time " +
+                "they submitted a recording for analysis was {{PrevPace}},  where 0 is &#39;not at all, they spoke with a" +
+                " monotonous voice and sounded bored&#39; and 100 is &#39;a lot, they sounded excited and interested&#39;. " +
                 "We are looking to see if there is a change.</p>";
 
             ratingScales += CreateIntRatingBox(
                 "Pitch",
-                "Please enter a number from 0-100 indicating how much you felt the pitch in the first sentence varied, where 0 is 'is not at all, " +
-                "they spoke with a monotonous voice and sounded bored' and 100 is 'a lot, they sounded excited and interested'",
+                "Please enter a number from 0-100 indicating how much you felt the pitch in the first sentence varied, where 0 is &#39;is not at all, " +
+                "they spoke with a monotonous voice and sounded bored&#39; and 100 is &#39;a lot, they sounded excited and interested&#39;",
                 "Please enter a number between 0-100, using the previous score given to the second recording as a comparison",
                 0, 100);
 
@@ -191,7 +192,7 @@ namespace Crowd.Service.CrowdFlower
 #region firstRating
             ratingScales += CreateIntRatingBox(
                 "Volume",
-                "Please enter a number from 0-100 indicating how loud you felt the sentence was, where 0 is 'so quiet I could barely hear them' and 100 is 'very loud'",
+                "Please enter a number from 0-100 indicating how loud you felt the sentence was, where 0 is &#39;so quiet I could barely hear them&#39; and 100 is &#39;very loud&#39;",
                 "Please enter a number between 0-100",
                 0, 100);
 
@@ -205,7 +206,7 @@ namespace Crowd.Service.CrowdFlower
 
             ratingScales += CreateIntRatingBox(
                 "Pace",
-                "Please enter a number from 0-100 indicating how fast you felt the person was talking, where 0 is 'very slow' and 100 is 'So fast I could barely understand them'.",
+                "Please enter a number from 0-100 indicating how fast you felt the person was talking, where 0 is &#39;very slow&#39; and 100 is &#39;So fast I could barely understand them&#39;.",
                 "Please enter a number between 0-100",
                 0, 100);
 
@@ -217,15 +218,15 @@ namespace Crowd.Service.CrowdFlower
                         new []{"It got slower as the sentence went on", "decrease"}
                     }) + "<br/>";
 
-            ratingScales += "<p>Think about how much the person’s pitch varied in the recording." +
-                            "(Pitch refers to the ups and downs in a person’s voice which give it feeling. " +
+            ratingScales += "<p>Think about how much the person&#39;s pitch varied in the recording." +
+                            "(Pitch refers to the ups and downs in a person&#39;s voice which give it feeling. " +
                             "Someone with a varied pitch might sound excited and interested, someone with little " +
                             "change to their pitch might sound monotonous or bored)</p>";
 
             ratingScales += CreateIntRatingBox(
                 "Pitch",
-                "Please enter a number from 0-100 indicating how much you felt the pitch in this sentence varied, where 0 is 'not at all, " +
-                "they spoke with a monotonous voice and sounded bored' and 100 is 'a lot, they sounded excited and interested'",
+                "Please enter a number from 0-100 indicating how much you felt the pitch in this sentence varied, where 0 is &#39;not at all, " +
+                "they spoke with a monotonous voice and sounded bored&#39; and 100 is &#39;a lot, they sounded excited and interested&#39;",
                 "Please enter a number between 0-100",
                 0, 100);
 
@@ -242,6 +243,8 @@ namespace Crowd.Service.CrowdFlower
             ratingScales += "{% endif %}\r\n"; // End != minimal pairs
 
             cml += string.Format(GroupCml, ratingScales);
+
+            cml += "<cml:text label=\"Enter the total number of your ratings above\" validates=\"required\" gold=\"true\" />";
 
             cml+= "</div>";
 
@@ -335,6 +338,36 @@ namespace Crowd.Service.CrowdFlower
             return new FormUrlEncodedContent(list);
         }
 
+        internal async Task<SvcStatus> ControlQuality(int jobId)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                string includedCountries = "GB";
+                List<KeyValuePair<string, string>> lstKeyValue = new List<KeyValuePair<string, string>>
+                {
+                    new KeyValuePair<string, string>("job[included_countries][]", includedCountries)
+                };
+                FormUrlEncodedContent reqContent = new FormUrlEncodedContent(lstKeyValue);
+                Uri baseAddress = new Uri(String.Format("{0}jobs/{1}.json?key={2}", CrowdflowerBaseUri, jobId, CrowdflowerKey));
+                HttpResponseMessage response = client.PutAsync(baseAddress, reqContent).Result;
+                SvcStatus status = new SvcStatus(); 
+                if (response.IsSuccessStatusCode)
+                {
+                    status = new SvcStatus()
+                    {
+                        Level = 0,
+                        Description = "Included countries: " + includedCountries,
+                        Response = response
+                    };
+                }
+                else
+                {
+                    status = new SvcStatus() { Level = 2, Description = "Failed to include/exclude countries", Response = response };
+                }
+                return status;
+            }
+        }
+
         internal async Task<SvcStatus> CreateAudioJob(ParticipantResult result, ParticipantActivity activity)
         {
             SvcStatus status = new SvcStatus();
@@ -377,7 +410,7 @@ namespace Crowd.Service.CrowdFlower
                     }
                     else
                     {
-                        status = new SvcStatus() { Level = 2, Description = "Failed", Response = response };
+                        status = new SvcStatus() { Level = 2, Description = "Failed to create the job", Response = response };
                     }
                 }
             }

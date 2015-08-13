@@ -167,17 +167,7 @@ namespace Crowd.Service.Model
                             prevPitch = GetAverageRes(comparionResponse, "rlstpitch");
                         }
 
-                        json += string.Format("{{\"AudioUrl\":\"{0}\", " +
-                                              "\"TaskType\":\"{1}\"," +
-                                              "\"ParticipantAssessmentTaskId\":\"{2}\"," +
-                                              "\"ParticipantTaskId\":\"{3}\"," +
-                                              "\"Choices\":\"{4}\"," +
-                                              "\"PrevLoud\":\"{5}\"," +
-                                              "\"PrevPace\":\"{6}\"," +
-                                              "\"PrevPitch\":\"{7}\"," +
-                                              "\"Comparison\":\"{8}\"," +
-                                              "\"ExtraData\":\"{9}\"}}\r\n"
-                            , path, taskType, assTaskId, normTaskId, choices, prevLoud, prevPace, prevPitch, comparisonPath, extraData);
+                        json += createUnit(path, taskType, assTaskId, normTaskId, choices, prevLoud, prevPace, prevPitch, comparisonPath, extraData);
 
                         count += 1;
                     }
@@ -191,9 +181,50 @@ namespace Crowd.Service.Model
                 }
 
             }
+            json += TestQuestions();
             json = json.TrimEnd();
 
             return json;
+        }
+
+        private static string createUnit(string path, string taskType, int assTaskId, int normTaskId, string choices, int prevLoud, int prevPace, int prevPitch, 
+            string comparisonPath, string extraData, bool isTest = false, string testVolAnswer1 = "", string testVolAnsweReason1 = "", string testPaceAnswer2 = "", 
+            string testPaceAnsweReason2 = "", string testPitchAnswer3 = "", string testPitchAnsweReason3 = "")
+        {
+            return string.Format("{{\"AudioUrl\":\"{0}\", " +
+                                "\"TaskType\":\"{1}\"," +
+                                "\"ParticipantAssessmentTaskId\":\"{2}\"," +
+                                "\"ParticipantTaskId\":\"{3}\"," +
+                                "\"Choices\":\"{4}\"," +
+                                "\"PrevLoud\":\"{5}\"," +
+                                "\"PrevPace\":\"{6}\"," +
+                                "\"PrevPitch\":\"{7}\"," +
+                                "\"Comparison\":\"{8}\"," +
+                                "\"ExtraData\":\"{9}\","+
+                                "\"_golden\":\"{10}\"," +
+                                "\"rlstVolumeChange_gold\":\"{11}\"," +
+                                "\"rlstVolumeChange_gold_reason\":\"{12}\"," +
+                                "\"rlstPaceChange_gold\":\"{13}\"," +
+                                "\"rlstPaceChange_gold_reason\":\"{14}\"," +
+                                "\"rlstPitchChange_gold\":\"{15}\"," +
+                                "\"rlstPitchChange_gold_reason\":\"{16}\"}}\r\n"
+                                , path, taskType, assTaskId, normTaskId, choices, prevLoud, prevPace, prevPitch, comparisonPath, extraData, (isTest ? "TRUE" : ""), testVolAnswer1, testVolAnsweReason1, testPaceAnswer2, testPaceAnsweReason2, testPitchAnswer3, testPitchAnsweReason3);
+        }
+
+        private static string TestQuestions()
+        {
+            string retJson = string.Empty;
+
+            //retJson += createUnit("https://openlabdata.blob.core.windows.net/speechinguploads/speeching2@gmail.com/6/748059/imgDesc_4-24.mp4", "Other", -1, 8, "", 0, 0, 0, "https://openlabdata.blob.core.windows.net/speechinguploads/speeching2@gmail.com/6/748059/imgDesc_4-24.mp4", "", true, "constant", "becasue the volume stayed the same",  "constant", "becasue the volume stayed the same",  "constant", "becasue the volume stayed the same");
+            //retJson += createUnit("https://xyz2.com", "test2", -1, 8, "", 0, 0, 0, "", "", true, "increase", "becasue its is increase");
+            //retJson += createUnit("https://xyz3.com", "test3", -1, 8, "", 0, 0, 0, "", "", true, "increase", "becasue its is increase");
+            //retJson += createUnit("https://xyz4.com", "test4", -1, 8, "", 0, 0, 0, "", "", true, "increase", "becasue its is increase");
+            //retJson += createUnit("https://xyz5.com", "test5", -1, 8, "", 0, 0, 0, "", "", true, "increase", "becasue its is increase");
+            //retJson += createUnit("https://xyz6.com", "test6", -1, 8, "", 0, 0, 0, "", "", true, "increase", "becasue its is increase");
+            //retJson += createUnit("https://xyz7.com", "test7", -1, 8, "", 0, 0, 0, "", "", true, "increase", "becasue its is increase");
+            //retJson += createUnit("https://xyz8.com", "test8", -1, 8, "", 0, 0, 0, "", "", true, "increase", "becasue its is increase");
+
+            return retJson;
         }
 
         private static int GetAverageRes(CrowdRowResponse resp, string dataType)

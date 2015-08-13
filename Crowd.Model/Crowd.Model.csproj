@@ -104,9 +104,9 @@
     <Compile Include="Interface\ICrowdTaskModel.cs" />
     <Compile Include="Interface\IUser.cs" />
     <Compile Include="ITaskModel.cs" />
-    <Compile Include="Migrations\201508071514080_FeedbackQuery.cs" />
-    <Compile Include="Migrations\201508071514080_FeedbackQuery.Designer.cs">
-      <DependentUpon>201508071514080_FeedbackQuery.cs</DependentUpon>
+    <Compile Include="Migrations\201508121700147_feedbackquery.cs" />
+    <Compile Include="Migrations\201508121700147_feedbackquery.Designer.cs">
+      <DependentUpon>201508121700147_feedbackquery.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -136,8 +136,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201508071514080_FeedbackQuery.resx">
-      <DependentUpon>201508071514080_FeedbackQuery.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201508121700147_feedbackquery.resx">
+      <DependentUpon>201508121700147_feedbackquery.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

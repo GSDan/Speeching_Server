@@ -33,28 +33,33 @@ namespace Crowd.Service.CrowdFlower
 
             if (jobId > 0)
             {
-                var baseAddress = new Uri(string.Format("{0}jobs/{1}/orders.json?key={2}",
-                    CrowdflowerBaseUri, jobId, ConfidentialData.CrowdFlowerKey));
                 using (HttpClient client = new HttpClient())
                 {
                     CFJobRequest job = new CFJobRequest();
-                    //TODO: what is units_count? I use 20 for now - Mo
-                    // Unit count is the number of rows ("units") that comprise the job - Dan
-                    // https://success.crowdflower.com/hc/en-us/articles/202703435-CrowdFlower-API-Jobs-Resource-Attributes
-                    var response = client.PostAsync(baseAddress, job.LaunchRequestCUrlData(CFJobRequest.CFWorkForce.Internally, unitCount)).Result;
-
-                    if (response.IsSuccessStatusCode)
+                    var incExcCountStatus = job.ControlQuality(jobId);
+                    if (incExcCountStatus.Result.Response.IsSuccessStatusCode)
                     {
-                        status = new SvcStatus() { Level = 0, Description = "Job launched", Response = response };
+                        var baseAddress = new Uri(string.Format("{0}jobs/{1}/orders.json?key={2}",
+                             CrowdflowerBaseUri, jobId, ConfidentialData.CrowdFlowerKey));
+                        var response = client.PostAsync(baseAddress, job.LaunchRequestCUrlData(CFJobRequest.CFWorkForce.OnDemand, unitCount)).Result;
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            status = new SvcStatus() { Level = 0, Description = "Job launched", Response = response };
+                        }
+                        else
+                        {
+                            status = new SvcStatus()
+                            {
+                                Level = 2,
+                                Description = "Failed to launch",
+                                Response = response
+                            };
+                        }
                     }
                     else
                     {
-                        status = new SvcStatus()
-                        {
-                            Level = 2,
-                            Description = "Failed to launch",
-                            Response = response
-                        };
+                        return incExcCountStatus.Result;
                     }
                 }
             }
@@ -66,15 +71,6 @@ namespace Crowd.Service.CrowdFlower
                     Description = "Job Key must be greater than 0"
                 };
             }
-            return status;
-        }
-
-        internal static SvcStatus JobQualitySettings(int jobId)
-        {
-            SvcStatus status = new SvcStatus();
-
-
-
             return status;
         }
     }
