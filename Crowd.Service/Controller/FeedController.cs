@@ -87,6 +87,23 @@ namespace Crowd.Service.Controller
             return null;
         }
 
+        private static async Task<int?> GetMostRecentJobId(CrowdContext db, User user)
+        {
+            ParticipantResult mostRecent = await db.ParticipantResults.Where(res => res.User.Email == user.Email &&
+                        ((int)res.ParticipantActivity.AppType == (int)user.App ||
+                                        (int)res.ParticipantActivity.AppType == (int)Crowd.Model.Data.User.AppType.None)).OrderByDescending(res => res.UploadedAt).FirstOrDefaultAsync();
+
+            if (mostRecent == null)
+            {
+                return null;
+            }
+            else
+            {
+                return mostRecent.CrowdJobId;
+            }
+
+        }
+
         /// <summary>
         /// Returns the user's subscription feed
         /// </summary>
@@ -165,6 +182,8 @@ namespace Crowd.Service.Controller
                 //    };
                 //    items.Add(accentFeedback);
                 //}
+
+                await GetMostRecentJobId(db, user);
 
                 float? volumeRating = await AverageRating("rlstvolume", user, db);
                 if (volumeRating != null)
