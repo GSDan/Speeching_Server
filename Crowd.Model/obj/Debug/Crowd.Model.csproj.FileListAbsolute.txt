@@ -37,9 +37,10 @@ Z:\Developments\NCLUni\speeching-server\Crowd.Model\bin\Debug\Newtonsoft.Json.dl
 Z:\Developments\NCLUni\speeching-server\Crowd.Model\bin\Debug\EntityFramework.xml
 Z:\Developments\NCLUni\speeching-server\Crowd.Model\bin\Debug\EntityFramework.SqlServer.xml
 Z:\Developments\NCLUni\speeching-server\Crowd.Model\bin\Debug\Newtonsoft.Json.xml
-Z:\Developments\NCLUni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.csproj.GenerateResource.Cache
 Z:\Developments\NCLUni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.dll
 Z:\Developments\NCLUni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.pdb
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.Migrations.FeedbackQuery.resources
 C:\Users\tgs03_000\Documents\Dev\Uni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.csproj.GenerateResource.Cache
-Z:\Developments\NCLUni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.Migrations.FeedbackQuery.resources
+Z:\Developments\NCLUni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.csprojResolveAssemblyReference.cache
+Z:\Developments\NCLUni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.Migrations.feedbackquery.resources
+Z:\Developments\NCLUni\speeching-server\Crowd.Model\obj\Debug\Crowd.Model.csproj.GenerateResource.Cache

@@ -9,8 +9,8 @@ namespace Crowd.Model
             : base("name=CrowdScience")
         {
             System.Console.WriteLine("*****start******");
-            Database.SetInitializer<CrowdContext>(null);
-            Database.Initialize(true);
+            Database.SetInitializer<CrowdContext>(new CustomDBInitializer());
+            //this.Database.Initialize(true);
         }
 
         public DbSet<ActivityHelper> ActivityHelpers { get; set; }

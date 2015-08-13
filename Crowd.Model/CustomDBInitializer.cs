@@ -6,12 +6,12 @@ using Crowd.Model.Data;
 
 namespace Crowd.Model
 {
-    public class CustomDBInitializer : DropCreateDatabaseIfModelChanges<CrowdContext>
+    public class CustomDBInitializer : CreateDatabaseIfNotExists<CrowdContext>
     {
         protected override void Seed(CrowdContext context)
         {
-            //if (System.Diagnostics.Debugger.IsAttached == false)
-            //    System.Diagnostics.Debugger.Launch();
+            if (System.Diagnostics.Debugger.IsAttached == false)
+                System.Diagnostics.Debugger.Launch();
             Console.WriteLine("*****Seeding******");
             var categories = new List<ParticipantActivityCategory>();
             categories.AddRange(new List<ParticipantActivityCategory>()

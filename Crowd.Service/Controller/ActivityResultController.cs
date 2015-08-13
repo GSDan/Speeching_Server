@@ -158,9 +158,7 @@ namespace Crowd.Service.Controller
                 result.User = user;
                 result.UploadedAt = DateTime.Now;
                 result = db.ParticipantResults.Add(result);
-
                 user.Submissions.Add(result);
-
                 if (result.IsAssessment)
                 {
                     user.LastAssessment = result;
@@ -202,7 +200,7 @@ namespace Crowd.Service.Controller
                             HttpStatusCode.ExpectationFailed, e.Message));
                     }
 
-                    CrowdFlowerApi.LaunchJob(jobRes.id, status.Count);
+                    status = CrowdFlowerApi.LaunchJob(jobRes.id, status.Count);
                     return status.Response;
                 }
                 db.DebugMessages.Add(new DebugMessage

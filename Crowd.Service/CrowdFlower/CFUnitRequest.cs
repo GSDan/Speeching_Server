@@ -34,10 +34,21 @@ namespace Crowd.Service.CrowdFlower
                 reqContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 HttpResponseMessage response = await client.PostAsync(baseAddress, reqContent);
 
-                if (!response.IsSuccessStatusCode) return null;
+                if (!response.IsSuccessStatusCode) 
+                    return null;
+
                 string responseJson = await response.Content.ReadAsStringAsync();
 
                 jobResp = JsonConvert.DeserializeObject<CFJobResponse>(responseJson);
+                baseAddress = new Uri(string.Format("{0}jobs/{1}/gold.json?key={2}",
+                    CrowdflowerBaseUri, jobId, CrowdflowerKey));
+
+                reqContent = new StringContent("");
+                reqContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                response = await client.PutAsync(baseAddress, reqContent);
+
+                //if (!response.IsSuccessStatusCode) 
+                    
             }
 
             try
